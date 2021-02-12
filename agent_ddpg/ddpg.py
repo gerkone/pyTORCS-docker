@@ -4,12 +4,12 @@ from datetime import datetime
 import numpy as np
 import tensorflow as tf
 
-from agent.utils.replay_buffer import ReplayBuffer
-from agent.utils.action_noise import OUActionNoise
-from agent.network.actor import Actor
-from agent.network.critic import Critic
+from agent_ddpg.utils.replay_buffer import ReplayBuffer
+from agent_ddpg.utils.action_noise import OUActionNoise
+from agent_ddpg.network.actor import Actor
+from agent_ddpg.network.critic import Critic
 
-class Agent(object):
+class DDPG(object):
     """
     DDPG agent
     """
