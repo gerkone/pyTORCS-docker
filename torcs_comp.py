@@ -19,12 +19,21 @@ class TorcsEnv:
 
     initial_reset = True
 
-    def __init__(self, vision=False, throttle=False, gear_change=False, state_filter = None):
+    def __init__(self, vision=False, throttle=False, gear_change=False, state_filter = None, img_width = 0, img_height = 0):
         self.vision = vision
         self.throttle = throttle
         self.gear_change = gear_change
         self.initial_run = True
-        self.img_width, self.img_height = 64, 64
+        if img_width != 0:
+            self.img_width = img_width
+        else:
+            self.img_width = 64
+
+        if img_height != 0:
+            self.img_height = img_height
+        else:
+            self.img_height = 64
+
         if state_filter != None:
             self.state_filter = state_filter
         else:
@@ -58,51 +67,36 @@ class TorcsEnv:
 
         high = np.array([])
         low = np.array([])
-        shape = 0
         if "angle" in self.state_filter:
-            shape += 1
             high = np.append(high, 1.0)
             low = np.append(low, -1.0)
         if "track" in self.state_filter:
             # the track rangefinder is made of 19 separate values
-            shape += 19
             for i in range(19):
                 high = np.append(high, 1.0)
                 low = np.append(low, 0.0)
         if "trackPos" in self.state_filter:
-            shape += 1
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
         if "speedX" in self.state_filter:
-            shape += 1
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
         if "speedY" in self.state_filter:
-            shape += 1
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
         if "speedZ" in self.state_filter:
-            shape += 1
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
         if "wheelSpinVel" in self.state_filter:
             # one value each wheel
-            shape += 4
             for i in range(4):
                 high = np.append(high, np.inf)
                 low = np.append(low, 0.0)
         if "rpm" in self.state_filter:
-            shape += 1
             high = np.append(high, np.inf)
             low = np.append(low, 0.0)
 
-        if self.vision:
-            shape += self.img_width * self.img_height
-            for i in range(self.img_width * self.img_height):
-                high = np.append(high, 255)
-                low = np.append(low, 0.0)
-
-        self.observation_space = spaces.Box(low=low, high=high, shape=(shape,))
+        self.observation_space = spaces.Box(low=low, high=high)
 
     def step(self, u):
         # convert thisAction to the actual torcs actionstr
@@ -248,9 +242,9 @@ class TorcsEnv:
         subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL)
         time.sleep(0.5)
         if self.vision is True:
-            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"], stderr=subprocess.STDOUT, stdout=subprocess.DEVNULL)
+            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
-            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime"], stderr=subprocess.STDOUT,  stdout=subprocess.DEVNULL)
+            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(0.5)
         subprocess.Popen(["sh", "autostart.sh"], stdout=subprocess.DEVNULL)
         time.sleep(0.5)
@@ -282,7 +276,7 @@ class TorcsEnv:
         g = image_vec[1:len(image_vec):3]
         b = image_vec[2:len(image_vec):3]
 
-        sz = (64, 64)
+        sz = (self.img_width, self.img_height)
         r = np.array(r).reshape(sz)
         g = np.array(g).reshape(sz)
         b = np.array(b).reshape(sz)
@@ -293,13 +287,13 @@ class TorcsEnv:
         """
         returns a numpy array with the normalized state values specified in state_filter
         """
-        obs = np.array([])
+        obs = []
         for cat in self.state_filter:
             par = np.array(raw_obs[cat], dtype=np.float32)/self.state_filter[cat]
-            obs = np.append(obs, par)
+            obs.append(par)
         if self.vision:
             # Get RGB from observation
             image_rgb = self.obs_vision_to_image_rgb(raw_obs["img"])
-            obs = np.append(obs, image_rgb)
+            obs.append(image_rgb)
 
         return obs

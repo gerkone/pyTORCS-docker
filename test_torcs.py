@@ -30,19 +30,15 @@ def main(vision = True):
     # state_filter["rpm"] = 10000
 
     # Instantiate the environment
-    env = TorcsEnv(throttle = False, vision = vision, state_filter = None)
+    env = TorcsEnv(throttle = False, vision = vision, state_filter = state_filter)
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
     action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
-    print(env.observation_space)
 
-    if vision:
-        pass
-    else:
-        agent = DDPG(state_dims = state_dims, action_dims = action_dims,
-            action_boundaries = action_boundaries, actor_lr = 1e-6,
-            critic_lr = 2*1e-6, batch_size = 32, gamma = 0.99, rand_steps = 0,
-            buf_size = int(1e5), tau = 0.001, fcl1_size = 128, fcl2_size = 64)
+    # agent = DDPG(state_dims = state_dims, action_dims = action_dims,
+    #     action_boundaries = action_boundaries, actor_lr = 1e-6,
+    #     critic_lr = 2*1e-6, batch_size = 32, gamma = 0.99, rand_steps = 0,
+    #     buf_size = int(1e2), tau = 0.001, fcl1_size = 128, fcl2_size = 64)
 
     np.random.seed(0)
     scores = []
@@ -53,13 +49,14 @@ def main(vision = True):
 
         while not terminal:
             #predict new action
-            action = agent.get_action(state, i)
+            action = np.random.random(action_dims) # agent.get_action(state, i)
             #perform the transition according to the predicted action
             state_new, reward, terminal = env.step(action)
+
             #store the transaction in the memory
-            agent.remember(state, state_new, action, reward, terminal)
+            # agent.remember(state, state_new, action, reward, terminal)
             #adjust the weights according to the new transaction
-            agent.learn(i)
+            # agent.learn(i)
             #iterate to the next state
             state = state_new
             score += reward
@@ -71,4 +68,4 @@ if __name__ == "__main__":
     #tell tensorflow to train with GPU 0
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    main(vision = False)
+    main(vision = True)

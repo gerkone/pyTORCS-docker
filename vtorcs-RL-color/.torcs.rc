@@ -1,0 +1,2 @@
+TORCS_BASE = /home/ggalletti/git/gym_torcs/vtorcs-RL-color
+MAKE_DEFAULT = /home/ggalletti/git/gym_torcs/vtorcs-RL-color/Make-default.mk
