@@ -8,6 +8,8 @@ import collections as col
 import subprocess
 import time
 
+import matplotlib.pyplot as plt
+
 from rewards import custom_reward
 
 
@@ -270,8 +272,12 @@ class TorcsEnv:
         return torcs_action
 
 
-    def obs_vision_to_image_rgb(self, obs_image_vec):
+    def raw_vision_to_rgb(self, obs_image_vec):
+        """
+        Transforms the raw byte array from vision in 3 two dimensional matrices
+        """
         image_vec =  obs_image_vec
+
         r = image_vec[0:len(image_vec):3]
         g = image_vec[1:len(image_vec):3]
         b = image_vec[2:len(image_vec):3]
@@ -280,6 +286,10 @@ class TorcsEnv:
         r = np.array(r).reshape(sz)
         g = np.array(g).reshape(sz)
         b = np.array(b).reshape(sz)
+
+        r = np.flip(r, axis = 0)
+        g = np.flip(g, axis = 0)
+        b = np.flip(b, axis = 0)
 
         return np.array([r, g, b], dtype=np.uint8)
 
@@ -293,7 +303,7 @@ class TorcsEnv:
             obs.append(par)
         if self.vision:
             # Get RGB from observation
-            image_rgb = self.obs_vision_to_image_rgb(raw_obs["img"])
+            image_rgb = self.raw_vision_to_rgb(raw_obs["img"])
             obs.append(image_rgb)
 
         return obs

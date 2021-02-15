@@ -2,7 +2,6 @@ from torcs_comp import TorcsEnv
 import os
 import numpy as np
 
-
 from agent_ddpg.ddpg import DDPG
 
 class bcolors:
