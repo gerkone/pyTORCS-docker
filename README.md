@@ -50,8 +50,22 @@ docker-compose --version
 ```
 
 ## Usage
+To run the simulation you can use the example script _torcs_test.py_.
+```
+python torcs_test.py
+```
+This will start two containers, one for TORCS and one for the agent, and connect a terminal to the agent output to monitor training.
 
+To run the agent on the host the flag _-d_ needs to be set
 
+```
+python torcs_test.py -d
+```
+
+If you want to run the TORCS container manually you can use
+```
+docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it getkone/torcs
+```
 
 ## References
 The python client was initially based on [ugo-nama-kun's gym_torcs](https://github.com/ugo-nama-kun/gym_torcs), with some changes and quality of life improvements.
