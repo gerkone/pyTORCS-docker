@@ -5,7 +5,7 @@ Both the **environment** and the **agent** are designed to be run inside a Docke
 
 Either can be still installed and run directly on the host. 
 
-More info on the environment and its usages can be found on [here](https://github.com/gerkone/torcs_test/tree/master/driver).
+More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
 
 ## Dockerized version installation
 This project is designed to run on a Linux system, ideally with an Nvidia GPU.
