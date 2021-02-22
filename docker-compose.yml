@@ -1,0 +1,9 @@
+services:
+  driver:
+    build: ./driver
+    command: python test_torcs.py
+    expose: 3101
+  torcs:
+    build: ./vtorcs
+    command: sh start_torcs.sh
+    expose: 3101
