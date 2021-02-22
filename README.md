@@ -50,8 +50,14 @@ docker-compose --version
 ## Host version installation
 To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/vtorcs/README.md) in  the vtorcs readme.
 
+For the python requirements for the example simply run
+```
+pip install -r requirements.txt
+```
+in the _driver/_ folder
+
 ## Usage
-To run the simulation you can use the example script _torcs_test.py_.
+To run the example you can use the script _torcs_test.py_.
 ```
 python torcs_test.py
 ```
