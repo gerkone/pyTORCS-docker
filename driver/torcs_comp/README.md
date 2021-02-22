@@ -65,4 +65,4 @@ state_new, reward, terminal = env.step(action)
 * **_terminal_** is set to true if the termination clause is verified.
 
 ## Further customization
-The reward function and the termination clause can be customized by changing the content of the functions in **_reward.py_** and **_terminator.py_**.
+The reward function and the termination clause can be customized by changing the content of the functions in **torcs_comp/_reward.py_** and **torcs_comp/_terminator.py_**.
