@@ -1,6 +1,8 @@
 # pyTORCS
 OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
 
+More info on the environment and its usage can be found on [here](https://github.com/gerkone/torcs_test/tree/master/driver).
+
 Both the **environment** and the **agent** are designed to be run inside Docker container(s). This was done to simplify the installation, as VTORCS/TORCS can be tricky to install on some systems.
 
 Alternatively, as the TensorFlow Docker image is quite large, the agent can be also run directly on the host, while the TORCS is still in a container.
