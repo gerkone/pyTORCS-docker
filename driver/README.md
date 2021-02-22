@@ -10,7 +10,7 @@ With the VTORCS modification the state can also be an image.
 The **TorcsEnv** class provides a simple abstraction of TORCS.
 
 The API is similar to OpenAI gym, with some peculiarities:
-```
+```python
 from torcs_comp.torcs_comp import TorcsEnv
 
 # filter and scale the returned state values
@@ -50,14 +50,15 @@ for i in range(N_EPISODES):
 ```
 
 The key parts are:
-```
+
+```python
 env = TorcsEnv(throttle = False, vision = True, state_filter = state_filter)
 ```
 * **_throttle = False_** sets automatic throttle control, for simpler training
 * **_vision = True_** turns on RGB vision. This returns a 64x64x3 numpy array, always on the last position of the state list.
 * **_state_filter = state_filter_** sets the selected sensors.
 
-```
+```python
 state_new, reward, terminal = env.step(action)
 ```
 * **_state_new_** is the next state. A list made of all the selected "sensors" is returned.
@@ -65,4 +66,6 @@ state_new, reward, terminal = env.step(action)
 * **_terminal_** is set to true if the termination clause is verified.
 
 ## Further customization
+An example deep reinforcement learning agent, using DDPG, is provided.
+
 The reward function and the termination clause can be customized by changing the content of the functions in **torcs_comp/_reward.py_** and **torcs_comp/_terminator.py_**.
