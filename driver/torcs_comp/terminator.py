@@ -1,6 +1,6 @@
 import numpy as np
 
-def custom_terminal(obs, reward, terminal_judge_start, time_step):
+def custom_terminal(obs, reward, terminal_judge_start, time_step, termination_limit_progress):
     terminal = False
 
     angle = np.cos(obs['angle'])
@@ -10,12 +10,12 @@ def custom_terminal(obs, reward, terminal_judge_start, time_step):
     # Episode is terminated if the car is out of track, too cruel to start
         # terminal = True
 
-    if self.terminal_judge_start < self.time_step:
+    if terminal_judge_start < time_step:
         # Episode terminates if the agent is too slow
         if speed < self.boring_speed:
            terminal = True
         # Episode terminates if the progress of agent is small
-        if reward < self.termination_limit_progress:
+        if reward < termination_limit_progress:
            terminal = True
 
     if angle < 0:

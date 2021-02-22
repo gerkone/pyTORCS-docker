@@ -170,7 +170,8 @@ class TorcsEnv:
         # Reward setting Here #######################################
         reward = custom_reward(obs, obs_prev)
         # Termination judgement #########################
-        episode_terminate = custom_terminal(obs, reward, terminal_judge_start = self.terminal_judge_start, time_step = self.time_step)
+        episode_terminate = custom_terminal(obs, reward, terminal_judge_start = self.terminal_judge_start,
+                                    time_step = self.time_step, termination_limit_progress = self.termination_limit_progress)
         client.R.d['meta'] = episode_terminate
 
         if episode_terminate: # Send a reset signal
