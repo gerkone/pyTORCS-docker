@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 import torcs_comp.snakeoil3_gym as snakeoil3
-from torcs_comp.rewards import custom_reward
+from torcs_comp.reward import custom_reward
 from torcs_comp.terminator import custom_terminal
 
 
