@@ -31,7 +31,7 @@ and selecting play > practice > start. If it stops on a blue screen with "waitin
 
 After the manual installation run postinstall.sh. 
 ```
-sh postinstall.sh
+sudo sh postinstall.sh
 ```
 
 This will copy the right TORCS configuration files. Tis includes:
