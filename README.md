@@ -1,4 +1,4 @@
-# pyTORCS
+# pyTORCS + Docker
 OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
 
 More info on the environment and its usage can be found on [here](https://github.com/gerkone/torcs_test/tree/master/driver).
