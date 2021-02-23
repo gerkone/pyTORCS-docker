@@ -6,9 +6,9 @@ from driver.test_torcs import main
 
 parser = argparse.ArgumentParser(description="pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
 
-parser.add_argument("-d", "--nodocker", help="Set to run the system on host (requires manual vtorcs installation).", default=False, type=bool)
+parser.add_argument("-n", "--nodocker", help="Set to run the system on host (requires manual vtorcs installation).", default=False, action="store_true")
 
-parser.add_argument("-v", "--verbose", help="Set verbose.", default=False, type=bool)
+parser.add_argument("-v", "--verbose", help="Set verbose.", default=False, action="store_true")
 
 args = parser.parse_args()
 

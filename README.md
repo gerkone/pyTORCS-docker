@@ -47,11 +47,15 @@ Verify docker-compose works
 docker-compose --version
 ```
 
-5 **pull the torcs image**
+5a **pull the torcs image**
 ```
-docker pull
+docker pull gerkone/vtorcs
 ```
 
+5b **build the torcs image yourself**
+```
+docker build -t <your image name> vtorcs/
+```
 
 ## Host version installation
 To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/vtorcs/README.md) in  the vtorcs readme.
@@ -60,14 +64,13 @@ For the python requirements for the example simply run
 ```
 pip install -r requirements.txt
 ```
-in the _driver/_ folder
 
 ## Usage
-To run the example you can use the script _torcs_test.py_.
+To run the example you can use the script _pytorcs.py_.
 ```
 python pytorcs.py
 ```
-This will start two containers, one for TORCS and one for the agent, and connect a terminal to the agent output to monitor training.
+This will start the TORCS container, open a new window with the game and start running the agent.
 
 To run TORCS on the host the flag _-n_ needs to be set
 
@@ -77,11 +80,7 @@ python pytorcs.py -n
 
 If you want to run the TORCS container manually you can use
 ```
-<<<<<<< HEAD
 nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm getkone/vtorcs
-=======
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it getkone/torcs
->>>>>>> e6fd0a2e301b701127f4ecf70a31a06d83bc4db2
 ```
 
 ## References

@@ -38,20 +38,23 @@ def start_container(name, verbose):
 
 def reset_torcs(torcs_on_docker, name, vision):
     if torcs_on_docker:
-      subprocess.Popen(["docker", "exec", name, "sh", "kill.sh"],
+        subprocess.Popen(["docker", "exec", name, "sh", "kill.sh"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-      if vision is True:
+        if vision is True:
           subprocess.Popen(["docker", "exec", name, "sh", "start_vision.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-      else:
+        else:
           subprocess.Popen(["docker", "exec", name, "sh", "start.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
-      subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL)
-      if vision is True:
+        subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if vision is True:
           subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-      else:
+        else:
           subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-      subprocess.Popen(["sh", "autostart.sh"], stdout=subprocess.DEVNULL)
+        # wait for window to pop up
+        time.sleep(0.5)
+        os.chdir(os.path.dirname(__file__))
+        subprocess.Popen([os.getcwd() + "/autostart.sh"])
