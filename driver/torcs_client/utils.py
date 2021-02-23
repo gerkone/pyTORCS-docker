@@ -28,7 +28,7 @@ def start_container(name, verbose):
         time.sleep(0.5)
         while len(id) == 0:
             time.sleep(0.5)
-            id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=gerkone/torcs"])
+            id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=gerkone/vtorcs"])
             id = id.decode('utf-8')
 
         if verbose: print(bcolors.OKGREEN + "Container started with id " + id + bcolors.ENDC)
