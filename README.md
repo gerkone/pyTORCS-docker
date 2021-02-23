@@ -77,7 +77,11 @@ python pytorcs.py -n
 
 If you want to run the TORCS container manually you can use
 ```
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm getkone/torcs
+<<<<<<< HEAD
+nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm getkone/vtorcs
+=======
+nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it getkone/torcs
+>>>>>>> e6fd0a2e301b701127f4ecf70a31a06d83bc4db2
 ```
 
 ## References
