@@ -1,9 +1,9 @@
 # pyTORCS + Docker
 OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
 
-Both the **environment** and the **agent** are designed to be run inside a Docker container(s). This was done to simplify the installation, as VTORCS/TORCS can be tricky to install on some systems.
+The **environment** is designed to be run inside a Docker container(s). This was done to simplify the installation, as VTORCS/TORCS can be tricky to install on some systems.
 
-Either can be still installed and run directly on the host. 
+Either way, everything can be still installed and run directly on the host.
 
 More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
 
@@ -47,6 +47,12 @@ Verify docker-compose works
 docker-compose --version
 ```
 
+5 **pull the torcs image**
+```
+docker pull
+```
+
+
 ## Host version installation
 To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/vtorcs/README.md) in  the vtorcs readme.
 
@@ -59,25 +65,19 @@ in the _driver/_ folder
 ## Usage
 To run the example you can use the script _torcs_test.py_.
 ```
-python torcs_test.py
+python pytorcs.py
 ```
 This will start two containers, one for TORCS and one for the agent, and connect a terminal to the agent output to monitor training.
 
-To run the agent on the host the flag _-d_ needs to be set
+To run TORCS on the host the flag _-n_ needs to be set
 
 ```
-python torcs_test.py -d
-```
-
-To run TORCS on the host the flag _-t_ needs to be set
-
-```
-python torcs_test.py -t
+python pytorcs.py -n
 ```
 
 If you want to run the TORCS container manually you can use
 ```
-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it getkone/torcs
+nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm getkone/torcs
 ```
 
 ## References

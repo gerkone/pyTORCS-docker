@@ -11,7 +11,7 @@ The **TorcsEnv** class provides a simple abstraction of TORCS.
 
 The API is similar to OpenAI gym, with some peculiarities:
 ```python
-from torcs_comp.torcs_comp import TorcsEnv
+from torcs_client.torcs_comp import TorcsEnv
 
 # filter and scale the returned state values
 # dict with key: observation name, val: scale
@@ -68,4 +68,4 @@ state_new, reward, terminal = env.step(action)
 ## Further customization
 An example deep reinforcement learning agent, using DDPG, is provided.
 
-The reward function and the termination clause can be customized by changing the content of the functions in **torcs_comp/_reward.py_** and **torcs_comp/_terminator.py_**.
+The reward function and the termination clause can be customized by changing the content of the functions in **torcs_client/_reward.py_** and **torcs_client/_terminator.py_**.

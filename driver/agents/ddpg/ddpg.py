@@ -4,10 +4,10 @@ from datetime import datetime
 import numpy as np
 import tensorflow as tf
 
-from agents.agent_ddpg.utils.replay_buffer import ReplayBuffer
-from agents.agent_ddpg.utils.action_noise import OUActionNoise
-from agents.agent_ddpg.network.actor import Actor
-from agents.agent_ddpg.network.critic import Critic
+from driver.agents.ddpg.utils.replay_buffer import ReplayBuffer
+from driver.agents.ddpg.utils.action_noise import OUActionNoise
+from driver.agents.ddpg.network.actor import Actor
+from driver.agents.ddpg.network.critic import Critic
 
 class DDPG(object):
     """

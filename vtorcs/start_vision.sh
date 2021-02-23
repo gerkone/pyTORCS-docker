@@ -1,4 +1,4 @@
-torcs -nofuel -nodamage -nolaptime &
+torcs -nofuel -nodamage -nolaptime -vision &
 
 sleep 0.5
 

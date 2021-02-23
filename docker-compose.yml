@@ -1,9 +1,19 @@
 services:
   driver:
     build: ./driver
+    image: gerkone/pytorcs-driver
     command: python test_torcs.py
-    expose: 3101
+    # run with nvidia docker
+    runtime: nvidia
+    # ports:
+    #   - "3101:3101/udp"
+    volumes:
+       - ./driver/:/driver/
   torcs:
     build: ./vtorcs
-    command: sh start_torcs.sh
-    expose: 3101
+    image: gerkone/torcs
+    command: /bin/sh
+    # run with nvidia docker
+    runtime: nvidia
+    ports:
+      - "3101:3101/udp"

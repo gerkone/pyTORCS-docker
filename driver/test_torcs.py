@@ -1,24 +1,14 @@
 import os
 import numpy as np
 
-from agents.agent_ddpg.ddpg import DDPG
-from torcs_comp.torcs_comp import TorcsEnv
+from driver.agents.ddpg.ddpg import DDPG
+from driver.torcs_client.torcs_comp import TorcsEnv
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
+from driver.torcs_client.utils import bcolors
 
 N_EPISODES = 1000
 
-def main(vision = True):
+def main(torcs_on_docker = True, vision = True, verbose = False):
     # dict with key: observation name, val: scale
     state_filter = {}
     # state_filter["track"] = 200.0
@@ -29,7 +19,7 @@ def main(vision = True):
     # state_filter["rpm"] = 10000
 
     # Instantiate the environment
-    env = TorcsEnv(throttle = False, vision = vision, state_filter = state_filter)
+    env = TorcsEnv(torcs_on_docker = torcs_on_docker, throttle = False, vision = vision, verbose = verbose, state_filter = state_filter)
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
     action_boundaries = [env.action_space.low[0], env.action_space.high[0]]

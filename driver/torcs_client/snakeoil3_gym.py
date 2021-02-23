@@ -56,9 +56,9 @@
 import socket
 import sys
 import getopt
-import subprocess
-import time
 PI= 3.14159265359
+
+from driver.torcs_client.utils import start_container, reset_torcs
 
 data_size = 2**17
 
@@ -116,7 +116,17 @@ def bargraph(x,mn,mx,w,c='X'):
     return '[%s]' % (nnc+npc+ppc+pnc)
 
 class Client():
-    def __init__(self,H=None,p=None,i=None,e=None,t=None,s=None,d=None,vision=False):
+    def __init__(self,H=None,p=None,i=None,e=None,t=None,s=None,d=None,vision=False, torcs_on_docker = True, verbose = False, container_name = "vtorcs_container_instance"):
+        self.torcs_on_docker = torcs_on_docker
+
+        self.container_name = container_name
+
+        self.verbose = verbose
+
+        if self.torcs_on_docker:
+            # start torcs container
+            start_container(self.container_name, self.verbose)
+
         # If you don't like the option defaults,  change them here.
         self.vision = vision
 
@@ -140,12 +150,20 @@ class Client():
         self.R= DriverAction()
         self.setup_connection()
 
+    def reset(self):
+        """
+        reset udp connection to vtorcs
+        """
+        self.S = ServerState()
+        self.R = DriverAction()
+        self.setup_connection()
+
     def setup_connection(self):
         # == Set Up UDP Socket ==
         try:
             self.so= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         except socket.error as emsg:
-            print('Error: Could not create socket...')
+            if self.verbose: print('Error: Could not create socket...')
             sys.exit(-1)
         # == Initialize Connection To Server ==
         self.so.settimeout(1)
@@ -168,30 +186,18 @@ class Client():
                 sockdata,addr= self.so.recvfrom(data_size)
                 sockdata = sockdata.decode('utf-8')
             except socket.error as emsg:
-                print("Waiting for server on %d............" % self.port)
-                print("Count Down : " + str(n_fail))
+                if self.verbose: print("Waiting for server on %d............" % self.port)
+                if self.verbose: print("Count Down : " + str(n_fail))
                 if n_fail < 0:
-                    print("relaunch torcs")
-                    self.reset_torcs()
+                    if self.verbose: print("relaunch torcs")
+                    reset_torcs(self.torcs_on_docker, self.container_name, self.vision)
                     n_fail = 5
                 n_fail -= 1
 
             identify = '***identified***'
             if identify in sockdata:
-                print("Client connected on %d.............." % self.port)
+                if self.verbose: print("Client connected on %d.............." % self.port)
                 break
-
-    def reset_torcs(self):
-       #print("relaunch torcs")
-        subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL)
-        time.sleep(0.5)
-        if self.vision is True:
-            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(0.5)
-        subprocess.Popen(["sh", "autostart.sh"], stdout=subprocess.DEVNULL)
-        time.sleep(0.5)
 
     def parse_the_command_line(self):
         try:
@@ -200,12 +206,12 @@ class Client():
                         'episodes=','track=','stage=',
                         'debug','help','version'])
         except getopt.error as why:
-            print('getopt error: %s\n%s' % (why, usage))
+            if self.verbose: print('getopt error: %s\n%s' % (why, usage))
             sys.exit(-1)
         try:
             for opt in opts:
                 if opt[0] == '-h' or opt[0] == '--help':
-                    print(usage)
+                    if self.verbose: print(usage)
                     sys.exit(0)
                 if opt[0] == '-d' or opt[0] == '--debug':
                     self.debug= True
@@ -224,14 +230,14 @@ class Client():
                 if opt[0] == '-m' or opt[0] == '--steps':
                     self.maxSteps= int(opt[1])
                 if opt[0] == '-v' or opt[0] == '--version':
-                    print('%s %s' % (sys.argv[0], version))
+                    if self.verbose: print('%s %s' % (sys.argv[0], version))
                     sys.exit(0)
         except ValueError as why:
-            print('Bad parameter \'%s\' for option %s: %s\n%s' % (
+            if self.verbose: print('Bad parameter \'%s\' for option %s: %s\n%s' % (
                                        opt[1], opt[0], why, usage))
             sys.exit(-1)
         if len(args) > 0:
-            print('Superflous input? %s\n%s' % (', '.join(args), usage))
+            if self.verbose: print('Superflous input? %s\n%s' % (', '.join(args), usage))
             sys.exit(-1)
 
     def get_servers_input(self):
@@ -245,20 +251,20 @@ class Client():
                 sockdata,addr= self.so.recvfrom(data_size)
                 sockdata = sockdata.decode('utf-8')
             except socket.error as emsg:
-                print('.', end=' ')
-                #print "Waiting for data on %d.............." % self.port
+                if self.verbose: print('.', end=' ')
+                #if self.verbose: print "Waiting for data on %d.............." % self.port
             if '***identified***' in sockdata:
-                print("Client connected on %d.............." % self.port)
+                if self.verbose: print("Client connected on %d.............." % self.port)
                 continue
             elif '***shutdown***' in sockdata:
-                print((("Server has stopped the race on %d. "+
+                if self.verbose: print((("Server has stopped the race on %d. "+
                         "You were in %d place.") %
                         (self.port,self.S.d['racePos'])))
                 self.shutdown()
                 return
             elif '***restart***' in sockdata:
                 # What do I do here?
-                print("Server has restarted the race on %d." % self.port)
+                if self.verbose: print("Server has restarted the race on %d." % self.port)
                 # I haven't actually caught the server doing this.
                 self.shutdown()
                 return
@@ -268,7 +274,7 @@ class Client():
                 self.S.parse_server_str(sockdata)
                 if self.debug:
                     sys.stderr.write("\x1b[2J\x1b[H") # Clear for steady output.
-                    print(self.S)
+                    if self.verbose: print(self.S)
                 break # Can now return from this function.
 
     def respond_to_server(self):
@@ -277,15 +283,15 @@ class Client():
             message = repr(self.R)
             self.so.sendto(message.encode(), (self.host, self.port))
         except socket.error as emsg:
-            print("Error sending to server: %s Message %s" % (emsg[1],str(emsg[0])))
+            if self.verbose: print("Error sending to server: %s Message %s" % (emsg[1],str(emsg[0])))
             sys.exit(-1)
         if self.debug: print(self.R.fancyout())
         # Or use this for plain output:
-        #if self.debug: print self.R
+        #if self.debug: if self.verbose: print self.R
 
     def shutdown(self):
         if not self.so: return
-        print(("Race terminated or %d steps elapsed. Shutting down %d."
+        if self.verbose: print(("Race terminated or %d steps elapsed. Shutting down %d."
                % (self.maxSteps,self.port)))
         self.so.close()
         self.so = None
@@ -522,7 +528,7 @@ def destringify(s):
         try:
             return float(s)
         except ValueError:
-            print("Could not find a value in %s" % s)
+            if self.verbose: print("Could not find a value in %s" % s)
             return s
     elif type(s) is list:
         if len(s) < 2:
