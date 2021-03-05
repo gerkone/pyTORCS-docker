@@ -52,6 +52,17 @@ for i in range(N_EPISODES):
 The key parts are:
 
 ```python
+state_filter = {}
+state_filter["track"] = 200.0
+state_filter["speedX"] = 300.0
+state_filter["speedY"] = 300.0
+state_filter["speedZ"] = 300.0
+state_filter["wheelSpinVel"] = 1.0
+state_filter["rpm"] = 10000
+```
+The **state_filter** map specifies which virtual sensor include in the state. The value is the normalization scale factor of the sensor.
+
+```python
 env = TorcsEnv(throttle = False, vision = True, state_filter = state_filter)
 ```
 * **_throttle = False_** sets automatic throttle control, for simpler training
