@@ -33,12 +33,10 @@ Eventually configure docker to start on boot.
 sudo systemctl enable docker
 ```
 
-3 **install nvidia-docker**
+3 **install nvidia-docker** -> [guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker).
 
 The NVIDIA Container Toolkit allows users to build and run GPU accelerated Docker containers.
 Nvidia-docker essentially exposes the GPU to the containers to use: https://github.com/NVIDIA/nvidia-docker
-
-To install the toolkit follow this [guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker).
 
 4 **install docker-compose** -> [guide](https://docs.docker.com/compose/install/#install-compose)
 
