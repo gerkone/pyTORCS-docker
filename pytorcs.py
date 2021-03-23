@@ -4,12 +4,18 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
-    parser.add_argument("-c", "--config", help="Path to the yaml config file.", default="config/simulation.yaml", type=str)
+    parser.add_argument("--config", help="Path to the yaml config file.", default="config/simulation.yaml", type=str)
     parser.add_argument("-v", "--verbose", help="Set verbose.", default=False, action="store_true")
+    parser.add_argument("-c", "--console", help="Your console of choice.", default="konsole", type=str)
 
     args = parser.parse_args()
-
+    # konsole, xterm
+    execute = "-e"
+    if args.console == "terminator" or args.console == "gnome-terminal":
+        # terminator, gnome-terminal
+        execute = "-x"
+    print(execute)
     if args.verbose:
-        subprocess.Popen(["python", "driver/launch.py", "--config", args.config, "--verbose"])
+        subprocess.Popen([args.console, execute, "python", "driver/launch.py", "--config", args.config, "--verbose"])
     else:
-        subprocess.Popen(["python", "driver/launch.py", "--config", args.config])
+        subprocess.Popen([args.console, execute, "python", "driver/launch.py", "--config", args.config])

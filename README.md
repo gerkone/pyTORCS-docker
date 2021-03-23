@@ -55,6 +55,19 @@ docker pull gerkone/vtorcs
 docker build -t <your image name> vtorcs/
 ```
 
+6 (optional) **install konsole**
+
+Konsole is already shipped with every KDE installations.
+
+On Ubuntu
+```
+sudo apt-get install konsole
+```
+On Arch/Manjaro
+```
+sudo pacman -S konsole
+```
+
 ## Host version installation
 To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/vtorcs/README.md) in  the vtorcs readme.
 
@@ -71,6 +84,11 @@ python pytorcs.py
 This will start the TORCS container, open a new window with the game and start running the agent.
 
 You can change some settings and options by editing the [simulation.yaml](config/simulation.yaml) file. For more details on the parameters and on how to use your code check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/torcs_client/README.md).
+
+If you don't want to install konsole you can run it with your shell of choice with
+```
+python pytorcs.py --console <terminator|xterm|gnome-terminal...>
+```
 
 If you want to run the TORCS container manually you can use
 ```

@@ -41,9 +41,11 @@ def reset_torcs(container_id, vision):
         subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
-            subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"])
+            subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
-            subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"])
+            subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
