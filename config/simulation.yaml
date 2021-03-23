@@ -1,0 +1,33 @@
+# docker image name
+image_name : "gerkone/vtorcs"
+
+# run module and path. change to your test script location and function
+mod_name : "main"
+run_path : "driver/test_torcs.py"
+
+# agent hyperparameters
+hyperparams:
+  actor_lr : 0.000001
+  critic_lr : 0.000003
+  batch_size : 32
+  gamma : 0.99
+  rand_steps : 0
+  buf_size : 10000
+  tau : 0.001
+  fcl1_size : 128
+  fcl2_size : 64
+
+# dict with key: observation name, val: normalization scale (sensor max value)
+sensors:
+  track : 200.0
+  speedX : 300.0
+  speedY : 300.0
+  speedZ : 300.0
+  wheelSpinVel : 1.0
+  rpm : 10000
+  # VISION SENSOR. set to turn vision on
+  img: 1.0
+
+# DO NOT CHANGE (for now)
+img_width : 64
+img_height : 64

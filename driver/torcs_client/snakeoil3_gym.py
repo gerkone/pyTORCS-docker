@@ -58,7 +58,7 @@ import sys
 import getopt
 PI= 3.14159265359
 
-from driver.torcs_client.utils import start_container, reset_torcs
+from torcs_client.utils import start_container, reset_torcs
 
 data_size = 2**17
 
@@ -116,16 +116,18 @@ def bargraph(x,mn,mx,w,c='X'):
     return '[%s]' % (nnc+npc+ppc+pnc)
 
 class Client():
-    def __init__(self,H=None,p=None,i=None,e=None,t=None,s=None,d=None,vision=False, torcs_on_docker = True, verbose = False, container_name = "vtorcs_container_instance"):
-        self.torcs_on_docker = torcs_on_docker
+    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None,
+                    vision=False, verbose = False, image_name = "gerkone/vtorcs"):
 
-        self.container_name = container_name
+        self.image_name = image_name
 
         self.verbose = verbose
 
-        if self.torcs_on_docker:
+        if self.image_name != "0":
             # start torcs container
-            start_container(self.container_name, self.verbose)
+            self.container_id = start_container(self.image_name, self.verbose)
+        else:
+            self.container_id = "0"
 
         # If you don't like the option defaults,  change them here.
         self.vision = vision
@@ -190,7 +192,7 @@ class Client():
                 if self.verbose: print("Count Down : " + str(n_fail))
                 if n_fail < 0:
                     if self.verbose: print("relaunch torcs")
-                    reset_torcs(self.torcs_on_docker, self.container_name, self.vision)
+                    reset_torcs(self.container_id, self.vision)
                     n_fail = 5
                 n_fail -= 1
 

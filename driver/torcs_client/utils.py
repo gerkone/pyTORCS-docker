@@ -14,36 +14,39 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def start_container(name, verbose):
+def start_container(image_name, verbose):
     # check if the container is already up
-    id = subprocess.check_output(["docker", "ps", "-q", "--filter", "name=" + name])
-    id = id.decode('utf-8')
-    if len(id) == 0:
+    container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name])
+    container_id = container_id.decode('utf-8')
+    if len(container_id) == 0:
         # not yet started
         # get display from environment
         display = "unix" + os.environ["DISPLAY"]
         if verbose: print(bcolors.OKGREEN + "Starting TORCS container..." + bcolors.ENDC)
         subprocess.Popen(["nvidia-docker", "run", "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
-            "-e", "DISPLAY=" + display, "-p", "3101:3101/udp", "--rm", "-t", "-d", "--name", name, "gerkone/vtorcs"])
+            "-e", "DISPLAY=" + display, "-p", "3101:3101/udp", "--rm", "-t", "-d", "gerkone/vtorcs"])
         time.sleep(0.5)
-        while len(id) == 0:
+        while len(container_id) == 0:
             time.sleep(0.5)
-            id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=gerkone/vtorcs"])
-            id = id.decode('utf-8')
+            container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name])
+            container_id = container_id.decode('utf-8')
 
-        if verbose: print(bcolors.OKGREEN + "Container started with id " + id + bcolors.ENDC)
+        if verbose: print(bcolors.OKGREEN + "Container started with container_id " + container_id + bcolors.ENDC)
     else:
-        if verbose: print(bcolors.OKGREEN +"Container " + id + " already running" + bcolors.ENDC)
+        if verbose: print(bcolors.OKGREEN +"Container " + container_id + " already running" + bcolors.ENDC)
 
-def reset_torcs(torcs_on_docker, name, vision):
-    if torcs_on_docker:
-        subprocess.Popen(["docker", "exec", name, "sh", "kill.sh"],
+    return container_id
+
+def reset_torcs(container_id, vision):
+    if container_id != "0":
+        print(container_id)
+        subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
-          subprocess.Popen(["docker", "exec", name, "sh", "start_vision.sh"],
+          subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
-          subprocess.Popen(["docker", "exec", name, "sh", "start.sh"],
+          subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

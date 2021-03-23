@@ -7,10 +7,10 @@ import collections as col
 import matplotlib.pyplot as plt
 
 
-import driver.torcs_client.snakeoil3_gym as snakeoil3
-from driver.torcs_client.reward import custom_reward
-from driver.torcs_client.terminator import custom_terminal
-from driver.torcs_client.utils import start_container, reset_torcs
+import torcs_client.snakeoil3_gym as snakeoil3
+from torcs_client.reward import custom_reward
+from torcs_client.terminator import custom_terminal
+from torcs_client.utils import start_container, reset_torcs
 
 class TorcsEnv:
     terminal_judge_start = 100  # If after 100 timestep still no progress, terminated
@@ -20,19 +20,20 @@ class TorcsEnv:
 
     initial_reset = True
 
-    def __init__(self, torcs_on_docker = True, vision=False, throttle=False, gear_change=False, state_filter = None, img_width = 0, img_height = 0, verbose = False, container_name = "vtorcs_container_instance"):
+    def __init__(self, vision = False, throttle = False, gear_change = False, state_filter = None, img_width = 0, img_height = 0, verbose = False, image_name = "gerkone/vtorcs"):
         self.vision = vision
         self.throttle = throttle
         self.gear_change = gear_change
 
         self.verbose = verbose
 
-        self.container_name = container_name
+        self.image_name = image_name
 
-        self.torcs_on_docker = torcs_on_docker
-        if self.torcs_on_docker:
+        if self.image_name != "0":
             # start torcs container
-            start_container(self.container_name, self.verbose)
+            self.container_id = start_container(self.image_name, self.verbose)
+        else:
+            self.container_id = "0"
 
         self.initial_run = True
         if img_width != 0:
@@ -59,7 +60,7 @@ class TorcsEnv:
             self.state_filter["rpm"] = 10000
 
         # run torcs and start practice run
-        reset_torcs(self.torcs_on_docker, self.container_name, self.vision)
+        reset_torcs(self.container_id, self.vision)
 
         """
         # Modify here if you use multiple tracks in the environment
@@ -203,12 +204,12 @@ class TorcsEnv:
 
             ## TENTATIVE. Restarting TORCS every episode suffers the memory leak bug!
             if relaunch is True:
-                reset_torcs(self.torcs_on_docker, self.torcs_container_id, self.vision)
+                reset_torcs(self.container_id, self.vision)
                 if self.verbose: print("### TORCS is RELAUNCHED ###")
 
         if self.initial_reset:
             # create new torcs client if first reset
-            self.client = snakeoil3.Client(p=3101, vision=self.vision,  verbose = self.verbose, torcs_on_docker = self.torcs_on_docker)
+            self.client = snakeoil3.Client(p=3101, vision=self.vision, verbose = self.verbose, image_name = self.image_name)
         else:
             # Open new UDP to vtorcs
             self.client.reset()

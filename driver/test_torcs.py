@@ -1,33 +1,23 @@
-import os
 import numpy as np
+# from agents.ddpg.ddpg import DDPG
+from torcs_client.torcs_comp import TorcsEnv
 
-from driver.agents.ddpg.ddpg import DDPG
-from driver.torcs_client.torcs_comp import TorcsEnv
-
-from driver.torcs_client.utils import bcolors
 
 N_EPISODES = 1000
 
-def main(torcs_on_docker = True, vision = True, verbose = False):
-    # dict with key: observation name, val: scale
-    state_filter = {}
-    # state_filter["track"] = 200.0
-    # state_filter["speedX"] = 300.0
-    # state_filter["speedY"] = 300.0
-    # state_filter["speedZ"] = 300.0
-    # state_filter["wheelSpinVel"] = 1.0
-    # state_filter["rpm"] = 10000
-
+def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/vtorcs", img_width = 64, img_height = 64):
     # Instantiate the environment
-    env = TorcsEnv(torcs_on_docker = torcs_on_docker, throttle = False, vision = vision, verbose = verbose, state_filter = state_filter)
+    env = TorcsEnv(throttle = False, vision = True, verbose = verbose, state_filter = sensors,
+            image_name = image_name, img_width = img_width, img_height = img_height)
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
     action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
 
-    # agent = DDPG(state_dims = state_dims, action_dims = action_dims,
-    #     action_boundaries = action_boundaries, actor_lr = 1e-6,
-    #     critic_lr = 2*1e-6, batch_size = 32, gamma = 0.99, rand_steps = 0,
-    #     buf_size = int(1e2), tau = 0.001, fcl1_size = 128, fcl2_size = 64)
+    # agent = DDPG(state_dims = state_dims, action_dims = action_dims, action_boundaries = action_boundaries,
+    #     actor_lr = hyperparams["actor_lr"], critic_lr = hyperparams["critic_lr"], batch_size = hyperparams["batch_size"],
+    #     gamma = hyperparams["gamma"], rand_steps = hyperparams["rand_steps"], buf_size = int(hyperparams["buf_size"]),
+    #     tau = hyperparams["tau"], fcl1_size = hyperparams["fcl1_size"], fcl2_size = hyperparams["fcl2_size"])
+
 
     np.random.seed(0)
     scores = []
@@ -51,10 +41,3 @@ def main(torcs_on_docker = True, vision = True, verbose = False):
             score += reward
             scores.append(score)
         print(bcolors.OKBLUE + "Iteration {:d} --> score {:.2f}. Average score {:.2f}".format(i, score, np.mean(scores)) + bcolors.ENDC)
-
-
-if __name__ == "__main__":
-    #tell tensorflow to train with GPU 0
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    main(vision = True)
