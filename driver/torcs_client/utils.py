@@ -1,6 +1,7 @@
 import subprocess
 import time
 import os
+import re
 
 class bcolors:
     HEADER = '\033[95m'
@@ -16,8 +17,7 @@ class bcolors:
 
 def start_container(image_name, verbose):
     # check if the container is already up
-    container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name])
-    container_id = container_id.decode('utf-8')
+    container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
     if len(container_id) == 0:
         # not yet started
         # get display from environment
@@ -28,26 +28,22 @@ def start_container(image_name, verbose):
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)
-            container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name])
-            container_id = container_id.decode('utf-8')
+            container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
 
         if verbose: print(bcolors.OKGREEN + "Container started with container_id " + container_id + bcolors.ENDC)
     else:
         if verbose: print(bcolors.OKGREEN +"Container " + container_id + " already running" + bcolors.ENDC)
 
-    return container_id
+    return re.sub("[^a-zA-Z0-9 -]", "", container_id)
 
 def reset_torcs(container_id, vision):
     if container_id != "0":
-        print(container_id)
         subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
-          subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"])
         else:
-          subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"])
     else:
         subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
