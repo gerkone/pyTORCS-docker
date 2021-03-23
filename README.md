@@ -70,15 +70,17 @@ python pytorcs.py
 ```
 This will start the TORCS container, open a new window with the game and start running the agent.
 
-To run TORCS on the host the flag _-n_ needs to be set
-
-```
-python pytorcs.py -n
-```
+You can change some settings and options by editing the [simulation.yaml](config/simulation.yaml) file. For more details on the parameters and on how to use your code check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/torcs_client/README.md).
 
 If you want to run the TORCS container manually you can use
 ```
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm getkone/vtorcs
+nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm gerkone/vtorcs
+```
+
+## Troubleshooting and known issues
+If you get the error "_freeglut (/usr/local/lib/torcs/torcs-bin): failed to open display ':0'_" OR the torcs window does not pop up after running you might need to allow access to your X display server by using
+```
+xhost local:root
 ```
 
 ## References
