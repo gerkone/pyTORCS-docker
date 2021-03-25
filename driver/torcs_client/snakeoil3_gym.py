@@ -58,7 +58,7 @@ import sys
 import getopt
 PI= 3.14159265359
 
-from torcs_client.utils import start_container, reset_torcs
+from utils import start_container, reset_torcs
 
 data_size = 2**17
 
@@ -117,11 +117,11 @@ def bargraph(x,mn,mx,w,c='X'):
 
 class Client():
     def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None,
-                    vision=False, verbose = False, image_name = "0"):
+                    vision=False, verbose = False, image_name = "gerkone/torcs"):
 
         self.image_name = image_name
 
-        self.verbose = verbose
+        self.verbose = True
 
         if self.image_name != "0":
             # start torcs container
@@ -578,7 +578,7 @@ def drive_example(c):
 
 # ================ MAIN ================
 if __name__ == "__main__":
-    C= Client(p=3101)
+    C= Client(p=3001)
     for step in range(C.maxSteps,0,-1):
         C.get_servers_input()
         drive_example(C)
