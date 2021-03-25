@@ -24,7 +24,7 @@ def start_container(image_name, verbose):
         display = "unix" + os.environ["DISPLAY"]
         if verbose: print(bcolors.OKGREEN + "Starting TORCS container..." + bcolors.ENDC)
         subprocess.Popen(["nvidia-docker", "run", "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
-            "-e", "DISPLAY=" + display, "-p", "3101:3101/udp", "--rm", "-t", "-d", "gerkone/vtorcs"])
+            "-e", "DISPLAY=" + display, "-p", "3001:3001/udp", "--rm", "-t", "-d", "gerkone/vtorcs"])
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)

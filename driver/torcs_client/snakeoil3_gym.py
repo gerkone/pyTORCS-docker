@@ -116,7 +116,7 @@ def bargraph(x,mn,mx,w,c='X'):
     return '[%s]' % (nnc+npc+ppc+pnc)
 
 class Client():
-    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None,
+    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None, maxSteps = 100,
                     vision=False, verbose = False, image_name = "gerkone/torcs"):
 
         self.image_name = image_name
@@ -139,7 +139,7 @@ class Client():
         self.trackname= 'unknown'
         self.stage= 3 # 0=Warm-up, 1=Qualifying 2=Race, 3=unknown <Default=3>
         self.debug= False
-        self.maxSteps= 100000  # 50steps/second
+        self.maxSteps= maxSteps  # 50steps/second
         # self.parse_the_command_line()
         if H: self.host= H
         if p: self.port= p
@@ -148,9 +148,7 @@ class Client():
         if t: self.trackname= t
         if s: self.stage= s
         if d: self.debug= d
-        self.S= ServerState()
-        self.R= DriverAction()
-        self.setup_connection()
+        self.reset()
 
     def reset(self):
         """
@@ -159,6 +157,9 @@ class Client():
         self.S = ServerState()
         self.R = DriverAction()
         self.setup_connection()
+        # spin once to avoid empty server state dictionary
+        self.get_servers_input()
+        self.respond_to_server()
 
     def setup_connection(self):
         # == Set Up UDP Socket ==
@@ -265,10 +266,8 @@ class Client():
                 self.shutdown()
                 return
             elif '***restart***' in sockdata:
-                # What do I do here?
                 if self.verbose: print("Server has restarted the race on %d." % self.port)
-                # I haven't actually caught the server doing this.
-                self.shutdown()
+                self.relaunch()
                 return
             elif not sockdata: # Empty?
                 continue       # Try again.
@@ -298,6 +297,13 @@ class Client():
         self.so.close()
         self.so = None
         #sys.exit() # No need for this really.
+
+    def relaunch(self):
+        if not self.so: return
+        if self.verbose: print("Restarting race...")
+        self.so.close()
+        self.so = None
+        self.restart()
 
 class ServerState():
     '''What the server is reporting right now.'''
@@ -543,7 +549,6 @@ def drive_example(c):
     correct thing to do is write your own `drive()` function.'''
     S,R= c.S.d,c.R.d
     target_speed=100
-
     # Steer To Corner
     R['steer']= S['angle']*10 / PI
     # Steer To Center
@@ -578,9 +583,12 @@ def drive_example(c):
 
 # ================ MAIN ================
 if __name__ == "__main__":
-    C= Client(p=3001)
-    for step in range(C.maxSteps,0,-1):
-        C.get_servers_input()
-        drive_example(C)
-        C.respond_to_server()
+    C = Client(p=3001)
+    while True:
+        C.R.d['meta'] = 0
+        for step in range(C.maxSteps,0,-1):
+            C.get_servers_input()
+            drive_example(C)
+            C.respond_to_server()
+        C.R.d['meta'] = 1
     C.shutdown()
