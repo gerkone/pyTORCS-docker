@@ -2,7 +2,7 @@
 <!DOCTYPE params SYSTEM "params.dtd">
 
 
-<params name="graph">
+<params name="Graph">
   <section name="Graphic">
     <attnum name="smoke value" val="300"/>
     <attnum name="smoke interval" val="0.01"/>
@@ -70,6 +70,7 @@
       <attnum name="camera head list" val="0"/>
       <attnum name="fovy-0-0" val="40"/>
       <attnum name="G graph" val="0"/>
+      <attnum name="fovy-0-1" val="40"/>
     </section>
 
   </section>
