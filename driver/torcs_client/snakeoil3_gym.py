@@ -117,7 +117,7 @@ def bargraph(x,mn,mx,w,c='X'):
 
 class Client():
     def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None,
-                    vision=False, verbose = False, image_name = "gerkone/vtorcs"):
+                    vision=False, verbose = False, image_name = "0"):
 
         self.image_name = image_name
 
@@ -192,7 +192,7 @@ class Client():
                 if self.verbose: print("Count Down : " + str(n_fail))
                 if n_fail < 0:
                     if self.verbose: print("relaunch torcs")
-                    reset_torcs(self.container_id, self.vision)
+                    reset_torcs(self.container_id, self.vision, True)
                     n_fail = 5
                 n_fail -= 1
 

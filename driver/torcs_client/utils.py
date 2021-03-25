@@ -36,10 +36,10 @@ def start_container(image_name, verbose):
 
     return re.sub("[^a-zA-Z0-9 -]", "", container_id)
 
-def reset_torcs(container_id, vision):
+def reset_torcs(container_id, vision, kill = False):
+    if kill:
+        kill_torcs(container_id)
     if container_id != "0":
-        subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
             subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -47,7 +47,6 @@ def reset_torcs(container_id, vision):
             subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
-        subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if vision is True:
           subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -58,3 +57,10 @@ def reset_torcs(container_id, vision):
         time.sleep(0.5)
         os.chdir(os.path.dirname(__file__))
         subprocess.Popen([os.getcwd() + "/autostart.sh"])
+
+def kill_torcs(container_id):
+    if container_id != "0":
+        subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    else:
+        subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

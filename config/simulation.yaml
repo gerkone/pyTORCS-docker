@@ -20,11 +20,13 @@ hyperparams:
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
   track : 200.0
+  # angle: 3.1415
   speedX : 300.0
   speedY : 300.0
   speedZ : 300.0
   wheelSpinVel : 1.0
-  rpm : 10000
+  # rpm : 10000
+  trackPos: 1.0
   # VISION SENSOR. set to turn vision on
   img: 1.0
 

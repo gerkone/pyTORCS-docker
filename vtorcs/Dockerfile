@@ -33,6 +33,7 @@ RUN cp -r config /usr/local/share/games/torcs/config
 COPY start.sh start.sh
 COPY start_vision.sh start_vision.sh
 COPY kill.sh kill.sh
+COPY ./vtorcs/reset.sh reset.sh
 
 # remove useless tools
 RUN apt-get remove -y make g++

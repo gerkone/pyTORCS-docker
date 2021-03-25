@@ -78,7 +78,7 @@ With these settings the function with name _main_ from the file _driver/test_tor
 ```python
 from torcs_client.torcs_comp import TorcsEnv
 def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
-  env = TorcsEnv(throttle = False, vision = True, verbose = verbose, state_filter = sensors)
+  env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors)
   action_dims = [env.action_space.shape[0]]
   state_dims = [env.observation_space.shape[0]]  # sensors input
   action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
@@ -107,22 +107,30 @@ A complete working example can be found in [test_torcs.py](https://github.com/ge
 ### Key parts
 
 1. ```python
+action_dims = [env.action_space.shape[0]]
+state_dims = [env.observation_space.shape[0]]  # sensors input
+action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
+ ```
+ The **action and observation spaces** are OpenAI gym spaces that describe the action and state space respectively.
+
+ Note that the observation space does not include the vision, only the other sensors.
+
+2. ```python
 state_filter = sensors
 ```
 The **sensors/state_filter** dictionary specifies which virtual sensor include in the state. The value is the normalization scale factor of the sensor.
 
-2. ```python
-env = TorcsEnv(throttle = False, vision = True, verbose = verbose, state_filter = state_filter)
+3. ```python
+env = TorcsEnv(throttle = False, verbose = verbose, state_filter = state_filter)
 ```
   - **_throttle_** sets automatic throttle control, for simpler training.
-  - **_vision_** turns on RGB vision. This returns a 64x64x3 numpy array, always on the last position of the state list.
   - **_state_filter__** sets the selected sensors.
   - **_verbose_** if set prints some info from the simulation.
 
-3. ```python
+4. ```python
 state_new, reward, terminal = env.step(action)
 ```
-  - **_state_new_** is the next state. A list made of all the selected "sensors" is returned.
+  - **_state_new_** is the next state. A list made of all the selected "sensors" is returned. The vision is in form of a 64x64x3 numpy array, always on the last position of the state list.
   - **_reward_** is the resulting reward fot the transition.
   - **_terminal_** is set to true if the termination clause is verified.
 

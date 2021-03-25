@@ -14,7 +14,6 @@ if __name__ == "__main__":
     if args.console == "terminator" or args.console == "gnome-terminal":
         # terminator, gnome-terminal
         execute = "-x"
-    print(execute)
     if args.verbose:
         subprocess.Popen([args.console, execute, "python", "driver/launch.py", "--config", args.config, "--verbose"])
     else:

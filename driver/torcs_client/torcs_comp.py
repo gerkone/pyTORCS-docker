@@ -5,12 +5,12 @@ import numpy as np
 import copy
 import collections as col
 import matplotlib.pyplot as plt
-
+import sys, signal
 
 import torcs_client.snakeoil3_gym as snakeoil3
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import start_container, reset_torcs
+from torcs_client.utils import start_container, reset_torcs, kill_torcs
 
 class TorcsEnv:
     terminal_judge_start = 100  # If after 100 timestep still no progress, terminated
@@ -20,8 +20,10 @@ class TorcsEnv:
 
     initial_reset = True
 
-    def __init__(self, vision = False, throttle = False, gear_change = False, state_filter = None, img_width = 0, img_height = 0, verbose = False, image_name = "gerkone/vtorcs"):
-        self.vision = vision
+    def __init__(self, throttle = False, gear_change = False, state_filter = None,
+            img_width = 0, img_height = 0, verbose = False, image_name = "gerkone/vtorcs"):
+
+        self.vision = False
         self.throttle = throttle
         self.gear_change = gear_change
 
@@ -47,7 +49,10 @@ class TorcsEnv:
             self.img_height = 64
 
         if state_filter != None:
-            self.state_filter = state_filter
+            if "img" in state_filter:
+                self.vision = True
+                del state_filter["img"]
+            self.state_filter = dict(sorted(state_filter.items()))
         else:
             self.state_filter = {}
             self.state_filter["angle"] = np.pi
@@ -60,7 +65,7 @@ class TorcsEnv:
             self.state_filter["rpm"] = 10000
 
         # run torcs and start practice run
-        reset_torcs(self.container_id, self.vision)
+        reset_torcs(self.container_id, self.vision, True)
 
         """
         # Modify here if you use multiple tracks in the environment
@@ -82,14 +87,9 @@ class TorcsEnv:
         if "angle" in self.state_filter:
             high = np.append(high, 1.0)
             low = np.append(low, -1.0)
-        if "track" in self.state_filter:
-            # the track rangefinder is made of 19 separate values
-            for i in range(19):
-                high = np.append(high, 1.0)
-                low = np.append(low, 0.0)
-        if "trackPos" in self.state_filter:
+        if "rpm" in self.state_filter:
             high = np.append(high, np.inf)
-            low = np.append(low, -np.inf)
+            low = np.append(low, 0.0)
         if "speedX" in self.state_filter:
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
@@ -99,70 +99,62 @@ class TorcsEnv:
         if "speedZ" in self.state_filter:
             high = np.append(high, np.inf)
             low = np.append(low, -np.inf)
+        if "track" in self.state_filter:
+            # the track rangefinder is made of 19 separate values
+            high = np.append(high, np.ones(19))
+            low = np.append(low, np.zeros(19))
+        if "trackPos" in self.state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, -np.inf)
         if "wheelSpinVel" in self.state_filter:
             # one value each wheel
-            for i in range(4):
-                high = np.append(high, np.inf)
-                low = np.append(low, 0.0)
-        if "rpm" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, 0.0)
+            high = np.append(high, np.array([np.inf, np.inf, np.inf, np.inf]))
+            low = np.append(low, np.zeros(4))
 
         self.observation_space = spaces.Box(low=low, high=high)
+
+        # kill torcs on sigint, avoid leaving the open window
+        def kill_torcs_and_close(sig, frame):
+            kill_torcs(self.container_id)
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, kill_torcs_and_close)
 
     def step(self, u):
 
         # convert thisAction to the actual torcs actionstr
-        this_action = self.agent_to_torcs(u)
+        action = self.agent_to_torcs(u)
 
         # current observation
         curr_state = self.client.S.d
 
-        # Apply Action
-        action_torcs = self.client.R.d
-
         # Steering
-        action_torcs["steer"] = this_action["steer"]  # in [-1, 1]
+        self.client.R.d["steer"] = action["steer"]  # in [-1, 1]
 
-        #  Simple Autnmatic Throttle Control by Snakeoil
+        # Simple Automatic Throttle Control by Snakeoil
         if self.throttle is False:
-            target_speed = self.default_speed
-            if curr_state["speedX"] < target_speed - (self.client.R.d["steer"]*50):
-                self.client.R.d["accel"] += .01
-            else:
-                self.client.R.d["accel"] -= .01
-
-            if self.client.R.d["accel"] > 0.2:
-                self.client.R.d["accel"] = 0.2
-
-            if curr_state["speedX"] < 10:
-                self.client.R.d["accel"] += 1/(curr_state["speedX"]+.1)
-
-            # Traction Control System
-            if ((curr_state["wheelSpinVel"][2]+curr_state["wheelSpinVel"][3]) -
-               (curr_state["wheelSpinVel"][0]+curr_state["wheelSpinVel"][1]) > 5):
-                action_torcs["accel"] -= .2
+            self.client.R.d= self.automatic_throttle_control(self.default_speed, curr_state, self.client.R.d)
         else:
-            action_torcs["accel"] = this_action["accel"]
-            action_torcs["brake"] = this_action["brake"]
+            self.client.R.d["accel"] = action["accel"]
+            self.client.R.d["brake"] = action["brake"]
 
         #  Automatic Gear Change by Snakeoil
         if self.gear_change is True:
-            action_torcs["gear"] = this_action["gear"]
+            self.client.R.d["gear"] = action["gear"]
         else:
             #  Automatic Gear Change by Snakeoil is possible
-            action_torcs["gear"] = 1
+            self.client.R.d["gear"] = 1
             if self.throttle:
                 if curr_state["speedX"] > 50:
-                    action_torcs["gear"] = 2
+                    self.client.R.d["gear"] = 2
                 if curr_state["speedX"] > 80:
-                    action_torcs["gear"] = 3
+                    self.client.R.d["gear"] = 3
                 if curr_state["speedX"] > 110:
-                    action_torcs["gear"] = 4
+                    self.client.R.d["gear"] = 4
                 if curr_state["speedX"] > 140:
-                    action_torcs["gear"] = 5
+                    self.client.R.d["gear"] = 5
                 if curr_state["speedX"] > 170:
-                    action_torcs["gear"] = 6
+                    self.client.R.d["gear"] = 6
         # Save the privious full-obs from torcs for the reward calculation
         obs_prev = copy.deepcopy(curr_state)
 
@@ -193,7 +185,7 @@ class TorcsEnv:
 
         return self.get_obs(), reward, episode_terminate
 
-    def reset(self, relaunch=False):
+    def reset(self):
         if self.verbose: print("Reset")
 
         self.time_step = 0
@@ -202,10 +194,8 @@ class TorcsEnv:
             self.client.R.d["meta"] = True
             self.client.respond_to_server()
 
-            ## TENTATIVE. Restarting TORCS every episode suffers the memory leak bug!
-            if relaunch is True:
-                reset_torcs(self.container_id, self.vision)
-                if self.verbose: print("### TORCS is RELAUNCHED ###")
+            reset_torcs(self.container_id, self.vision, True)
+            if self.verbose: print("TORCS is relaunched")
 
         if self.initial_reset:
             # create new torcs client if first reset
@@ -231,6 +221,25 @@ class TorcsEnv:
 
     def get_obs(self):
         return self.observation
+
+    def automatic_throttle_control(self, target_speed, curr_state, curr_action):
+        if curr_state["speedX"] < target_speed - (curr_action["steer"]*50):
+            curr_action["accel"] += .01
+        else:
+            curr_action["accel"] -= .01
+
+        if curr_action["accel"] > 0.2:
+            curr_action["accel"] = 0.2
+
+        if curr_state["speedX"] < 10:
+            curr_action["accel"] += 1 / (curr_state["speedX"] + .1)
+
+        # Traction Control System
+        if ((curr_state["wheelSpinVel"][2]+curr_state["wheelSpinVel"][3]) -
+           (curr_state["wheelSpinVel"][0]+curr_state["wheelSpinVel"][1]) > 5):
+            curr_action["accel"] -= .2
+
+        return curr_action
 
     def agent_to_torcs(self, u):
         torcs_action = {"steer": u[0]}
