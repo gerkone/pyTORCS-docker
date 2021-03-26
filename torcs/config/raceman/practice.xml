@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE params SYSTEM "params.dtd">
+<!-- 
+	 file        : practice.xml
+	 created     : Sun Jan  5 11:52:32 CET 2003
+	 copyright   : (C) 2003-2014 by Eric Espie, Bernhard Wymann                         
+	 email       : Eric.Espie@torcs.org   
+	 version     : $Id: practice.xml,v 1.7.2.4 2014/04/12 13:55:33 berniw Exp $                                  
+	 -->
+
+<!--    This program is free software; you can redistribute it and/or modify  -->
+<!--    it under the terms of the GNU General Public License as published by  -->
+<!--    the Free Software Foundation; either version 2 of the License, or     -->
+<!--    (at your option) any later version.                                   -->
+
+<!DOCTYPE params SYSTEM "../libs/tgf/params.dtd">
 
 
 <params name="Practice">
@@ -48,7 +61,7 @@
 
   <section name="Drivers">
     <attnum name="maximum number" val="1"/>
-    <attstr name="focused module" val="scr_server"/>
+    <attstr name="focused module" val="human"/>
     <attnum name="focused idx" val="1"/>
     <section name="1">
       <attnum name="idx" val="0"/>
@@ -84,13 +97,5 @@
     </section>
 
   </section>
-
-  <section name="Drivers Start List">
-    <section name="1">
-      <attstr name="module" val="championship2011server"/>
-      <attnum name="idx" val="0"/>
-    </section>
-
-  </section>
-
+	
 </params>

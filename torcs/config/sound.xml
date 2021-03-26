@@ -4,7 +4,7 @@
     created              : Thu Dec 12 15:11:55 CET 2004
     copyright            : (C) 2004 Bernhard Wymann
     email                : Berniw@bluewin.ch
-    version              : $Id: sound.xml,v 1.2 2005/07/20 17:56:08 berniw Exp $                                  
+    version              : $Id: sound.xml,v 1.2.2.1 2011/12/28 15:05:38 berniw Exp $                                  
 -->
 
 <!--    This program is free software; you can redistribute it and/or modify  -->
@@ -19,4 +19,9 @@
 		<attstr name="state" val="openal"/>
 		<attnum name="volume" unit="%" val="100"/>
 	</section>
+	
+	<section name="Menu Music">
+		<attstr name="enable" val="enabled"/>
+	</section>
+
 </params>

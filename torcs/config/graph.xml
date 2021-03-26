@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE params SYSTEM "params.dtd">
+<!-- 
+    file                 : graph.xml
+    created              : Sun Dec  2 11:58:59 CET 2001
+    copyright            : (C) 2001 by Eric Espié                         
+    email                : Eric.Espie@torcs.org   
+    version              : $Id: graph.xml,v 1.11.2.1 2010/05/15 13:16:07 berniw Exp $                                  
+-->
 
+<!--    This program is free software; you can redistribute it and/or modify  -->
+<!--    it under the terms of the GNU General Public License as published by  -->
+<!--    the Free Software Foundation; either version 2 of the License, or     -->
+<!--    (at your option) any later version.                                   -->
 
-<params name="Graph">
+<!DOCTYPE params SYSTEM "../../../libs/tgf/params.dtd">
+
+<params name="graph" type="param" mode="mw">
   <section name="Graphic">
     <attnum name="smoke value" val="300"/>
     <attnum name="smoke interval" val="0.01"/>
-    <attnum name="smoke duration" val="2"/>
-    <attnum name="skid value" val="20"/>
+    <attnum name="smoke duration" val="2.0"/>
+
+    <attnum name="skid value" val="100"/>
     <attnum name="skid length" val="300"/>
     <attnum name="skid interval" val="0.05"/>
-    <attnum name="fov factor" val="1"/>
+
+    <attnum name="fov factor" val="2.0"/>
+    <attstr name="wheel rendering" val="detailed"/>
   </section>
 
   <section name="Playable Cameras Distance of Views">
@@ -18,18 +33,22 @@
     <attnum name="Front Level Group 1" val="400"/>
     <attnum name="Front Level Group 2" val="300"/>
     <attnum name="Front Level Group 3" val="200"/>
+
     <attnum name="Rear Level Group Global" val="700"/>
     <attnum name="Rear Level Group 1" val="500"/>
     <attnum name="Rear Level Group 2" val="300"/>
     <attnum name="Rear Level Group 3" val="150"/>
+
     <attnum name="Front Level Map 1" val="300"/>
     <attnum name="Front Level Map 2" val="200"/>
     <attnum name="Front Level Map 3" val="100"/>
+
     <attnum name="Rear Level Map 1" val="300"/>
     <attnum name="Rear Level Map 2" val="200"/>
     <attnum name="Rear Level Map 3" val="100"/>
-    <attnum name="Level Factor" val="1"/>
-    <attnum name="Map Factor" val="1"/>
+
+    <attnum name="Level Factor" val="1.0"/>
+    <attnum name="Map Factor" val="1.0"/>
   </section>
 
   <section name="UnPlayable Cameras Distance of Views">
@@ -37,42 +56,37 @@
     <attnum name="Front Level Group 1" val="350"/>
     <attnum name="Front Level Group 2" val="300"/>
     <attnum name="Front Level Group 3" val="200"/>
+
     <attnum name="Rear Level Group Global" val="400"/>
     <attnum name="Rear Level Group 1" val="350"/>
     <attnum name="Rear Level Group 2" val="300"/>
     <attnum name="Rear Level Group 3" val="200"/>
+
     <attnum name="Front Level Map 1" val="300"/>
     <attnum name="Front Level Map 2" val="250"/>
     <attnum name="Front Level Map 3" val="200"/>
+
     <attnum name="Rear Level Map 1" val="300"/>
     <attnum name="Rear Level Map 2" val="250"/>
     <attnum name="Rear Level Map 3" val="200"/>
-    <attnum name="Level Factor" val="1"/>
-    <attnum name="Map Factor" val="1"/>
+
+    <attnum name="Level Factor" val="1.0"/>
+    <attnum name="Map Factor" val="1.0"/>
   </section>
+
 
   <section name="TV Director View">
     <attnum name="change camera interval" val="30"/>
     <attnum name="event interval" val="5"/>
-    <attnum name="proximity threshold" val="25"/>
+    <attnum name="proximity threshold" val="25.0"/>
   </section>
+
 
   <section name="Display Mode">
     <section name="Player">
       <attnum name="camera" val="0"/>
       <attnum name="camera head list" val="0"/>
     </section>
-
-    <section name="0">
-      <attnum name="fovy-9-0" val="9"/>
-      <attstr name="current driver" val="scr_server 1"/>
-      <attnum name="camera" val="1"/>
-      <attnum name="camera head list" val="0"/>
-      <attnum name="fovy-0-0" val="40"/>
-      <attnum name="G graph" val="0"/>
-      <attnum name="fovy-0-1" val="40"/>
-    </section>
-
   </section>
 
 </params>

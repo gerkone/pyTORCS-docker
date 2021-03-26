@@ -9,5 +9,3 @@ libs/raceengineclient/raceinit.cpp (ReStartNewRace) >
 libs/raceengineclient/racestate.cpp !!!!!!(ReStateManage)!!!!!!
 
 files modified:
-src/interfaces/car.h - added restart request field
-src/libs/raceengineclient/raceengine - added restart handling in main race loop

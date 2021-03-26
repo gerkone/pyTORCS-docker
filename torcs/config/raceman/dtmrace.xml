@@ -2,9 +2,9 @@
 <!-- 
 	 file        : dtmrace.xml
 	 created     : Fri Jan  3 13:19:48 CET 2003
-	 copyright   : (C) 2003 by Eric Espi�                         
+	 copyright   : (C) 2003-2014 by Eric Espie, Bernhard Wymann                         
 	 email       : Eric.Espie@torcs.org   
-	 version     : $Id: dtmrace.xml,v 1.9.2.1 2008/08/05 23:47:46 berniw Exp $                                  
+	 version     : $Id: dtmrace.xml,v 1.9.2.2 2014/03/19 10:41:00 berniw Exp $                                  
 	 -->
 
 <!--    This program is free software; you can redistribute it and/or modify  -->
@@ -56,7 +56,6 @@
 		<attstr name="display mode" val="results only"/>
 		<attstr name="restart" val="no"/>
 		<attstr name="display results" val="yes"/>
-		<attstr name="must complete" val="yes"/>
 		
 		<section name="Starting Grid">
 			<attnum name="rows" val="1.000000"/>
