@@ -43,17 +43,21 @@ class Launch:
         self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors)
 
 if __name__ == "__main__":
-    import time
-    # set tensorflow to train with GPU 0
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    try:
+        # set tensorflow to train with GPU 0
+        os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+        os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-    parser = argparse.ArgumentParser(description="pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
-    parser.add_argument("--config", help="Path to the yaml config file.", default="config/simulation.yaml", type=str)
-    parser.add_argument("--verbose", help="Set verbose.", default=False, action="store_true")
+        parser = argparse.ArgumentParser(description="pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
+        parser.add_argument("--config", help="Path to the yaml config file.", default="config/simulation.yaml", type=str)
+        parser.add_argument("--verbose", help="Set verbose.", default=False, action="store_true")
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    pytorcs = Launch(args)
-    # launch system
-    pytorcs.run()
+        pytorcs = Launch(args)
+        # launch system
+        pytorcs.run()
+    except Exception as e:
+        print(e)
+        import time
+        time.sleep(199999)

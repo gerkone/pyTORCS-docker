@@ -1,7 +1,6 @@
 import subprocess
 import argparse
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
     parser.add_argument("--config", help="Path to the yaml config file.", default="config/simulation.yaml", type=str)

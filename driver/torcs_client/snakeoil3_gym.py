@@ -58,7 +58,7 @@ import sys
 import getopt
 PI= 3.14159265359
 
-from utils import start_container, reset_torcs
+from torcs_client.utils import start_container, reset_torcs
 
 data_size = 2**17
 
@@ -116,18 +116,12 @@ def bargraph(x,mn,mx,w,c='X'):
     return '[%s]' % (nnc+npc+ppc+pnc)
 
 class Client():
-    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None, maxSteps = 100,
-                    vision=False, verbose = False, image_name = "gerkone/torcs"):
+    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None, maxSteps = 10000,
+                    container_id = "0", vision=False, verbose = False):
 
-        self.image_name = image_name
+        self.verbose = verbose
 
-        self.verbose = True
-
-        if self.image_name != "0":
-            # start torcs container
-            self.container_id = start_container(self.image_name, self.verbose)
-        else:
-            self.container_id = "0"
+        self.container_id = container_id
 
         # If you don't like the option defaults,  change them here.
         self.vision = vision
@@ -161,6 +155,21 @@ class Client():
         self.get_servers_input()
         self.respond_to_server()
 
+    def shutdown(self):
+        if not self.so: return
+        if self.verbose: print(("Race terminated or %d steps elapsed. Shutting down %d."
+               % (self.maxSteps,self.port)))
+        self.so.close()
+        self.so = None
+        #sys.exit() # No need for this really.
+
+    def restart(self):
+        if not self.so: return
+        if self.verbose: print("Restarting race...")
+        self.so.close()
+        self.so = None
+        self.reset()
+
     def setup_connection(self):
         # == Set Up UDP Socket ==
         try:
@@ -192,7 +201,7 @@ class Client():
                 if self.verbose: print("Waiting for server on %d............" % self.port)
                 if self.verbose: print("Count Down : " + str(n_fail))
                 if n_fail < 0:
-                    if self.verbose: print("relaunch torcs")
+                    if self.verbose: print("Relaunch torcs")
                     reset_torcs(self.container_id, self.vision, True)
                     n_fail = 5
                 n_fail -= 1
@@ -267,7 +276,8 @@ class Client():
                 return
             elif '***restart***' in sockdata:
                 if self.verbose: print("Server has restarted the race on %d." % self.port)
-                self.relaunch()
+                # reset UDP, reset client
+                self.restart()
                 return
             elif not sockdata: # Empty?
                 continue       # Try again.
@@ -289,21 +299,6 @@ class Client():
         if self.debug: print(self.R.fancyout())
         # Or use this for plain output:
         #if self.debug: if self.verbose: print self.R
-
-    def shutdown(self):
-        if not self.so: return
-        if self.verbose: print(("Race terminated or %d steps elapsed. Shutting down %d."
-               % (self.maxSteps,self.port)))
-        self.so.close()
-        self.so = None
-        #sys.exit() # No need for this really.
-
-    def relaunch(self):
-        if not self.so: return
-        if self.verbose: print("Restarting race...")
-        self.so.close()
-        self.so = None
-        self.restart()
 
 class ServerState():
     '''What the server is reporting right now.'''
@@ -583,7 +578,7 @@ def drive_example(c):
 
 # ================ MAIN ================
 if __name__ == "__main__":
-    C = Client(p=3001)
+    C = Client(p=3001, maxSteps = 100)
     while True:
         C.R.d['meta'] = 0
         for step in range(C.maxSteps,0,-1):

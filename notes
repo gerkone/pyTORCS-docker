@@ -1,0 +1,13 @@
+MENU :
+linux/main.cpp (TorcsEntry) >
+libs/client/entry.cpp (GfInitClient, TorcsMainMenuInit) >
+libs/client/mainmenu.cpp (ReSinglePlayerInit) >
+libs/raceengineclient/singleplayer.cpp (ReAddRacemanListButton) >
+libs/raceengineclient/raceinit.cpp (list of possible race modes racemanList build with the xml files in config/raceman, callback to reSelectRaceman > ReStateApply) >
+libs/raceengineclient/racemanmenu.cpp (ReRacemanMenu) >
+libs/raceengineclient/raceinit.cpp (ReStartNewRace) >
+libs/raceengineclient/racestate.cpp !!!!!!(ReStateManage)!!!!!!
+
+files modified:
+src/interfaces/car.h - added restart request field
+src/libs/raceengineclient/raceengine - added restart handling in main race loop

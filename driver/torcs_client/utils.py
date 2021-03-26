@@ -15,7 +15,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def start_container(image_name, verbose):
+def start_container(image_name, verbose, port):
     # check if the container is already up
     container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
     if len(container_id) == 0:
@@ -24,43 +24,36 @@ def start_container(image_name, verbose):
         display = "unix" + os.environ["DISPLAY"]
         if verbose: print(bcolors.OKGREEN + "Starting TORCS container..." + bcolors.ENDC)
         subprocess.Popen(["nvidia-docker", "run", "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
-            "-e", "DISPLAY=" + display, "-p", "3001:3001/udp", "--rm", "-t", "-d", "gerkone/vtorcs"])
+            "-e", "DISPLAY=" + display, "-p", "{p}:{p}/udp".format(p = port), "--rm", "-t", "-d", image_name])
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)
             container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
 
-        if verbose: print(bcolors.OKGREEN + "Container started with container_id " + container_id + bcolors.ENDC)
+        if verbose: print(bcolors.OKGREEN + "Container started with id " + container_id + bcolors.ENDC)
     else:
         if verbose: print(bcolors.OKGREEN +"Container " + container_id + " already running" + bcolors.ENDC)
 
     return re.sub("[^a-zA-Z0-9 -]", "", container_id)
 
 def reset_torcs(container_id, vision, kill = False):
+    command = []
+
     if kill:
         kill_torcs(container_id)
+
     if container_id != "0":
-        if vision is True:
-            subprocess.Popen(["docker", "exec", container_id, "sh", "start_vision.sh"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            subprocess.Popen(["docker", "exec", container_id, "sh", "start.sh"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    else:
-        if vision is True:
-          subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime", "-vision"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-          subprocess.Popen(["torcs", "-nofuel", "-nodamage", "-nolaptime"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        # wait for window to pop up
-        time.sleep(0.5)
-        os.chdir(os.path.dirname(__file__))
-        subprocess.Popen([os.getcwd() + "/autostart.sh"])
+        command.extend(["docker", "exec", container_id, "torcs"])
+    command.extend(["torcs", "-nofuel", "-nodamage", "-nolaptime"])
+    if vision is True:
+      command.extend("-vision")
+
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def kill_torcs(container_id):
+    command = []
+
     if container_id != "0":
-        subprocess.Popen(["docker", "exec", container_id, "sh", "kill.sh"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    else:
-        subprocess.Popen(["pkill", "torcs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        command.extend(["docker", "exec", container_id])
+    command.extend(["pkill", "torcs"])
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

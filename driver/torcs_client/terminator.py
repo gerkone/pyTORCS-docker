@@ -1,6 +1,10 @@
 import numpy as np
 
-def custom_terminal(obs, reward, terminal_judge_start, time_step, termination_limit_progress, boring_speed):
+terminal_judge_start = 100  # If after 100 timestep still no progress, terminated
+termination_limit_progress = 5  # [km/h], episode terminates if car is running slower than this limit
+boring_speed = 1
+
+def custom_terminal(obs, reward, time_step):
     terminal = False
 
     angle = np.cos(obs['angle'])

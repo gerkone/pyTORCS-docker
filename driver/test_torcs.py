@@ -1,11 +1,12 @@
 import numpy as np
+
 # from agents.ddpg.ddpg import DDPG
 from torcs_client.torcs_comp import TorcsEnv
 from torcs_client.utils import bcolors
 
 N_EPISODES = 1000
 
-def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/vtorcs", img_width = 64, img_height = 64):
+def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", img_width = 640, img_height = 480):
     # Instantiate the environment
     env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors,
             image_name = image_name, img_width = img_width, img_height = img_height)

@@ -28,7 +28,7 @@ sensors:
   # rpm : 10000
   trackPos: 1.0
   # VISION SENSOR. set to turn vision on
-  img: 1.0
+  # img: 1.0
 
 # DO NOT CHANGE (for now)
 img_width : 64
