@@ -60,3 +60,19 @@ def kill_torcs(container_id):
         command.extend(["docker", "exec", container_id])
     command.extend(["pkill", "torcs"])
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def destringify(s):
+    '''makes a string into a value or a list of strings into a list of
+    values (if possible)'''
+    if not s: return s
+    if type(s) is str:
+        try:
+            return float(s)
+        except ValueError:
+            if self.verbose: print("Could not find a value in %s" % s)
+            return s
+    elif type(s) is list:
+        if len(s) < 2:
+            return destringify(s[0])
+        else:
+            return [destringify(i) for i in s]
