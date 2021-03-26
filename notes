@@ -1,4 +1,4 @@
-MENU :
+MENU:
 linux/main.cpp (TorcsEntry) >
 libs/client/entry.cpp (GfInitClient, TorcsMainMenuInit) >
 libs/client/mainmenu.cpp (ReSinglePlayerInit) >
@@ -8,6 +8,12 @@ libs/raceengineclient/racemanmenu.cpp (ReRacemanMenu) >
 libs/raceengineclient/raceinit.cpp (ReStartNewRace) >
 libs/raceengineclient/racestate.cpp !!!!!!(ReStateManage)!!!!!!
 
+QUARTER SCREEN DRAW ISSUE:
+libs/raceengineclient/racemain.cpp (reRaceRealStart) >
+libs/raceengineclient/racegl.cpp (ReScreenInit, ReResScreenInit)
+> !!!!! ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
+GfScrGetSize fails -> sw, sh, vw, vh = (0, 0, 640, 480), draw area = ((sw-vw)/2, (sh-vh)/2, vw, vh) = (-320, -240, 640, 480) = start drawing below top left, top right corner falls on center of the screen
+
 files modified:
 skipMenu:
 libs/raceengineclient/raceinit.cpp - added skipMenu function
@@ -16,3 +22,5 @@ libs/client/entry.cpp - removed menu init, added skipMenu call
 countdown removed:
 libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
 libs/raceengineclient/racemain.cpp - time now starts at 0.0, to remove countdown
+Draw issue:
+libs/raceengineclient/racemain.cpp line 321, ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh), GR_VIEW_STD, ReInfo->_reGameScreen);  to ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);

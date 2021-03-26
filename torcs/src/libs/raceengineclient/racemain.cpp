@@ -317,7 +317,8 @@ static int reRaceRealStart(void)
 
 	if ((ReInfo->_displayMode != RM_DISP_MODE_CONSOLE) &&  ReInfo->_reGraphicItf.initview != 0) {
 		GfScrGetSize(&sw, &sh, &vw, &vh);
-		ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
+		// solve the quarter screen issue, bad fix but it works
+		ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
 
 		if (ReInfo->_displayMode == RM_DISP_MODE_NORMAL) {
 			/* RmLoadingScreenSetText("Loading Cars 3D Objects..."); */

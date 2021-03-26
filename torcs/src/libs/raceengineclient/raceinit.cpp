@@ -898,8 +898,6 @@ skipMenu(const char* raceconfig) {
 		 AI trial and error (i.e. Reinforcement Learning)
 	*/
 
-	tRmMovieCapture *capture;
-
 	ReShutdown();
 
 	ReInfo = (tRmInfo *)calloc(1, sizeof(tRmInfo));
@@ -926,16 +924,7 @@ skipMenu(const char* raceconfig) {
 	if (GfModLoad(0, buf, &reEventModList)) return;
 	reEventModList->modInfo->fctInit(reEventModList->modInfo->index, &ReInfo->_reGraphicItf);
 
-	capture = &(ReInfo->movieCapture);
-	if (strcmp(GfParmGetStr(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_ENABLE, "no"), "no") == 0){
-		capture->enabled = 0;
-	} else {
-		capture->enabled = 1;
-		capture->state = 0;
-		capture->deltaFrame = 1.0 / GfParmGetNum(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_FPS, NULL, 1.0);
-		capture->outputBase = GfParmGetStr(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_OUT_DIR, "/tmp");
-		capture->deltaSimu = RCM_MAX_DT_SIMU;
-	}
+	ReInfo->movieCapture.enabled = 0;
 
 	// set up display
 	ReInfo->_reGameScreen = ReHookInit();
@@ -959,11 +948,9 @@ skipMenu(const char* raceconfig) {
 	// race name
 	ReInfo->_reName = GfParmGetStr(ReInfo->params, RM_SECT_HEADER, RM_ATTR_NAME, "");
 
-
-	// init results
 	ReInitResults();
 
-	// skip menu with the state machine
+	// skip menu with the state machine, directly to race initialization
 	ReStateApply((void *) RE_STATE_EVENT_INIT);
 
 	GfParmReleaseHandle(ReInfo->params);

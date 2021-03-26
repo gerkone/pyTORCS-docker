@@ -674,7 +674,7 @@ ReOneStep(double deltaTimeIncrement)
 
 	if ((ReInfo->_displayMode != RM_DISP_MODE_NONE) && (ReInfo->_displayMode != RM_DISP_MODE_CONSOLE)) {
 		// do not waste 3 seconds every start
-		
+
 		// if (floor(s->currentTime) == -2.0) {
 		// 	ReRaceBigMsgSet("Ready", 1.0);
 		// } else if (floor(s->currentTime) == -1.0) {
