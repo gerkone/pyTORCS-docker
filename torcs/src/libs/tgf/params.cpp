@@ -1,9 +1,9 @@
 /***************************************************************************
                  params.cpp -- configuration parameters management
-                             -------------------                                         
+                             -------------------
     created              : Fri Aug 13 22:27:57 CEST 1999
     copyright            : (C) 1999-2014 by Eric Espie, Bernhard Wymann
-    email                : torcs@free.fr   
+    email                : torcs@free.fr
     version              : $Id: params.cpp,v 1.30.2.26 2014/05/23 08:38:31 berniw Exp $
  ***************************************************************************/
 
@@ -152,7 +152,7 @@ static struct section *getParent (struct parmHeader *conf, const char *sectionNa
 static void cleanUnusedSection (struct parmHeader *conf, struct section *section);
 
 
-/** @brief Parameter set library API initialization, set up parameter set handle cache. 
+/** @brief Parameter set library API initialization, set up parameter set handle cache.
  *  @ingroup conf
  */
 void GfParmInit (void)
@@ -161,7 +161,7 @@ void GfParmInit (void)
 }
 
 
-/** @brief Parameter set library API shutdown, removes parameter set handle cache. 
+/** @brief Parameter set library API shutdown, removes parameter set handle cache.
  *  @ingroup conf
  */
 void GfParmShutdown (void)
@@ -175,7 +175,7 @@ void GfParmShutdown (void)
 
 
 /** @brief Helper function to get the full name of a parameter (full name: "sectionName/paramName").
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] sectionName name of the section containing the parameter
  *  @param[in] paramName name of the parameter
@@ -188,20 +188,20 @@ static char *getFullName (const char *sectionName, const char *paramName)
 {
 	char *fullName;
 	unsigned long len = strlen (sectionName) + strlen (paramName) + 2;
-	
+
 	fullName = (char *) malloc(strlen (sectionName) + strlen (paramName) + 2);
 	if (!fullName) {
 		GfError ("getFullName: malloc (%lu) failed", len);
 		return NULL;
 	}
 	snprintf(fullName, len, "%s/%s", sectionName, paramName);
-	
+
 	return fullName;
 }
 
 
 /** @brief Helper function to get (or create) a parameter by name.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in] sectionName name of the section containing the parameter
@@ -244,7 +244,7 @@ static struct param* getParamByName(struct parmHeader *conf, const char *section
 
 
 /** @brief Helper function to remove a parameter with given name @e paramName.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in] sectionName name of the section containing the parameter
@@ -256,30 +256,30 @@ static void removeParamByName(struct parmHeader *conf, const char *sectionName, 
 	char *fullName;
 	struct param *param;
 	struct section *section;
-	
+
 	section = (struct section *)GfHashGetStr (conf->sectionHash, sectionName);
 	if (!section) {
 		return;
 	}
-	
+
 	fullName = getFullName (sectionName, paramName);
 	if (!fullName) {
 		GfError("removeParamByName: getFullName failed\n");
 		return;
 	}
-	
+
 	param = (struct param *)GfHashGetStr (conf->paramHash, fullName);
 	freez (fullName);
 	if (param) {
 		removeParam(conf, section, param);
 	}
-	
+
 	cleanUnusedSection(conf, section);
 }
 
 
 /** @brief Helper function to clean up unused (empty) sections starting with given @e section.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in] section section to start up cleaning
@@ -307,7 +307,7 @@ static void cleanUnusedSection(struct parmHeader *conf, struct section *section)
 
 
 /** @brief Helper function to remove given parameter.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in,out] section section to remove parameter from
@@ -334,7 +334,7 @@ static void removeParam(struct parmHeader *conf, struct section *section, struct
 
 
 /** @brief Helper function to add parameter, does not check for duplicated name.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in,out] section section to add parameter to
@@ -349,13 +349,13 @@ static struct param *addParam(struct parmHeader *conf, struct section *section, 
 	struct param *param = NULL;
 	char *tmpVal = NULL;
 	const unsigned long len = sizeof (struct param);
-	
+
 	tmpVal = strdup (value);
 	if (!tmpVal) {
 		GfError ("addParam: strdup (%s) failed\n", value);
 		goto bailout;
 	}
-	
+
 	param = (struct param *) calloc (1, len);
 	if (!param) {
 		GfError ("addParam: calloc (1, %lu) failed\n", len);
@@ -367,7 +367,7 @@ static struct param *addParam(struct parmHeader *conf, struct section *section, 
 		GfError ("addParam: strdup (%s) failed\n", paramName);
 		goto bailout;
 	}
-	
+
 	fullName = getFullName (section->fullName, paramName);
 	if (!fullName) {
 		GfError ("addParam: getFullName failed\n");
@@ -378,17 +378,17 @@ static struct param *addParam(struct parmHeader *conf, struct section *section, 
 	if (GfHashAddStr (conf->paramHash, param->fullName, param)) {
 		goto bailout;
 	}
-	
+
 	GF_TAILQ_INIT (&(param->withinList));
-	
+
 	/* Attach to section */
 	GF_TAILQ_INSERT_TAIL (&(section->paramList), param, linkParam);
-	
+
 	freez (param->value);
 	param->value = tmpVal;
-	
+
 	return param;
-	
+
  bailout:
 	if (param) {
 		freez (param->name);
@@ -397,13 +397,13 @@ static struct param *addParam(struct parmHeader *conf, struct section *section, 
 		free  (param);
 	}
 	freez (tmpVal);
-	
+
 	return NULL;
 }
 
 
 /** @brief Helper function to remove a section and its contents (subsections, elements).
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in] section section to remove
@@ -431,7 +431,7 @@ static void removeSection(struct parmHeader *conf, struct section *section)
 
 
 /** @brief Helper function to get (or create if not found) parent section of section given in @e sectionName.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] conf parameter set header
  *  @param[in] sectionName name of the section
@@ -471,7 +471,7 @@ end:
 
 
 /** @brief Helper function to add a section to a parameter set.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] conf parameter set header
  *  @param[in] sectionName section name
@@ -528,7 +528,7 @@ bailout:
 
 
 /** @brief Helper function for looking up parameter sets in the cache.
- * 
+ *
  *  @ingroup paramshelper
  *  @param file name of the file to look up
  *  @param mode opening mode is a mask of:
@@ -573,7 +573,7 @@ bailout:
 
 
 /** @brief Helper function to create header for parameter set handle.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] file filename
  *  @return parmHeader in case of success
@@ -598,7 +598,7 @@ static struct parmHeader* createParmHeader (const char *file)
 		GfError ("gfParmReadFile: calloc (1, %lu) failed\n", sectionsize);
 		goto bailout;
 	}
-	
+
 	GF_TAILQ_INIT (&(conf->rootSection->paramList));
 	GF_TAILQ_INIT (&(conf->rootSection->subSectionList));
 
@@ -627,11 +627,11 @@ static struct parmHeader* createParmHeader (const char *file)
 	if (conf->paramHash) {
 		GfHashRelease (conf->paramHash, NULL);
 	}
-	
+
 	if (conf->sectionHash) {
 		GfHashRelease (conf->sectionHash, NULL);
 	}
-	
+
 	freez (conf->filename);
 	freez (conf);
 
@@ -640,7 +640,7 @@ static struct parmHeader* createParmHeader (const char *file)
 
 
 /** @brief Helper function to add "within" options to parameter @e curParam.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] curParam parameter to add "within" option
  *  @param[in] s1 option string
@@ -666,7 +666,7 @@ static int myStrcmp(const void *s1, const void * s2)
 
 
 /** @brief Helper function to parse number.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] str number as string
  *  @return number
@@ -689,11 +689,11 @@ static tdble getValNumFromStr (const char *str)
 
 
 /** @brief Helper function to process opening XML elements.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] userData handle to parameter set to read data into
  *  @param[in] name name of the current XML element
- *  @param[in] atts attributes of the XML element 
+ *  @param[in] atts attributes of the XML element
  */
 static void xmlStartElement (void *userData , const char *name, const char **atts)
 {
@@ -935,10 +935,10 @@ static void xmlStartElement (void *userData , const char *name, const char **att
 
 
 /** @brief Helper function to process closing XML elements.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] userData handle to parameter set to read data into
- *  @param[in] name name of the current XML element 
+ *  @param[in] name name of the current XML element
  */
 static void xmlEndElement (void *userData, const XML_Char *name)
 {
@@ -960,7 +960,7 @@ static void xmlEndElement (void *userData, const XML_Char *name)
 
 
 /** @brief Helper function to handle external XML entities (XML referencing over multiple files/URI's).
- * 
+ *
  *  @ingroup paramshelper
  * @param[in] mainparser parent XML parser
  * @param[in] openEntityNames space separated list of names of entities that are open for the parse of this entity
@@ -1028,7 +1028,7 @@ static int xmlExternalEntityRefHandler(
 			return 0;
 		}
 	} while (!done);
-	
+
 	XML_ParserFree (parser);
 	fclose(in);
 
@@ -1037,7 +1037,7 @@ static int xmlExternalEntityRefHandler(
 
 
 /** @brief Helper function to parse one line of XML.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] parmHandle parameter set handle
  *  @param[in] buf line to parse
@@ -1065,7 +1065,7 @@ static int parseXml(struct parmHandle *parmHandle, char *buf, int len, int done)
 
 
 /** @brief Helper function to set up XML parser in @e parmHandle.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] parmHandle parameter set handle
  */
@@ -1081,9 +1081,9 @@ static int parserXmlInit (struct parmHandle *parmHandle)
 
 
 /** @brief Read parameter set from memory buffer and return handle to parameter set.
- * 
+ *
  *  @ingroup paramsfile
- *  @param[in] buffer buffer to read the configuration from 
+ *  @param[in] buffer buffer to read the configuration from
  *  @return	handle to the parameter set
  *  <br>0 if Error
  *  @see GfParmWriteBuf
@@ -1139,7 +1139,7 @@ void* GfParmReadBuf (char *buffer)
 
 
 /** @brief Read parameter set from file and return handle to parameter set.
- * 
+ *
  *  @ingroup paramsfile
  *  @param[in] file name of the file to read
  *  @param mode opening mode is a mask of:
@@ -1244,7 +1244,7 @@ void* GfParmReadFile(const char *file, int mode)
 
 
 /** @brief Helper function to convert the input line given in @e val into proper XML notation, the output goes into @e buf.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] buf buffer for the processed line
  *  @param[in] BUFSIZE buffer size
@@ -1258,7 +1258,7 @@ static char* handleEntities(char *buf, const int BUFSIZE, const char* val)
 	const char *replacement;
 	char *pos = buf;
 	int rlen;
-	
+
 	for (i = 0; i < len; i++) {
 		switch (val[i]) {
 			case '<':
@@ -1270,18 +1270,18 @@ static char* handleEntities(char *buf, const int BUFSIZE, const char* val)
 			case '\'':
 				replacement = "&apos;"; break;
 			case '"':
-				replacement = "&quot;"; break;	
+				replacement = "&quot;"; break;
 			default:
-				replacement = 0;		
+				replacement = 0;
 		}
-		
+
 		if (replacement == 0) {
 			replacement = &val[i];
 			rlen = 1;
 		} else {
 			rlen = strlen(replacement);
 		}
-		
+
 		if (pos-buf < BUFSIZE - rlen) {
 			memcpy(pos, replacement, rlen*sizeof(char));
 			pos += rlen;
@@ -1298,7 +1298,7 @@ static char* handleEntities(char *buf, const int BUFSIZE, const char* val)
 
 
 /** @brief Helper function for indentation in the XML.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] buf buffer for the result
  *  @param[in] BUFSIZE buffer size
@@ -1316,7 +1316,7 @@ static void createIndent(char *buf, const int BUFSIZE, const int blanks)
 
 
 /** @brief Helper function to support the serialization into the XML of the "within" attribute.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] buf buffer for the result
  *  @param[in] BUFSIZE buffer size
@@ -1329,7 +1329,7 @@ static void createIn(char *buf, const int BUFSIZE, withinHead* head)
 	int pos = 0;
 	bool separator = false;
 	*buf = '\0'; // Terminate for empty content
-	
+
 	while (curWithin != 0) {
 		int len = strlen(s);
 		if (pos < BUFSIZE - len - 1) {
@@ -1339,7 +1339,7 @@ static void createIn(char *buf, const int BUFSIZE, withinHead* head)
 		} else {
 			break;
 		}
-		
+
 		if (separator) {
 			curWithin = GF_TAILQ_NEXT(curWithin, linkWithin);
 			if (curWithin != 0) {
@@ -1351,7 +1351,7 @@ static void createIn(char *buf, const int BUFSIZE, withinHead* head)
 			separator = true;
 		}
 	}
-	
+
 	// Just terminate if we have written something
 	if (pos > 0) {
 		memcpy(buf, "\"", 2*sizeof(char));
@@ -1360,9 +1360,9 @@ static void createIn(char *buf, const int BUFSIZE, withinHead* head)
 
 
 /** @brief Helper function to output one line of XML generated from the given parameter set.
- * 
+ *
  *  The parameter set handle @e parmHandle keeps track of the progress internally.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out] parmHandle parameter set handle
  *  @param[in,out] buffer buffer for the line
@@ -1414,7 +1414,7 @@ static int xmlGetOuputLine(struct parmHandle *parmHandle, char *buffer, int size
 				outCtrl->curSection = curSection;
 				outCtrl->indent += 2;
 				outCtrl->state = 4;
-			} else {     
+			} else {
 				outCtrl->state = 3;
 			}
 			return 1;
@@ -1432,11 +1432,11 @@ static int xmlGetOuputLine(struct parmHandle *parmHandle, char *buffer, int size
 			} else {
 				s++;
 			}
-			
+
 			createIndent(indent, INDENTSIZE, outCtrl->indent);
 			handleEntities(buf, BUFSIZE, s);
 			snprintf(buffer, size, "%s<section name=\"%s\">\n", indent, buf);
-			
+
 			outCtrl->indent += 2;
 			outCtrl->state = 5;
 			return 1;
@@ -1453,27 +1453,27 @@ static int xmlGetOuputLine(struct parmHandle *parmHandle, char *buffer, int size
 				createIn(in, INSIZE, &(curParam->withinList));
 				handleEntities(buf, BUFSIZE, curParam->value);
 				snprintf(buffer, size, "%s<attstr name=\"%s\"%s val=\"%s\"/>\n", indent, curParam->name, in, buf);
-				
+
 				outCtrl->curParam = GF_TAILQ_NEXT (curParam, linkParam);
 				return 1;
 			} else {
 				if (curParam->unit) {
 					if ((curParam->min != curParam->valnum) || (curParam->max != curParam->valnum)) {
-						snprintf(numvalue, NUMVALUE, " min=\"%g\" max=\"%g\" unit=\"%s\" val=\"%g\"/>\n", 
+						snprintf(numvalue, NUMVALUE, " min=\"%g\" max=\"%g\" unit=\"%s\" val=\"%g\"/>\n",
 							GfParmSI2Unit (curParam->unit, curParam->min),
 							GfParmSI2Unit (curParam->unit, curParam->max),
 							curParam->unit,
 							GfParmSI2Unit (curParam->unit, curParam->valnum)
 						);
 					} else {
-						snprintf(numvalue, NUMVALUE, " unit=\"%s\" val=\"%g\"/>\n", 
+						snprintf(numvalue, NUMVALUE, " unit=\"%s\" val=\"%g\"/>\n",
 							curParam->unit,
 							GfParmSI2Unit (curParam->unit, curParam->valnum)
 						);
 					}
 				} else {
 					if ((curParam->min != curParam->valnum) || (curParam->max != curParam->valnum)) {
-						snprintf (numvalue, NUMVALUE, " min=\"%g\" max=\"%g\" val=\"%g\"/>\n", 
+						snprintf (numvalue, NUMVALUE, " min=\"%g\" max=\"%g\" val=\"%g\"/>\n",
 							curParam->min,
 							curParam->max,
 							curParam->valnum
@@ -1482,7 +1482,7 @@ static int xmlGetOuputLine(struct parmHandle *parmHandle, char *buffer, int size
 						snprintf (numvalue, NUMVALUE, " val=\"%g\"/>\n", curParam->valnum);
 					}
 				}
-				
+
 				createIndent(indent, INDENTSIZE, outCtrl->indent);
 				snprintf (buffer, size, "%s<attnum name=\"%s\"%s", indent, curParam->name, numvalue);
 
@@ -1532,7 +1532,7 @@ static int xmlGetOuputLine(struct parmHandle *parmHandle, char *buffer, int size
 
 
 /** @brief Write a parameter set into a memory buffer.
- * 
+ *
  *  @ingroup paramsfile
  *  @param[in] handle parameter set handle
  *  @param[in,out] buf buffer to write the configuration to (must be big enough)
@@ -1575,7 +1575,7 @@ int GfParmWriteBuf(void *handle, char *buf, int size)
 
 
 /** @brief Set the dtd path and header.
- * 
+ *
  *  @ingroup paramsfile
  *  @param	parmHandle parameter set handle
  *  @param	dtd optional dtd path
@@ -1599,7 +1599,7 @@ void GfParmSetDTD(void *parmHandle, char *dtd, char*header)
 
 
 /** @brief Write parameter set into file.
- * 
+ *
  *   @ingroup paramsfile
  *   @param[in] file if NULL the internally stored filename is used, if not NULL the given filename is used (it is not stored in the handle)
  *   @param[in,out] parmHandle parameter set handle
@@ -1613,12 +1613,12 @@ int GfParmWriteFile(const char *file, void *parmHandle, const char *name)
 	struct parmHeader *conf = handle->conf;
 	char line[LINE_SZ];
 	FILE *fout;
-	
+
 	if (handle->magic != PARM_MAGIC) {
 		GfFatal ("gfParmWriteFile: bad handle (%p)\n", parmHandle);
 		return 1;
 	}
-	
+
 	if (!file) {
 		file = conf->filename;
 		if (!file) {
@@ -1632,30 +1632,30 @@ int GfParmWriteFile(const char *file, void *parmHandle, const char *name)
 		GfError ("gfParmSetStr: fopen (%s, \"wb\") failed\n", file);
 		return 1;
 	}
-	
+
 	if (name) {
 		FREEZ (conf->name);
 		conf->name = strdup (name);
 	}
-	
+
 	handle->outCtrl.state = 0;
 	handle->outCtrl.curSection = NULL;
 	handle->outCtrl.curParam = NULL;
-	
+
 	while (xmlGetOuputLine (handle, line, sizeof (line))) {
 		fputs (line, fout);
 	}
-	
+
 	GfOut ("GfParmWriteFile: %s file written\n", file);
-	
+
 	fclose (fout);
-	
+
 	return 0;
 }
 
 
 /** @brief Create directory for parameter set handle if it does not yet exist.
- * 
+ *
  *   @ingroup paramsfile
  *   @param[in] file if NULL the internally stored path is used, if not NULL the given path is used (it is not stored in the handle)
  *   @param[in,out] parmHandle parameter set handle
@@ -1666,12 +1666,12 @@ int GfParmCreateDirectory(const char *file, void *parmHandle)
 {
 	struct parmHandle *handle = (struct parmHandle *)parmHandle;
 	struct parmHeader *conf = handle->conf;
-	
+
 	if (handle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmCreateDirectory: bad handle (%p)\n", parmHandle);
 		return 1;
 	}
-	
+
 	if (!file) {
 		file = conf->filename;
 		if (!file) {
@@ -1689,7 +1689,7 @@ int GfParmCreateDirectory(const char *file, void *parmHandle)
 
 
 /** @brief Remove a parameter from a parameter set.
- * 
+ *
  *  @ingroup paramsdata
  *  @param parmHandle parameter set handle
  *  @param sectionName parameter section name
@@ -1712,7 +1712,7 @@ void GfParmRemove(void *parmHandle, char *sectionName, char *paramName)
 
 
 /** @brief Helper function to release the parameter set content.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] conf parameter set header
  */
@@ -1731,8 +1731,8 @@ static void parmClean(struct parmHeader *conf)
 /** @brief Clean all the parameters of a parameter set.
  *
  *  Removes all contained parameters in the parameter set, the
- *  @e parmHande remains valid. 
- * 
+ *  @e parmHande remains valid.
+ *
  *  @ingroup paramsfile
  *  @param[in,out] parmHandle parameter set handle
  *  @return	0 if OK
@@ -1755,7 +1755,7 @@ void GfParmClean(void *parmHandle)
 
 
 /** @brief Helper function to release the parameter set if the reference counter is 0.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] conf parameter set header
  *  @see GfParmReleaseHandle
@@ -1814,18 +1814,18 @@ static void parmReleaseHandle(struct parmHandle *parmHandle)
 
 
 /** @brief Release given parameter set handle @e parmHandle.
- * 
+ *
  *  Releases the parameter set handle and eventally the parameter set which it
- *  refers to. 
- * 
+ *  refers to.
+ *
  *  The parameter sets are internally reused and reference counted, so if the
  *  parameter set has still a reference counter greater than 0, just the reference
  *  counter is decremented, if it reaches 0, the whole parameter set is deleted from
  *  memory.
- * 
+ *
  *  The parameter file is not written on release, write operations are done explicitely
  *  with @ref GfParmWriteFile.
- * 
+ *
  *  @ingroup paramsfile
  *  @param[in] parmHandle parameter set handle
  *  @see GfParmWriteFile
@@ -1845,10 +1845,10 @@ void GfParmReleaseHandle(void *parmHandle)
 
 
 /** @brief Support function to multiply or divide @e dest with unit conversion factor.
- * 
+ *
  *  This function is used by @ref GfParmUnit2SI and @ref GfParmSI2Unit. The given unit string
  *  gets split up and processed unit by unit with evalUnit.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in] unit unit name from dest
  *  @param[in,out] dest pointer to value to convert
@@ -1913,9 +1913,9 @@ static void evalUnit(char *unit, tdble *dest, int flg)
 
 
 /** @brief Convert a value given in unit to SI.
- * 
- *   The units can be combined with "/" (divide), "." (multiply) and "2" (square), e.g. "lbf/in", "N.m", "kg.m/s2".  
- *   
+ *
+ *   The units can be combined with "/" (divide), "." (multiply) and "2" (square), e.g. "lbf/in", "N.m", "kg.m/s2".
+ *
  *   @ingroup paramsdata
  *   @param[in] unit unit name from val
  *   @param[in] val value in unit
@@ -1938,7 +1938,7 @@ static void evalUnit(char *unit, tdble *dest, int flg)
  *   <li><b>percent</b> or <b>%</b> divided by <b>100</b></li>
  *   <li><b>lbf</b> converted to <b>N</b></li>
  *   </ul>
- * 
+ *
  *   @see GfParmSI2Unit
  */
 tdble GfParmUnit2SI(const char *unit, tdble val)
@@ -1948,14 +1948,14 @@ tdble GfParmUnit2SI(const char *unit, tdble val)
 	const char *s;
 	int  inv;
 	tdble dest = val;
-	
+
 	if ((unit == NULL) || (strlen(unit) == 0)) return dest;
-	
+
 	s = unit;
 	buf[0] = 0;
 	inv = 0;
 	idx = 0;
-	
+
 	while (*s != 0) {
 		switch (*s) {
 			case '.':
@@ -1974,7 +1974,7 @@ tdble GfParmUnit2SI(const char *unit, tdble val)
 				evalUnit(buf, &dest, inv);
 				buf[0] = 0;
 				idx = 0;
-				break;	    
+				break;
 			default:
 				buf[idx++] = *s;
 				buf[idx] = 0;
@@ -2002,14 +2002,14 @@ tdble GfParmSI2Unit(const char *unit, tdble val)
 	const char *s;
 	int  inv;
 	tdble dest = val;
-	
+
 	if ((unit == NULL) || (strlen(unit) == 0)) return dest;
-	
+
 	s = unit;
 	buf[0] = 0;
 	inv = 1;
 	idx = 0;
-	
+
 	while (*s != 0) {
 		switch (*s) {
 			case '.':
@@ -2028,7 +2028,7 @@ tdble GfParmSI2Unit(const char *unit, tdble val)
 				evalUnit(buf, &dest, inv);
 				buf[0] = 0;
 				idx = 0;
-				break;	    
+				break;
 			default:
 				buf[idx++] = *s;
 				buf[idx] = 0;
@@ -2094,10 +2094,10 @@ char* GfParmGetFileName(void *handle)
 
 
 /** @brief Count the number of subsections in a section in the parameter set @e handle.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in] handle parameter set handle
  *  @param[in] path path of the section containing the subsections to count
@@ -2109,34 +2109,34 @@ int GfParmGetEltNb(void *handle, const char *path)
 	struct parmHeader *conf = parmHandle->conf;
 	struct section	*section;
 	int count;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmGetEltNb: bad handle (%p)\n", parmHandle);
 		return 0;
 	}
-	
+
 	section = (struct section *)GfHashGetStr (conf->sectionHash, path);
 	if (!section) {
 		return 0;
 	}
-	
+
 	count = 0;
 	section = GF_TAILQ_FIRST (&(section->subSectionList));
 	while (section) {
 		count++;
 		section = GF_TAILQ_NEXT (section, linkSection);
 	}
-	
+
 	return count;
 }
 
 
 
 /** @brief Go the the first subsection element in the parameter set @e handle.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in,out] handle parameter set handle, interation state is internally stored
  *  @param[in] path path of the section containing the subsections to iterate through
@@ -2150,28 +2150,28 @@ int GfParmListSeekFirst(void *handle, const char *path)
 	struct parmHandle *parmHandle = (struct parmHandle *)handle;
 	struct parmHeader *conf = parmHandle->conf;
 	struct section *section;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmListSeekFirst: bad handle (%p)\n", parmHandle);
 		return -1;
 	}
-	
+
 	section = (struct section *)GfHashGetStr (conf->sectionHash, path);
 	if (!section) {
 		return -1;
 	}
-	
+
 	section->curSubSection = GF_TAILQ_FIRST (&(section->subSectionList));
-	
+
 	return 0;
 }
 
 
 /** @brief Go the the next subsection element in the parameter set @e handle.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in,out] handle parameter set handle, interation state is internally stored
  *  @param[in] path path of the section containing the subsections to iterate through
@@ -2186,32 +2186,32 @@ int GfParmListSeekNext(void *handle, const char *path)
 	struct parmHandle *parmHandle = (struct parmHandle *)handle;
 	struct parmHeader *conf = parmHandle->conf;
 	struct section *section;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmListSeekNext: bad handle (%p)\n", parmHandle);
 		return -1;
 	}
-	
+
 	section = (struct section *)GfHashGetStr (conf->sectionHash, path);
 	if ((!section) || (!section->curSubSection)) {
 		return -1;
 	}
-	
+
 	section->curSubSection = GF_TAILQ_NEXT (section->curSubSection, linkSection);
-	
+
 	if (section->curSubSection) {
 		return 0;
 	}
-	
+
 	return 1;
 }
 
 
 /** @brief Remove all the subsections in a section in the parameter set @e handle.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in,out] handle parameter set handle
  *  @param[in] path path of the section containing the subsections to remove
@@ -2224,7 +2224,7 @@ int GfParmListClean(void *handle, const char *path)
 	struct parmHeader *conf = parmHandle->conf;
 	struct section *listSection;
 	struct section *section;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmListSeekNext: bad handle (%p)\n", parmHandle);
 		return -1;
@@ -2239,20 +2239,20 @@ int GfParmListClean(void *handle, const char *path)
 	while ((section = GF_TAILQ_FIRST (&(listSection->subSectionList))) != NULL) {
 		removeSection (conf, section);
 	}
-	
+
 	return 0;
 }
 
 
 /** @brief Get current subsection name of the parameter set @e handle during subsection iteration.
- * 
+ *
  *  The internal state of the parameter set @e handle must point to a current subsection,
  *  this is done using @ref GfParmListSeekFirst or @ref GfParmListSeekNext. This call
  *  returns the name of the current subsection.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in] handle parameter set handle
  *  @param[in] path path of the section used to iterate subsections
@@ -2293,9 +2293,9 @@ char* GfParmListGetCurEltName(void *handle, const char *path)
 
 
 /** @brief Get a string parameter from the parameter set @e handle.
- * 
+ *
  *  If the parameter does not yet exist the given default is returned.
- * 
+ *
  *  @ingroup paramsdata
  *  @param[in] parmHandle parameter set handle
  *  @param[in] path path of the parameter
@@ -2329,14 +2329,14 @@ const char* GfParmGetStr(void *parmHandle, const char *path, const char *key, co
 
 
 /** @brief Get a string parameter from the parameter set @e handle based on subsection iteration.
- * 
+ *
  *  The internal state of the parameter set @e handle must point to a current subsection,
  *  this is done using @ref GfParmListSeekFirst or @ref GfParmListSeekNext. If the parameter
  *  does not yet exist the given default is returned.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in] handle parameter set handle
  *  @param[in] path path of the section used to iterate subsections
@@ -2357,7 +2357,7 @@ const char* GfParmGetCurStr(void *handle, const char *path, const char *key, con
 	struct parmHeader *conf = parmHandle->conf;
 	struct section *section;
 	struct param *param;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmGetCurStr: bad handle (%p)\n", parmHandle);
 		return deflt;
@@ -2367,20 +2367,20 @@ const char* GfParmGetCurStr(void *handle, const char *path, const char *key, con
 	if ((!section) || (!section->curSubSection)) {
 		return deflt;
 	}
-	
+
 	param = getParamByName (conf, section->curSubSection->fullName, key, 0);
 	if (!param || !(param->value) || !strlen (param->value) || (param->type != P_STR)) {
 		return deflt;
 	}
-	
+
 	return param->value;
 }
 
 
 /** @brief Get a numerical parameter from the parameter set @e handle.
- *  
+ *
  *  If the parameter does not exist the given default value is returned without unit conversion.
- * 
+ *
  *  @ingroup paramsdata
  *  @param[in] handle parameter set handle
  *  @param[in] path path of the parameter
@@ -2408,20 +2408,20 @@ tdble GfParmGetNum(void *handle, const char *path, const char *key, const char *
 	if (unit) {
 		return GfParmSI2Unit(unit, param->valnum);
 	}
-	
+
 	return  param->valnum;
 }
 
 
 /** @brief Get a numerical parameter from the parameter set @e handle based on subsection iteration.
- * 
+ *
  *  The internal state of the parameter set @e handle must point to a current subsection,
  *  this is done using @ref GfParmListSeekFirst or @ref GfParmListSeekNext. If the parameter
  *  does not exist the given default value is returned without unit conversion.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in] handle parameter set handle
  *  @param[in] path path of the section used to iterate subsections
@@ -2438,7 +2438,7 @@ tdble GfParmGetCurNum(void *handle, const char *path, const char *key, const cha
 	struct parmHeader *conf = parmHandle->conf;
 	struct section *section;
 	struct param *param;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmGetCurNum: bad handle (%p)\n", parmHandle);
 		return deflt;
@@ -2448,24 +2448,24 @@ tdble GfParmGetCurNum(void *handle, const char *path, const char *key, const cha
 	if ((!section) || (!section->curSubSection)) {
 		return deflt;
 	}
-	
+
 	param = getParamByName(conf, section->curSubSection->fullName, key, 0);
 	if (!param || (param->type != P_NUM)) {
 		return deflt;
 	}
-	
+
 	if (unit) {
 		return GfParmSI2Unit(unit, param->valnum);
 	}
-	
+
 	return  param->valnum;
 }
 
 
 /** @brief Set a string parameter in the parameter set @e handle.
- * 
+ *
  *  If the parameter  does not yet exist it is created. The within constraint is not checked.
- * 
+ *
  *  @ingroup paramsdata
  *  @param[in,out] handle parameter set handle
  *  @param[in] path path of the parameter
@@ -2479,46 +2479,46 @@ int GfParmSetStr(void *handle, const char *path, const char *key, const char *va
 	struct parmHandle *parmHandle = (struct parmHandle *)handle;
 	struct parmHeader *conf = parmHandle->conf;
 	struct param *param;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmSetStr: bad handle (%p)\n", parmHandle);
 		return -1;
 	}
-	
+
 	if (!val || !strlen (val)) {
 		/* Remove the entry */
 		removeParamByName (conf, path, key);
 		return 0;
 	}
-	
+
 	param = getParamByName (conf, path, key, PARAM_CREATE);
 	if (!param) {
 		return -1;
 	}
-	
+
 	param->type = P_STR;
 	freez (param->value);
 	param->value = strdup (val);
-	
+
 	if (!param->value) {
 		GfError ("gfParmSetStr: strdup (%s) failed\n", val);
 		removeParamByName (conf, path, key);
 		return -1;
 	}
-	
+
 	return 0;
 }
 
 
 /** @brief Set a string parameter in the parameter set @e handle based on subsection iteration.
- * 
+ *
  *  The internal state of the parameter set @e handle must point to a current subsection,
  *  this is done using @ref GfParmListSeekFirst or @ref GfParmListSeekNext. If the parameter
  *  does not yet exist it is created. The within constraint is not checked.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in,out] handle parameter set handle
  *  @param[in] path path of the section used to iterate subsections
@@ -2556,7 +2556,7 @@ int GfParmSetCurStr(void *handle, const char *path, const char *key, const char 
 	if (!param) {
 		return -1;
 	}
-	
+
 	param->type = P_STR;
 	freez (param->value);
 	param->value = strdup (val);
@@ -2571,15 +2571,15 @@ int GfParmSetCurStr(void *handle, const char *path, const char *key, const char 
 
 
 /** @brief Set a numerical parameter in the parameter set @e handle.
- * 
+ *
  *  If the parameter does not yet exist it is created. The value is assigned to the value, min and max.
- * 
+ *
  *  @ingroup	paramsdata
  *  @param[in,out]	handle	parameter set handle
  *  @param[in]	path	path of the parameter
  *  @param[in]	key	parameter key name
- *  @param[in]	unit	unit to convert the result to (NULL if SI desired)	
- *  @param[in]	val	value to set	
+ *  @param[in]	unit	unit to convert the result to (NULL if SI desired)
+ *  @param[in]	val	value to set
  *  @return	0	ok
  *  <br>-1	error
  */
@@ -2588,12 +2588,12 @@ int GfParmSetNum(void *handle, const char *path, const char *key, const char *un
 	struct parmHandle	*parmHandle = (struct parmHandle *)handle;
 	struct parmHeader	*conf = parmHandle->conf;
 	struct param	*param;
-	
+
 	if (parmHandle->magic != PARM_MAGIC) {
 		GfFatal ("GfParmSetNum: bad handle (%p)\n", parmHandle);
 		return -1;
 	}
-	
+
 	param = getParamByName (conf, path, key, PARAM_CREATE);
 	if (!param) {
 		return -11;
@@ -2604,12 +2604,12 @@ int GfParmSetNum(void *handle, const char *path, const char *key, const char *un
 	if (unit) {
 		param->unit = strdup (unit);
 	}
-	
+
 	val = GfParmUnit2SI (unit, val);
 	param->valnum = val;
 	param->min = val;
 	param->max = val;
-	
+
 	return 0;
 }
 
@@ -2619,7 +2619,7 @@ int GfParmSetNum(void *handle, const char *path, const char *key, const char *un
  *  @param[in,out]	handle	parameter set handle
  *  @param[in]	path	path of the parameter
  *  @param[in]	key	parameter key name
- *  @param[in]	unit	unit to convert the result to (NULL if SI desired)	
+ *  @param[in]	unit	unit to convert the result to (NULL if SI desired)
  *  @param[in]	val	value to set
  *  @param[in]	min	min value to set
  *  @param[in]	max	max value to set
@@ -2641,7 +2641,7 @@ int GfParmSetNumEx(void *handle, const char *path, const char *key, const char *
 	if (!param) {
 		return -1;
 	}
-	
+
 	param->type = P_NUM;
 	FREEZ (param->unit);
 	if (unit) {
@@ -2657,20 +2657,20 @@ int GfParmSetNumEx(void *handle, const char *path, const char *key, const char *
 
 
 /** @brief Set a numerical parameter in the parameter set @e handle based on subsection iteration.
- * 
+ *
  *  The internal state of the parameter set @e handle must point to a current subsection,
  *  this is done using @ref GfParmListSeekFirst or @ref GfParmListSeekNext. If the parameter
  *  does not yet exist it is created. The value is assigned to the value, min and max.
- * 
+ *
  *  A subsection can have any name and structure, any section element enclosed by the section given in
  *  the @e path is a subsection.
- * 
+ *
  *  @ingroup paramslist
  *  @param[in,out]	handle	parameter set handle
  *  @param[in]	path	path of the section used to iterate subsections
- *  @param[in]	key	parameter key name	
- *  @param[in]	unit	unit to convert the result to (NULL if SI is desired)	
- *  @param[in]	val	value to set	
+ *  @param[in]	key	parameter key name
+ *  @param[in]	unit	unit to convert the result to (NULL if SI is desired)
+ *  @param[in]	val	value to set
  *  @return	0	ok
  *  <br>-1	error
  *  @see GfParmListSeekFirst
@@ -2715,10 +2715,10 @@ int GfParmSetCurNum(void *handle, const char *path, const char *key, const char 
 
 
 /** @brief Check the values in the parameter set @e tgt against the min/max/within definitions in the @e ref parameter set.
- * 
+ *
  *  @ingroup	paramsfile
  *  @param[in]	ref	reference parameter set handle for check (min/max/within)
- *  @param[in]	tgt	target parameter set handle for check (values) 
+ *  @param[in]	tgt	target parameter set handle for check (values)
  *  @return	0 All checked values are ok
  *	<br>-1 Some values are out of bounds
  *  @note	Only the parameters present in both sets, @e tgt and @e ref, are tested.
@@ -2779,7 +2779,7 @@ int GfParmCheckHandle(void *ref, void *tgt)
 			}
 			curParamRef = GF_TAILQ_NEXT (curParamRef, linkParam);
 		}
-		
+
 		nextSectionRef = GF_TAILQ_NEXT (curSectionRef, linkSection);
 		while (!nextSectionRef) {
 			nextSectionRef = curSectionRef->parent;
@@ -2798,18 +2798,18 @@ int GfParmCheckHandle(void *ref, void *tgt)
 
 
 /** @brief Helper function to merge a parameter into a parameter set.
- * 
+ *
  *  If the parameter @e param already exists in @e paramHandle, the values are overwritten with the values from @e param.
  *  If the parameter @e param does not yet exist in @e paramHandle, it gets created. The value and restrictions (min, max, within)
- *  in @e param are checked against the restrictions given by @e parmRef and adjusted if required. 
- * 
+ *  in @e param are checked against the restrictions given by @e parmRef and adjusted if required.
+ *
  *  @ingroup paramshelper
  *  @param[in,out]	parmHandle	parameter set handle
  *  @param[in]	path	path to the parameter
  *  @param[in]	paramRef reference parameter for min/max boundaries or string set restrictions
  *  @param[in]	param	parameter
  *  @see	GfParmMergeHandles
- * 
+ *
  */
 static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct param *paramRef, struct param *param)
 {
@@ -2824,21 +2824,21 @@ static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct p
 	if (!paramNew) {
 		return;
 	}
-	
+
 	if (param->type == P_NUM) {
 		paramNew->type = P_NUM;
 		FREEZ (paramNew->unit);
 		if (param->unit) {
 			paramNew->unit = strdup (param->unit);
 		}
-		
+
 		if (param->min < paramRef->min) {
 			num = paramRef->min;
 		} else {
 			num = param->min;
 		}
 		paramNew->min = num;
-		
+
 		if (param->max > paramRef->max) {
 			num = paramRef->max;
 		} else {
@@ -2846,11 +2846,11 @@ static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct p
 		}
 		paramNew->max = num;
 		num = param->valnum;
-		
+
 		if (num < paramNew->min) {
 			num = paramNew->min;
 		}
-		
+
 		if (num > paramNew->max) {
 			num = paramNew->max;
 		}
@@ -2859,7 +2859,7 @@ static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct p
 		paramNew->type = P_STR;
 		FREEZ (paramNew->value);
 		within = GF_TAILQ_FIRST (&(param->withinList));
-		
+
 		while (within) {
 			withinRef = GF_TAILQ_FIRST (&(paramRef->withinList));
 			while (withinRef) {
@@ -2873,7 +2873,7 @@ static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct p
 		}
 		str = NULL;
 		withinRef = GF_TAILQ_FIRST (&(paramRef->withinList));
-		
+
 		while (withinRef) {
 			if (!strcmp (withinRef->val, param->value)) {
 				str = param->value;
@@ -2881,27 +2881,27 @@ static void insertParamMerge(struct parmHandle *parmHandle, char *path, struct p
 			}
 			withinRef = GF_TAILQ_NEXT (withinRef, linkWithin);
 		}
-		
+
 		if (!str) {
 			str = paramRef->value;
 		}
-		
+
 		paramNew->value = strdup (str);
 	}
 }
 
 
 /** @brief Helper function to insert a parameter into a parameter set.
- * 
+ *
  *  If the parameter @e param already exists in @e paramHandle, the values are overwritten with the values from @e param.
  *  If the parameter @e param does not yet exist in @e paramHandle, it gets created.
- * 
+ *
  *  @ingroup paramshelper
  *  @param[in,out]	parmHandle	parameter set handle
  *  @param[in]	path	path to the parameter
  *  @param[in]	param	parameter
  *  @see	GfParmMergeHandles
- * 
+ *
  */
 static void insertParam(struct parmHandle *parmHandle, char *path, struct param *param)
 {
@@ -2913,7 +2913,7 @@ static void insertParam(struct parmHandle *parmHandle, char *path, struct param 
 	if (!paramNew) {
 		return;
 	}
-	
+
 	if (param->type == P_NUM) {
 		paramNew->type = P_NUM;
 		FREEZ (paramNew->unit);
@@ -2937,17 +2937,17 @@ static void insertParam(struct parmHandle *parmHandle, char *path, struct param 
 
 
 /** @brief Merge two parameter sets into a new one, either containing parameters from @e ref, @e tgt or from both sets, the @e ref and @e tgt sets are not changed.
- *   
+ *
  *  Used to create a new parameter set from two exising ones, e.g. like the car category and car. If #GFPARM_MMODE_SRC
  *  mode is used, all parameterers from @e ref will exist in the new parameter set. If #GFPARM_MMODE_DST
  *  mode is used, all parameterers from @e tgt will exist in the new parameter set. You can combine #GFPARM_MMODE_SRC and
  *  #GFPARM_MMODE_DST to get all parameters from both sets into the new set.
- *   
+ *
  *  The parameter value is taken from the @e tgt set if the parameter exists in the @e tgt set. If a parameter exists in
  *  both sets (@e ref and @e tgt) and has different min/max values, then the greater min value and the smaller max value
  *  is selected, so with combining parameters it is only possible to shrink the possible range. If the parameter value
  *  does not fit the new min/max range it is adjusted.
- *   
+ *
  *  @ingroup	paramsfile
  *  @param[in]	ref	reference parameter set handle for merge
  *  @param[in]	tgt	target parameter set handle for merge
@@ -3054,7 +3054,7 @@ void *GfParmMergeHandles(void *ref, void *tgt, int mode)
 				}
 				curParamTgt = GF_TAILQ_NEXT (curParamTgt, linkParam);
 			}
-			
+
 			nextSectionTgt = GF_TAILQ_FIRST (&(curSectionTgt->subSectionList));
 			if (nextSectionTgt) {
 				curSectionTgt = nextSectionTgt;
@@ -3092,7 +3092,7 @@ void *GfParmMergeHandles(void *ref, void *tgt, int mode)
  *  @ingroup	paramsdata
  *  @param[in]	handle	parameter set handle
  *  @param[in]	path	path of the parameter
- *  @param[in]	key	parameter key name	
+ *  @param[in]	key	parameter key name
  *  @param[out]	min	Receives the min value
  *  @param[out]	max	Receives the max value
  *  @return	0 Ok
@@ -3119,5 +3119,3 @@ int GfParmGetNumBoundaries(void *handle, const char *path, const char *key, tdbl
 
 	return 0;
 }
-
- 

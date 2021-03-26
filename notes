@@ -9,3 +9,10 @@ libs/raceengineclient/raceinit.cpp (ReStartNewRace) >
 libs/raceengineclient/racestate.cpp !!!!!!(ReStateManage)!!!!!!
 
 files modified:
+skipMenu:
+libs/raceengineclient/raceinit.cpp - added skipMenu function
+linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu
+libs/client/entry.cpp - removed menu init, added skipMenu call
+countdown removed:
+libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
+libs/raceengineclient/racemain.cpp - time now starts at 0.0, to remove countdown

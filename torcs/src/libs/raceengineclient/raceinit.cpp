@@ -2,9 +2,9 @@
 
     file        : raceinit.cpp
     created     : Sat Nov 16 10:34:35 CET 2002
-    copyright   : (C) 2002-2013 by Eric Espie, Bernhard Wymann                
-    email       : eric.espie@torcs.org   
-    version     : $Id: raceinit.cpp,v 1.18.2.16 2014/05/20 09:09:08 berniw Exp $                                  
+    copyright   : (C) 2002-2013 by Eric Espie, Bernhard Wymann
+    email       : eric.espie@torcs.org
+    version     : $Id: raceinit.cpp,v 1.18.2.16 2014/05/20 09:09:08 berniw Exp $
 
  ***************************************************************************/
 
@@ -17,8 +17,8 @@
  *                                                                         *
  ***************************************************************************/
 
-/** @file   
-    		
+/** @file
+
     @author	<a href=mailto:eric.espie@torcs.org>Eric Espie</a>
     @version	$Id: raceinit.cpp,v 1.18.2.16 2014/05/20 09:09:08 berniw Exp $
 */
@@ -52,7 +52,7 @@ static const char *level_str[] = { ROB_VAL_ROOKIE, ROB_VAL_AMATEUR, ROB_VAL_SEMI
 static tModList *reEventModList = 0;
 tModList *ReRaceModList = 0;
 
-typedef struct 
+typedef struct
 {
 	int index;
 	tModList *curmod;
@@ -197,7 +197,7 @@ void ReRunRaceOnConsole(const char* raceconfig)
 
 	ReInitResults();
 
-	ReStateApply((void *) RE_STATE_EVENT_INIT);	
+	ReStateApply((void *) RE_STATE_EVENT_INIT);
 	GfParmReleaseHandle(ReInfo->params);
 	ReShutdown();
 }
@@ -209,7 +209,7 @@ reRegisterRaceman(tFList *racemanCur)
 {
 	const int BUFSIZE = 1024;
 	char buf[BUFSIZE];
-	
+
 	snprintf(buf, BUFSIZE, "%sconfig/raceman/%s", GetLocalDir(), racemanCur->name);
 	racemanCur->userData = GfParmReadFile(buf, GFPARM_RMODE_STD);
 	racemanCur->dispName = strndup(GfParmGetStr(racemanCur->userData, RM_SECT_HEADER, RM_ATTR_NAME, 0), 1024);
@@ -419,11 +419,11 @@ initPits(void)
 	// create a list with the teams, a pit can just be used by one team.
 	for (i = 0; i < ReInfo->s->_ncars; i++) {
 		tCarElt *car = &(ReInfo->carList[i]);
-		teams[car->_teamname] = teams[car->_teamname] + 1; 
-	}	
+		teams[car->_teamname] = teams[car->_teamname] + 1;
+	}
 
 	for (teamsIterator = teams.begin(); teamsIterator != teams.end(); ++teamsIterator) {
-		printf("----------------- %s\t%d\n", (teamsIterator->first).c_str(), teamsIterator->second); 
+		printf("----------------- %s\t%d\n", (teamsIterator->first).c_str(), teamsIterator->second);
 	}
 	*/
 
@@ -454,7 +454,7 @@ initPits(void)
 			}
 
 			// Assign cars to pits. Inefficient (O(n*n)), but just at initialization, so do not care.
-			// One pit can just host cars of one team (this matches with the reality) 
+			// One pit can just host cars of one team (this matches with the reality)
 			for (i = 0; i < ReInfo->s->_ncars; i++) {
 				// Find pit for the cars team.
 				tCarElt *car = &(ReInfo->carList[i]);
@@ -494,7 +494,7 @@ initPits(void)
 				tTrackOwnPit *pit = &(pits->driversPits[i]);
 				for (j = 0; j < pit->freeCarIndex; j++) {
 					if (j == 0) {
-						GfOut("Pit %d, Team: %s, ", i, pit->car[j]->_teamname); 
+						GfOut("Pit %d, Team: %s, ", i, pit->car[j]->_teamname);
 					}
 					GfOut("%d: %s ", j, pit->car[j]->_name);
 				}
@@ -592,7 +592,7 @@ ReInitCars(void)
 					elt->_name[MAX_NAME_LEN - 1] = 0;
 					strncpy(elt->_teamname, GfParmGetStr(robhdle, path, ROB_ATTR_TEAM, "<none>"), MAX_NAME_LEN - 1);
 					elt->_teamname[MAX_NAME_LEN - 1] = 0;
-					
+
 					strncpy(elt->_carName, GfParmGetStr(robhdle, path, ROB_ATTR_CAR, ""), MAX_NAME_LEN - 1);
 					elt->_carName[MAX_NAME_LEN - 1] = 0;
 					elt->_raceNumber = (int)GfParmGetNum(robhdle, path, ROB_ATTR_RACENUM, (char*)NULL, 0);
@@ -706,7 +706,7 @@ reDumpTrack(tTrack *track, int verbose)
 	tTrackSeg *seg;
 	const int BUFSIZE = 1024;
 	char buf[BUFSIZE];
-	
+
 #ifdef DEBUG
     const char *stype[4] = { "", "RGT", "LFT", "STR" };
 #endif
@@ -798,7 +798,7 @@ ReInitTrack(void)
 	const int BUFSIZE = 1024;
 	char buf[BUFSIZE];
 
-	
+
 	curTrkIdx = (int)GfParmGetNum(results, RE_SECT_CURRENT, RE_ATTR_CUR_TRACK, NULL, 1);
 	snprintf(buf, BUFSIZE, "%s/%d", RM_SECT_TRACKS, curTrkIdx);
 	const char* trackName = GfParmGetStr(params, buf, RM_ATTR_NAME, 0);
@@ -806,13 +806,13 @@ ReInitTrack(void)
 
 	const char* catName = GfParmGetStr(params, buf, RM_ATTR_CATEGORY, 0);
 	if (!catName) return -1;
-	
+
 	snprintf(buf, BUFSIZE, "Loading Track %s...", trackName);
 	RmLoadingScreenSetText(buf);
 	snprintf(buf, BUFSIZE, "tracks/%s/%s/%s.%s", catName, trackName, trackName, TRKEXT);
 	ReInfo->track = ReInfo->_reTrackItf.trkBuild(buf);
 	reDumpTrack(ReInfo->track, 0);
-	
+
 	return 0;
 }
 
@@ -871,7 +871,7 @@ ReGetCurrentRaceName(void)
 	void *results = ReInfo->results;
 	const int BUFSIZE = 1024;
 	char path[BUFSIZE];
-	
+
 	curRaceIdx = (int)GfParmGetNum(results, RE_SECT_CURRENT, RE_ATTR_CUR_RACE, NULL, 1);
 	snprintf(path, BUFSIZE, "%s/%d", RM_SECT_RACES, curRaceIdx);
 	return GfParmGetStr(params, path, RM_ATTR_NAME, 0);
@@ -884,9 +884,87 @@ ReGetPrevRaceName(void)
 	void *params = ReInfo->params;
 	void *results = ReInfo->results;
 	const int BUFSIZE = 1024;
-	char path[BUFSIZE];	
-	
+	char path[BUFSIZE];
+
 	curRaceIdx = (int)GfParmGetNum(results, RE_SECT_CURRENT, RE_ATTR_CUR_RACE, NULL, 1) - 1;
 	snprintf(path, BUFSIZE, "%s/%d", RM_SECT_RACES, curRaceIdx);
 	return GfParmGetStr(params, path, RM_ATTR_NAME, 0);
+}
+
+void
+skipMenu(const char* raceconfig) {
+	/* Get xml race configuration from command line and immediately
+	 	 start the choosen race. For automatic enrovonment restart for
+		 AI trial and error (i.e. Reinforcement Learning)
+	*/
+
+	tRmMovieCapture *capture;
+
+	ReShutdown();
+
+	ReInfo = (tRmInfo *)calloc(1, sizeof(tRmInfo));
+	ReInfo->s = (tSituation *)calloc(1, sizeof(tSituation));
+	ReInfo->modList = &ReRaceModList;
+
+	const int BUFSIZE = 1024;
+	char buf[BUFSIZE];
+	snprintf(buf, BUFSIZE, "%s%s", GetLocalDir(), RACE_ENG_CFG);
+
+	ReInfo->_reParam = GfParmReadFile(buf, GFPARM_RMODE_REREAD | GFPARM_RMODE_CREAT);
+
+	// Loading Track Loader
+	const char* dllname = GfParmGetStr(ReInfo->_reParam, "Modules", "track", "");
+	snprintf(buf, BUFSIZE, "%smodules/track/%s.%s", GetLibDir (), dllname, DLLEXT);
+	if (GfModLoad(0, buf, &reEventModList)) return;
+	reEventModList->modInfo->fctInit(reEventModList->modInfo->index, &ReInfo->_reTrackItf);
+
+	// ReInfo->_displayMode = RM_DISP_MODE_NORMAL;
+	// GfuiScreenActivate(ReInfo->_reGameScreen);
+	// Loading Graphic Engine
+	dllname = GfParmGetStr(ReInfo->_reParam, "Modules", "graphic", "");
+	snprintf(buf, BUFSIZE, "%smodules/graphic/%s.%s", GetLibDir (), dllname, DLLEXT);
+	if (GfModLoad(0, buf, &reEventModList)) return;
+	reEventModList->modInfo->fctInit(reEventModList->modInfo->index, &ReInfo->_reGraphicItf);
+
+	capture = &(ReInfo->movieCapture);
+	if (strcmp(GfParmGetStr(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_ENABLE, "no"), "no") == 0){
+		capture->enabled = 0;
+	} else {
+		capture->enabled = 1;
+		capture->state = 0;
+		capture->deltaFrame = 1.0 / GfParmGetNum(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_FPS, NULL, 1.0);
+		capture->outputBase = GfParmGetStr(ReInfo->_reParam, RM_SECT_MOVIE_CAPTURE, RM_ATT_CAPTURE_OUT_DIR, "/tmp");
+		capture->deltaSimu = RCM_MAX_DT_SIMU;
+	}
+
+	// set up display
+	ReInfo->_reGameScreen = ReHookInit();
+
+	const char *s, *e, *m;
+
+	ReInfo->params = GfParmReadFile(raceconfig, GFPARM_RMODE_STD);
+	if (ReInfo->params == 0) {
+		GfError("Could not open file: %s\n", raceconfig);
+		exit(1);
+	}
+
+	s = GfParmGetFileName(ReInfo->params);
+	while ((m = strstr(s, "/")) != 0) {
+		s = m + 1;
+	}
+
+	e = strstr(s, PARAMEXT);
+	ReInfo->_reFilename = strndup(s, e-s+1);
+	ReInfo->_reFilename[e-s] = '\0';
+	// race name
+	ReInfo->_reName = GfParmGetStr(ReInfo->params, RM_SECT_HEADER, RM_ATTR_NAME, "");
+
+
+	// init results
+	ReInitResults();
+
+	// skip menu with the state machine
+	ReStateApply((void *) RE_STATE_EVENT_INIT);
+
+	GfParmReleaseHandle(ReInfo->params);
 }

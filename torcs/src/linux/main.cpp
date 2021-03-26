@@ -28,11 +28,11 @@
 #include <raceinit.h>
 
 
-#include <sys/shm.h> 
+#include <sys/shm.h>
 #define image_width 640
 #define image_height 480
-#include <iostream> 
-#include <unistd.h> 
+#include <iostream>
+#include <unistd.h>
 
 
 extern bool bKeepModules;
@@ -42,7 +42,7 @@ init_args(int argc, char **argv, const char **raceconfig)
 {
 	int i;
 	char *buf;
-    
+
     setNoisy(false);
     setVersion("2013");
 
@@ -113,7 +113,7 @@ init_args(int argc, char **argv, const char **raceconfig)
 		} else if (strncmp(argv[i], "-nolaptime", 10) == 0) {
 		    i++;
 		    setLaptimeLimit(false);
-		    printf("Laptime limit disabled!\n");   
+		    printf("Laptime limit disabled!\n");
 		} else if(strncmp(argv[i], "-k", 2) == 0) {
 			i++;
 			// Keep modules in memory (for valgrind)
@@ -147,13 +147,13 @@ init_args(int argc, char **argv, const char **raceconfig)
 #endif
 }
 
-struct shared_use_st  
-{  
+struct shared_use_st
+{
     int written;
     uint8_t data[image_width*image_height*3];
     int pause;
-    int zmq_flag;   
-    int save_flag;  
+    int zmq_flag;
+    int save_flag;
 };
 
 int* pwritten = NULL;
@@ -184,30 +184,30 @@ int
 main(int argc, char *argv[])
 {
 	struct shared_use_st *shared = NULL;
-    int shmid; 
-    // establish memory sharing 
-    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);  
-    if(shmid == -1)  
-    {  
-        fprintf(stderr, "shmget failed\n");  
-        exit(EXIT_FAILURE);  
-    }  
-  
-    shm = shmat(shmid, 0, 0);  
-    if(shm == (void*)-1)  
-    {  
-        fprintf(stderr, "shmat failed\n");  
-        exit(EXIT_FAILURE);  
-    }  
-    printf("\n********** Memory sharing started, attached at %X **********\n \n", shm);  
-    // set up shared memory 
-    shared = (struct shared_use_st*)shm;  
+    int shmid;
+    // establish memory sharing
+    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);
+    if(shmid == -1)
+    {
+        fprintf(stderr, "shmget failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    shm = shmat(shmid, 0, 0);
+    if(shm == (void*)-1)
+    {
+        fprintf(stderr, "shmat failed\n");
+        exit(EXIT_FAILURE);
+    }
+    printf("\n********** Memory sharing started, attached at %X **********\n \n", shm);
+    // set up shared memory
+    shared = (struct shared_use_st*)shm;
     shared->written = 0;
     shared->pause = 0;
-    shared->zmq_flag = 0;  
+    shared->zmq_flag = 0;
     shared->save_flag = 0;
 
- 
+
     pwritten=&shared->written;
     pdata=shared->data;
     ppause=&shared->pause;
@@ -220,15 +220,14 @@ main(int argc, char *argv[])
 	LinuxSpecInit();			/* init specific linux functions */
 
 	if(strlen(raceconfig) == 0) {
-		GfScrInit(argc, argv);	/* init screen */
-		TorcsEntry();			/* launch TORCS */
-		glutMainLoop();			/* event loop of glut */
-	} else {
-		// Run race from console, no Window, no OpenGL/OpenAL etc.
-		// Thought for blind scripted AI training
-		ReRunRaceOnConsole(raceconfig);
+		// fallback to practice
+		raceconfig = "config/raceman/practice.xml";
 	}
+	// run torcs with gui and config file
+	GfScrInit(argc, argv);	/* init screen */
+	TorcsEntry(raceconfig);			/* launch TORCS */
+	glutMainLoop();			/* event loop of glut */
+
 
 	return 0;					/* just for the compiler, never reached */
 }
-

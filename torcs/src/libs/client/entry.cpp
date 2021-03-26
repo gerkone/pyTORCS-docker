@@ -21,6 +21,7 @@
 #include <client.h>
 #include <tgfclient.h>
 #include <plib/ssg.h>
+#include <raceinit.h>
 
 #include "mainmenu.h"
 #include "splash.h"
@@ -40,18 +41,20 @@
  *	none
  *
  * Remarks
- *	
+ *
  */
 void
-TorcsEntry(void)
+TorcsEntry(const char* raceconfig)
 {
 	ssgInit();
 
 	GfInitClient();
 
-	TorcsMainMenuInit();
+	skipMenu(raceconfig);
 
-	SplashScreen();
-	
-	startMenuMusic();
+	// TorcsMainMenuInit();
+	//
+	// SplashScreen();
+	//
+	// startMenuMusic();
 }

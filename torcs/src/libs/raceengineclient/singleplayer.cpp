@@ -2,9 +2,9 @@
 
     file        : singleplayer.cpp
     created     : Sat Nov 16 09:36:29 CET 2002
-    copyright   : (C) 2002 by Eric Espié                        
-    email       : eric.espie@torcs.org   
-    version     : $Id: singleplayer.cpp,v 1.4 2004/04/05 18:25:00 olethros Exp $                                  
+    copyright   : (C) 2002 by Eric Espiï¿½
+    email       : eric.espie@torcs.org
+    version     : $Id: singleplayer.cpp,v 1.4 2004/04/05 18:25:00 olethros Exp $
 
  ***************************************************************************/
 
@@ -17,8 +17,8 @@
  *                                                                         *
  ***************************************************************************/
 
-/** @file   
-    		
+/** @file
+
     @author	<a href=mailto:eric.espie@torcs.org>Eric Espie</a>
     @version	$Id: singleplayer.cpp,v 1.4 2004/04/05 18:25:00 olethros Exp $
 */
@@ -58,10 +58,10 @@ void *
 ReSinglePlayerInit(void *precMenu)
 {
     if (singlePlayerHandle) return singlePlayerHandle;
-    
-    singlePlayerHandle = GfuiScreenCreateEx((float*)NULL, 
-					    NULL, singlePlayerMenuActivate, 
-					    NULL, (tfuiCallback)NULL, 
+
+    singlePlayerHandle = GfuiScreenCreateEx((float*)NULL,
+					    NULL, singlePlayerMenuActivate,
+					    NULL, (tfuiCallback)NULL,
 					    1);
 
     GfuiTitleCreate(singlePlayerHandle, "SELECT RACE", 0);
@@ -78,6 +78,6 @@ ReSinglePlayerInit(void *precMenu)
     GfuiMenuBackQuitButtonCreate(singlePlayerHandle,
 				 "Back", "Back to Main",
 				 precMenu, singlePLayerShutdown);
-    
+
     return singlePlayerHandle;
 }

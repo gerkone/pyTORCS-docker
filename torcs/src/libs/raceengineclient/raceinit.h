@@ -2,9 +2,9 @@
 
     file        : raceinit.h
     created     : Sat Nov 16 12:24:26 CET 2002
-    copyright   : (C) 2002 by Eric Espi�                        
-    email       : eric.espie@torcs.org   
-    version     : $Id: raceinit.h,v 1.4.2.2 2012/02/14 23:42:20 berniw Exp $                                  
+    copyright   : (C) 2002 by Eric Espi�
+    email       : eric.espie@torcs.org
+    version     : $Id: raceinit.h,v 1.4.2.2 2012/02/14 23:42:20 berniw Exp $
 
  ***************************************************************************/
 
@@ -16,9 +16,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
-/** @file    
-    		
+
+/** @file
+
     @author	<a href=mailto:torcs@free.fr>Eric Espie</a>
     @version	$Id: raceinit.h,v 1.4.2.2 2012/02/14 23:42:20 berniw Exp $
 */
@@ -40,11 +40,10 @@ extern const char *ReGetCurrentRaceName(void);
 extern const char *ReGetPrevRaceName(void);
 extern void ReRunRaceOnConsole(const char* raceconfig);
 
+extern void skipMenu(const char* raceconfig);
+
 extern tModList *ReRaceModList;
 
 
 
-#endif /* _RACEINIT_H_ */ 
-
-
-
+#endif /* _RACEINIT_H_ */

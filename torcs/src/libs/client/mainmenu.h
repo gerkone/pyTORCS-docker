@@ -16,8 +16,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 #ifndef _MAINMENU_H_
 #define _MAINMENU_H_
 
@@ -31,7 +31,4 @@ extern tModList *RacemanModLoaded;
 extern int TorcsMainMenuInit(void);
 extern int TorcsMainMenuRun(void);
 
-#endif /* _MAINMENU_H_ */ 
-
-
-
+#endif /* _MAINMENU_H_ */

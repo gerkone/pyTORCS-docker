@@ -53,14 +53,14 @@ TorcsMainMenuActivate(void * /* dummy */)
  *	0 ok -1 nok
  *
  * Remarks
- *	
+ *
  */
 int
 TorcsMainMenuInit(void)
 {
-    menuHandle = GfuiScreenCreateEx((float*)NULL, 
-				    NULL, TorcsMainMenuActivate, 
-				    NULL, (tfuiCallback)NULL, 
+    menuHandle = GfuiScreenCreateEx((float*)NULL,
+				    NULL, TorcsMainMenuActivate,
+				    NULL, (tfuiCallback)NULL,
 				    1);
 
     GfuiScreenAddBgImg(menuHandle, "data/img/splash-main.png");
@@ -86,7 +86,7 @@ TorcsMainMenuInit(void)
     GfuiMenuButtonCreate(menuHandle,
 			 "Options", "Configure",
 			 TorcsOptionOptionInit(menuHandle), GfuiScreenActivate);
-    
+
     GfuiMenuDefaultKeysAdd(menuHandle);
 
     GfuiMenuBackQuitButtonCreate(menuHandle,
@@ -98,19 +98,19 @@ TorcsMainMenuInit(void)
 
 /*
  * Function
- *	
+ *
  *
  * Description
- *	
+ *
  *
  * Parameters
- *	
+ *
  *
  * Return
- *	
+ *
  *
  * Remarks
- *	
+ *
  */
 int
 TorcsMainMenuRun(void)

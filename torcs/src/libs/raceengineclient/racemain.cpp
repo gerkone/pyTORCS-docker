@@ -2,9 +2,9 @@
 
     file        : racemain.cpp
     created     : Sat Nov 16 12:13:31 CET 2002
-    copyright   : (C) 2002-2013 by Eric Espie, Bernhard Wymann                    
-    email       : eric.espie@torcs.org   
-    version     : $Id: racemain.cpp,v 1.13.2.11 2014/05/22 17:21:38 berniw Exp $                                  
+    copyright   : (C) 2002-2013 by Eric Espie, Bernhard Wymann
+    email       : eric.espie@torcs.org
+    version     : $Id: racemain.cpp,v 1.13.2.11 2014/05/22 17:21:38 berniw Exp $
 
  ***************************************************************************/
 
@@ -17,8 +17,8 @@
  *                                                                         *
  ***************************************************************************/
 
-/** @file   
-    		
+/** @file
+
     @author	<a href=mailto:eric.espie@torcs.org>Eric Espie</a>
     @version	$Id: racemain.cpp,v 1.13.2.11 2014/05/22 17:21:38 berniw Exp $
 */
@@ -309,7 +309,8 @@ static int reRaceRealStart(void)
 
 	ReInfo->_reTimeMult = 1.0;
 	ReInfo->_reLastTime = -1.0;
-	ReInfo->s->currentTime = -2.0;
+  // avoid wasting 3 seconds, time initialized on 0 - race begins immediately
+	ReInfo->s->currentTime = 0.0;
 	ReInfo->s->deltaTime = RCM_MAX_DT_SIMU;
 
 	ReInfo->s->_raceState = RM_RACE_STARTING;
@@ -646,4 +647,3 @@ int ReEventShutdown(void)
 
 	return RM_SYNC | ret;
 }
-

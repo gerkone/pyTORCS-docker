@@ -2,9 +2,9 @@
 
     file        : singleplayer.h
     created     : Sat Nov 16 09:48:11 CET 2002
-    copyright   : (C) 2002 by Eric Espié                        
-    email       : eric.espie@torcs.org   
-    version     : $Id: singleplayer.h,v 1.3 2004/04/05 18:25:00 olethros Exp $                                  
+    copyright   : (C) 2002 by Eric Espiï¿½
+    email       : eric.espie@torcs.org
+    version     : $Id: singleplayer.h,v 1.3 2004/04/05 18:25:00 olethros Exp $
 
  ***************************************************************************/
 
@@ -16,9 +16,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
-/** @file    
-    		
+
+/** @file
+
     @author	<a href=mailto:torcs@free.fr>Eric Espie</a>
     @version	$Id: singleplayer.h,v 1.3 2004/04/05 18:25:00 olethros Exp $
 */
@@ -28,7 +28,4 @@
 
 extern void *ReSinglePlayerInit(void *precMenu);
 
-#endif /* _SINGLEPLAYER_H_ */ 
-
-
-
+#endif /* _SINGLEPLAYER_H_ */

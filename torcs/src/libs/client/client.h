@@ -16,8 +16,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 #ifndef _TORCS_H_
 #define _TORCS_H_
 
@@ -26,9 +26,6 @@
 #endif
 
 
-extern void TorcsEntry(void);
+extern void TorcsEntry(const char* raceconfig);
 
-#endif /* _TORCS_H_ */ 
-
-
-
+#endif /* _TORCS_H_ */
