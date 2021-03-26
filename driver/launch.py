@@ -44,6 +44,7 @@ class Launch:
 
 if __name__ == "__main__":
     try:
+        print("pyTORCS: TORCS-based environment for simple autonomous driving simulations.")
         # set tensorflow to train with GPU 0
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ["CUDA_VISIBLE_DEVICES"] = "0"

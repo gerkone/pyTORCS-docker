@@ -31,10 +31,6 @@ class TorcsEnv:
         else:
             self.container_id = "0"
 
-        # create new torcs client
-        self.client = snakeoil3.Client(p=port, vision=self.vision, verbose = self.verbose,
-                                container_id = self.container_id, maxSteps = np.inf)
-
         # should be true if tor was just opened
         self.initial_run = True
 
@@ -66,6 +62,10 @@ class TorcsEnv:
 
         # run torcs and start practice run
         reset_torcs(self.container_id, self.vision, True)
+
+        # create new torcs client - after torcs launch
+        self.client = snakeoil3.Client(p=port, vision=self.vision, verbose = self.verbose,
+                                container_id = self.container_id, maxSteps = np.inf)
 
         if throttle is False:
             self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
