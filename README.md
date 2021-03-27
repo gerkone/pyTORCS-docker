@@ -1,7 +1,7 @@
 # pyTORCS + Docker
 OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
 
-The **environment** is designed to be run inside a Docker container(s). This was done to simplify the installation, as VTORCS/TORCS can be tricky to install on some systems.
+The **environment** is designed to be run inside a Docker container(s). This was done to simplify the installation, as torcs/TORCS can be tricky to install on some systems.
 
 Either way, everything can be still installed and run directly on the host.
 
@@ -47,12 +47,12 @@ docker-compose --version
 
 5a **pull the torcs image**
 ```
-docker pull gerkone/vtorcs
+docker pull gerkone/torcs
 ```
 
 5b **build the torcs image yourself**
 ```
-docker build -t <your image name> vtorcs/
+docker build -t <your image name> torcs/
 ```
 
 6 (optional) **install konsole**
@@ -69,7 +69,7 @@ sudo pacman -S konsole
 ```
 
 ## Host version installation
-To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/vtorcs/README.md) in  the vtorcs readme.
+To install TORCS follow the [guide](https://github.com/gerkone/pyTORCS-docker/blob/master/torcs/README.md) in  the torcs readme.
 
 For the python requirements for the example simply run
 ```
@@ -92,7 +92,7 @@ python pytorcs.py --console <terminator|xterm|gnome-terminal...>
 
 If you want to run the TORCS container manually you can use
 ```
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3101:3101/udp -it --rm gerkone/vtorcs
+nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm gerkone/torcs
 ```
 
 ## Troubleshooting and known issues
@@ -102,6 +102,12 @@ xhost local:root
 ```
 
 ## References
-The python client was initially based on [ugo-nama-kun's gym_torcs](https://github.com/ugo-nama-kun/gym_torcs), with some changes to accomodate docker and quality of life improvements.
+This torcs is a modified version of 1.3.7 with the following changes:
+- The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
+- The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
+- The **loading screens were also removed**. I found that this somehow saves a lot of time.
+- The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
 
-The modified TORCS source is taken from [Giuseppe Cuccu's vtorcs](https://github.com/giuse/vtorcs), which enables 64x64 RGB vision.
+The Python environment was initially based on [ugo-nama-kun's gym_torcs](https://github.com/ugo-nama-kun/gym_torcs), with some changes to accomodate docker and quality of life improvements.
+
+The Python torcs client is an extended version of snakeoil3.

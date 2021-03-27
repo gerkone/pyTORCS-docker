@@ -1,5 +1,33 @@
-# **TORCS 1.3.7** 
+# **TORCS 1.3.7**
 Version of TORCS 1.3.7 with [SCR patch](https://github.com/barisdemirdelen/scr-torcs-1.3.7) and an additional patch to send the current game image to another application via shared memory.
+It was additionally modified with the following changes
+- The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
+- The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
+- The **loading screens were also removed**. I found that this somehow saves a lot of time.
+- The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
+
+## My changes
+The files modified by me are limited to:
+### To skip the menu:
+- libs/raceengineclient/raceinit.cpp - added skipMenu function
+- linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu
+- libs/client/entry.cpp - removed menu init, added skipMenu call
+### To skip the countdown:
+- libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
+### To solve the quarter screen draw issue:
+- libs/raceengineclient/racemain.cpp on line 321,
+```cpp
+ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh), GR_VIEW_STD, ReInfo->_reGameScreen);  
+```
+becomes
+```cpp
+ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
+```
+GfScrGetSize fails and initview start drawing below the top left corner, so that the top right corner falls on center of the screen.
+### To make shared memory vision easier:
+- linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
+- libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
+
 
 ## Installation on Ubuntu 20.04
 
@@ -100,7 +128,7 @@ install PLIB-dependencies
 
 ```sudo apt-get install libxmu-dev libxmu6 libxi-dev```
 
-now download [PLIB 1.8.5](http://plib.sourceforge.net/download.html), unpack to the created directory and enter the plib folder by 
+now download [PLIB 1.8.5](http://plib.sourceforge.net/download.html), unpack to the created directory and enter the plib folder by
 
 ```sudo tar xfvz /path_to_downloaded_files/plib-1.8.5.tar.gz```
 
@@ -150,7 +178,7 @@ we enter the build folder and compile openal
 ```sudo make install```
 
 ### install TORCS
-enter your TORCS_PATH 
+enter your TORCS_PATH
 
 ```cd $TORCS_PATH```
 
@@ -158,7 +186,7 @@ and clone this repository
 
 ```git clone https://github.com/fmirus/torcs-1.3.7.git```
 
-now we enter our torcs folder 
+now we enter our torcs folder
 
 ```cd torcs-1.3.7```
 
@@ -287,7 +315,7 @@ Command line arguments:
 Command line arguments:
 * -s disable multitexturing, important for older graphics cards
 * -r pathtoraceconfigfile, run race from command line only, for testing and AI
-     training, see FAQ for details 
+     training, see FAQ for details
 
 
 ### 6.1 Windows Installation from Source, additional notes
@@ -338,7 +366,7 @@ Command line arguments:
 Command line arguments:
 * -s disable multitexturing, important for older graphics cards
 * -r pathtoraceconfigfile, run race from command line only, for testing and AI
-     training, see FAQ for details 
+     training, see FAQ for details
 
 
 ## 8. Testing
@@ -420,7 +448,7 @@ Changes since 1.3.6
 - Result saving creates directory if not available, matters when creating
   custom racemanagers or running custom batches with -r (Bernhard).
 - Improved -r on Windows, paths containing backslashes ('\') are now working
-  (Bernhard). 
+  (Bernhard).
 - Added ShFolder.lib to VS 6 project files (required for SHGetFolderPath).
   For VS 6 builds you will need to install the Windows Server 2003 February
   Edtion CORE SDK (the last one which worked with VS 6) and set the lib
@@ -539,7 +567,7 @@ mc-larenf1 -> replace with car10-trb1
 p406 -> replace with car1-trb4
 rework buggy, baja bug
 replace rally cars
-Remove invalid geometry from tracks 
+Remove invalid geometry from tracks
 convert force units internally from lbs to lbf
 
 
