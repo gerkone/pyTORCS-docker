@@ -155,6 +155,7 @@ class TorcsEnv:
 
         if episode_terminate:
             self.initial_run = False
+            reset_torcs(self.container_id, True, True)
 
         self.time_step += 1
 
@@ -162,6 +163,10 @@ class TorcsEnv:
 
     def reset(self):
         if self.verbose: print("Reset")
+
+        if not self.initial_run:
+            # because the game restarts the UDP connection must be reset too
+            self.client.restart()
 
         self.time_step = 0
 
@@ -235,6 +240,5 @@ class TorcsEnv:
         for cat in self.state_filter:
             par = np.array(raw_obs[cat], dtype=np.float32)/self.state_filter[cat]
             obs.append(par)
-        print(obs)
 
         return obs

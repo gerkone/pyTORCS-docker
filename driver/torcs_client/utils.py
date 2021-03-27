@@ -44,14 +44,13 @@ def reset_torcs(container_id, vision, kill = False):
         kill_torcs(container_id)
 
     if container_id != "0":
-        command.extend(["docker", "exec", container_id, "torcs"])
+        command.extend(["docker", "exec", container_id])
 
     command.extend(["torcs", "-nofuel", "-nodamage", "-nolaptime"])
 
     if vision is True:
         command.extend("-vision")
 
-    time.sleep(1)
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def kill_torcs(container_id):
