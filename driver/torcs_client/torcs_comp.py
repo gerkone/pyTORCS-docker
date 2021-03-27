@@ -6,16 +6,14 @@ import collections as col
 import matplotlib.pyplot as plt
 import sys, signal
 
-import torcs_client.snakeoil3_gym as snakeoil3
+from torcs_client.torcs_client import Client
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
 from torcs_client.utils import start_container, reset_torcs, kill_torcs
 
 class TorcsEnv:
     def __init__(self, throttle = False, gear_change = False, state_filter = None, default_speed = 50,
-            port = 3001, img_width = 0, img_height = 0, verbose = False, image_name = "gerkone/torcs"):
-
-        self.vision = False
+            port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
         self.gear_change = gear_change
@@ -45,9 +43,6 @@ class TorcsEnv:
             self.img_height = 64
 
         if state_filter != None:
-            if "img" in state_filter:
-                self.vision = True
-                del state_filter["img"]
             self.state_filter = dict(sorted(state_filter.items()))
         else:
             self.state_filter = {}
@@ -60,12 +55,14 @@ class TorcsEnv:
             self.state_filter["wheelSpinVel"] = 1.0
             self.state_filter["rpm"] = 10000
 
+        vision = "img" in state_filter
+
         # run torcs and start practice run
-        reset_torcs(self.container_id, self.vision, True)
+        reset_torcs(self.container_id, vision, True)
 
         # create new torcs client - after torcs launch
-        self.client = snakeoil3.Client(p=port, vision=self.vision, verbose = self.verbose,
-                                container_id = self.container_id, maxSteps = np.inf)
+        self.client = Client(port = port, verbose = self.verbose, container_id = self.container_id,
+                        maxSteps = np.inf, vision = vision)
 
         if throttle is False:
             self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
@@ -230,37 +227,6 @@ class TorcsEnv:
 
         return torcs_action
 
-
-    def raw_vision_to_rgb(self, obs_image_vec):
-        """
-        Transforms the raw byte array from vision in 3 two dimensional matrices
-        """
-        image_vec =  obs_image_vec
-
-        r = image_vec[0:len(image_vec):3]
-        g = image_vec[1:len(image_vec):3]
-        b = image_vec[2:len(image_vec):3]
-
-        sz = (self.img_width, self.img_height)
-        r = np.array(r).reshape(sz)
-        g = np.array(g).reshape(sz)
-        b = np.array(b).reshape(sz)
-
-        r = np.flip(r, axis = 0)
-        g = np.flip(g, axis = 0)
-        b = np.flip(b, axis = 0)
-
-        # if not hasattr(self, "plt"):
-        #     self.fig, ax = plt.subplots(1,1)
-        #     image = np.array(r)
-        #     self.im = ax.imshow(image)
-        #
-        # self.im.set_data(np.array(r))
-        # self.fig.canvas.draw_idle()
-        # plt.pause(1)
-
-        return np.array([r, g, b], dtype=np.uint8)
-
     def make_observaton(self, raw_obs):
         """
         returns a numpy array with the normalized state values specified in state_filter
@@ -269,9 +235,6 @@ class TorcsEnv:
         for cat in self.state_filter:
             par = np.array(raw_obs[cat], dtype=np.float32)/self.state_filter[cat]
             obs.append(par)
-        if self.vision:
-            # Get RGB from observation
-            image_rgb = self.raw_vision_to_rgb(raw_obs["img"])
-            obs.append(image_rgb)
+        print(obs)
 
         return obs

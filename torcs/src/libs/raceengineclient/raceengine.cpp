@@ -638,11 +638,12 @@ ReRaceRules(tCarElt *car)
 		}
 	}
 }
-extern int* pwritten;
+
+// extern int* pwritten;
 extern uint8_t* pdata;
-extern int* ppause;
-extern int* pzmq_flag;
-extern int* psave_flag;
+// extern int* ppause;
+// extern int* pzmq_flag;
+// extern int* psave_flag;
 
 int count=0;
 
@@ -650,23 +651,23 @@ int count=0;
 static void
 ReOneStep(double deltaTimeIncrement)
 {
+	// ignore pause on write - memory access from python is on read only because of lazyness
+	// if (*ppause == 1)
+  //    {
+    count++;
+    if (count > 10) // 25FPS
+    {
+       count=1;
 
-	if (*ppause == 1)
-     {
-        count++;
-        if (count>50) // 10FPS
-        {
-           count=1;
+       glReadPixels(0, 0, image_width, image_height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)pdata);
 
-           glReadPixels(0, 0, image_width, image_height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)pdata);
+       // *pwritten=1;
 
-           *pwritten=1;
-
-           double t = GfTimeClock();
-           if ((t - ReInfo->_reCurTime) > 30*RCM_MAX_DT_SIMU)
-               ReInfo->_reCurTime = t - RCM_MAX_DT_SIMU;
-        }
+       double t = GfTimeClock();
+       if ((t - ReInfo->_reCurTime) > 30*RCM_MAX_DT_SIMU)
+           ReInfo->_reCurTime = t - RCM_MAX_DT_SIMU;
     }
+    // }
 
     int i;
 	tRobotItf *robot;

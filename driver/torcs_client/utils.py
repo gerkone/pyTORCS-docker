@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 import re
+import numpy as np
 
 class bcolors:
     HEADER = '\033[95m'
@@ -51,7 +52,7 @@ def reset_torcs(container_id, vision, kill = False):
         command.extend("-vision")
 
     time.sleep(1)
-    subprocess.Popen(command)
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def kill_torcs(container_id):
     command = []
@@ -62,8 +63,6 @@ def kill_torcs(container_id):
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def destringify(s):
-    '''makes a string into a value or a list of strings into a list of
-    values (if possible)'''
     if not s: return s
     if type(s) is str:
         try:
@@ -76,3 +75,19 @@ def destringify(s):
             return destringify(s[0])
         else:
             return [destringify(i) for i in s]
+
+def raw_to_rgb(img_buf, img_size, img_width, img_height):
+
+    col1 = img_buf[0:img_size:3]
+    col2 = img_buf[1:img_size:3]
+    col3 = img_buf[2:img_size:3]
+
+    col1 = np.array(col1).reshape((img_width, img_height))
+    col2 = np.array(col2).reshape((img_width, img_height))
+    col3 = np.array(col3).reshape((img_width, img_height))
+
+    col1 = np.flip(col1, axis = 0)
+    col2 = np.flip(col2, axis = 0)
+    col3 = np.flip(col3, axis = 0)
+
+    return np.dstack((col1,col2,col3))

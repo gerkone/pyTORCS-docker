@@ -17,10 +17,12 @@ GfScrGetSize fails -> sw, sh, vw, vh = (0, 0, 640, 480), draw area = ((sw-vw)/2,
 files modified:
 skipMenu:
 libs/raceengineclient/raceinit.cpp - added skipMenu function
-linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu
+linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu.
 libs/client/entry.cpp - removed menu init, added skipMenu call
-countdown removed:
-libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
-libs/raceengineclient/racemain.cpp - time now starts at 0.0, to remove countdown
+countdown:
+libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start.
 Draw issue:
 libs/raceengineclient/racemain.cpp line 321, ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh), GR_VIEW_STD, ReInfo->_reGameScreen);  to ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
+Vision:
+linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
+libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write

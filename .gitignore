@@ -1,7 +1,7 @@
 __pycache__/
  *.pyc
 *.o
-torcs/export/
+export/
 *.rc
 .depend
 *-bin

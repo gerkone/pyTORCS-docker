@@ -1,95 +1,51 @@
-#!/usr/bin/python
-# snakeoil.py
+# snakeoil extended with vision through shared memory
 # Chris X Edwards <snakeoil@xed.ch>
-# Snake Oil is a Python library for interfacing with a TORCS
-# race car simulator which has been patched with the server
-# extentions used in the Simulated Car Racing competitions.
-# http://scr.geccocompetitions.com/
-#
-# To use it, you must import it and create a "drive()" function.
-# This will take care of option handling and server connecting, etc.
-# To see how to write your own client do something like this which is
-# a complete working client:
-# /-----------------------------------------------\
-# |#!/usr/bin/python                              |
-# |import snakeoil                                |
-# |if __name__ == "__main__":                     |
-# |    C= snakeoil.Client()                       |
-# |    for step in xrange(C.maxSteps,0,-1):       |
-# |        C.get_servers_input()                  |
-# |        snakeoil.drive_example(C)              |
-# |        C.respond_to_server()                  |
-# |    C.shutdown()                               |
-# \-----------------------------------------------/
-# This should then be a full featured client. The next step is to
-# replace 'snakeoil.drive_example()' with your own. There is a
-# dictionary which holds various option values (see `default_options`
-# variable for all the details) but you probably only need a few
-# things from it. Mainly the `trackname` and `stage` are important
-# when developing a strategic bot.
-#
-# This dictionary also contains a ServerState object
-# (key=S) and a DriverAction object (key=R for response). This allows
-# you to get at all the information sent by the server and to easily
-# formulate your reply. These objects contain a member dictionary "d"
-# (for data dictionary) which contain key value pairs based on the
-# server's syntax. Therefore, you can read the following:
-#    angle, curLapTime, damage, distFromStart, distRaced, focus,
-#    fuel, gear, lastLapTime, opponents, racePos, rpm,
-#    speedX, speedY, speedZ, track, trackPos, wheelSpinVel, z
-# The syntax specifically would be something like:
-#    X= o[S.d['tracPos']]
-# And you can set the following:
-#    accel, brake, clutch, gear, steer, focus, meta
-# The syntax is:
-#     o[R.d['steer']]= X
-# Note that it is 'steer' and not 'steering' as described in the manual!
-# All values should be sensible for their type, including lists being lists.
-# See the SCR manual or http://xed.ch/help/torcs.html for details.
-#
-# If you just run the snakeoil.py base library itself it will implement a
-# serviceable client with a demonstration drive function that is
-# sufficient for getting around most tracks.
-# Try `snakeoil.py --help` to get started.
+# Gianluca Galletti
 
-# for Python3-based torcs python robot client
+
+import matplotlib.pyplot as plt
+
 import socket
 import sys
 import getopt
 import numpy as np
+import sysv_ipc as ipc
 
-from torcs_client.utils import start_container, reset_torcs, destringify
+from torcs_client.utils import start_container, reset_torcs, destringify, raw_to_rgb
 
 data_size = 2**17
 
+SHMKEY = 1234
+
 class Client():
-    def __init__(self, H=None, p=None, i=None, e=None, t=None, s=None, d=None, maxSteps = 10000,
-                    container_id = "0", vision=False, verbose = False):
+    """
+    Snake Oil is a Python library for interfacing with a TORCS
+    race car simulator which has been patched with the server
+    extentions used in the Simulated Car Racing competitions.
+    """
+    def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None,
+                maxSteps = 10000, container_id = "0", vision=False, verbose = False,
+                img_height= 640, img_width = 480):
 
         self.verbose = verbose
 
         self.container_id = container_id
 
-        # If you don't like the option defaults,  change them here.
         self.vision = vision
 
-        self.host= 'localhost'
-        self.port= 3001
-        self.sid= 'SCR'
-        self.maxEpisodes=1 # "Maximum number of learning episodes to perform"
-        self.trackname= 'unknown'
-        self.stage= 3 # 0=Warm-up, 1=Qualifying 2=Race, 3=unknown <Default=3>
-        self.debug= False
-        self.maxSteps= maxSteps  # 50steps/second
-        # self.parse_the_command_line()
-        if H: self.host= H
-        if p: self.port= p
-        if i: self.sid= i
-        if e: self.maxEpisodes= e
-        if t: self.trackname= t
-        if s: self.stage= s
-        if d: self.debug= d
+        self.img_height = img_height
+        self.img_width = img_width
+        self.img_size = self.img_width * self.img_height * 3
+
+        self.host = host
+        self.port = port
+        self.sid = sid
+        self.trackname = trackname
+        self.maxSteps = maxSteps  # should be 50steps/second if it had real time performance
+
         self.reset()
+        if(self.vision):
+            self.setup_shm_vision()
 
     def reset(self):
         """
@@ -158,46 +114,31 @@ class Client():
                 if self.verbose: print("Client connected on %d.............." % self.port)
                 break
 
-    def parse_the_command_line(self):
-        try:
-            (opts, args) = getopt.getopt(sys.argv[1:], 'H:p:i:m:e:t:s:dhv',
-                       ['host=','port=','id=','steps=',
-                        'episodes=','track=','stage=',
-                        'debug','help','version'])
-        except getopt.error as why:
-            if self.verbose: print('getopt error: %s\n%s' % (why, usage))
-            sys.exit(-1)
-        try:
-            for opt in opts:
-                if opt[0] == '-h' or opt[0] == '--help':
-                    if self.verbose: print(usage)
-                    sys.exit(0)
-                if opt[0] == '-d' or opt[0] == '--debug':
-                    self.debug= True
-                if opt[0] == '-H' or opt[0] == '--host':
-                    self.host= opt[1]
-                if opt[0] == '-i' or opt[0] == '--id':
-                    self.sid= opt[1]
-                if opt[0] == '-t' or opt[0] == '--track':
-                    self.trackname= opt[1]
-                if opt[0] == '-s' or opt[0] == '--stage':
-                    self.stage= int(opt[1])
-                if opt[0] == '-p' or opt[0] == '--port':
-                    self.port= int(opt[1])
-                if opt[0] == '-e' or opt[0] == '--episodes':
-                    self.maxEpisodes= int(opt[1])
-                if opt[0] == '-m' or opt[0] == '--steps':
-                    self.maxSteps= int(opt[1])
-                if opt[0] == '-v' or opt[0] == '--version':
-                    if self.verbose: print('%s %s' % (sys.argv[0], version))
-                    sys.exit(0)
-        except ValueError as why:
-            if self.verbose: print('Bad parameter \'%s\' for option %s: %s\n%s' % (
-                                       opt[1], opt[0], why, usage))
-            sys.exit(-1)
-        if len(args) > 0:
-            if self.verbose: print('Superflous input? %s\n%s' % (', '.join(args), usage))
-            sys.exit(-1)
+    def setup_shm_vision(self):
+        """
+        Open shared memory with the key that specified in torcs
+        """
+        # no need to attach/detach - read only access (nobody likes semaphores)
+        self.shm = ipc.SharedMemory(SHMKEY, flags = 0)
+
+    def get_vision(self):
+        """
+        Return a numpy array with the whole 640x480(x3) vision
+        """
+        if(self.vision):
+            if(hasattr(self, "shm")):
+                # read image size, 16 padding pits should be there otherwise
+                buf = self.shm.read(self.img_size)
+                # sent as array of 8 bit ints
+                image_buf = np.frombuffer(buf, dtype=np.int8)
+
+                return raw_to_rgb(image_buf, self.img_size, self.img_width, self.img_height)
+            else:
+                # shared memory not yet ready, get blank image
+                image_buf = np.zeros(self.img_size)
+                return raw_to_rgb(image_buf, self.img_size, self.img_width, self.img_height)
+
+        return None
 
     def get_servers_input(self):
         '''Server's input is stored in a ServerState object'''
@@ -229,10 +170,7 @@ class Client():
             elif not sockdata: # Empty?
                 continue       # Try again.
             else:
-                self.S.parse_server_str(sockdata)
-                if self.debug:
-                    sys.stderr.write("\x1b[2J\x1b[H") # Clear for steady output.
-                    if self.verbose: print(self.S)
+                self.S.parse_server_str(sockdata, self.get_vision())
                 break # Can now return from this function.
 
     def respond_to_server(self):
@@ -245,24 +183,34 @@ class Client():
             sys.exit(-1)
 
 class ServerState():
-    '''What the server is reporting right now.'''
+    """
+    What the server is reporting right now.
+    """
     def __init__(self):
         self.servstr= str()
         self.d= dict()
 
-    def parse_server_str(self, server_string):
-        '''Parse the server string.'''
+    def parse_server_str(self, server_string, image):
+        """
+        Parse the server string.
+        """
         self.servstr= server_string.strip()[:-1]
         sslisted= self.servstr.strip().lstrip('(').rstrip(')').split(')(')
         for i in sslisted:
             w= i.split(' ')
             self.d[w[0]]= destringify(w[1:])
 
+        if(image is not None):
+            # add image to the state dictionary
+            self.d["img"] = image
+
 class DriverAction():
-    '''What the driver is intending to do (i.e. send to the server).
+    """
+    What the driver is intending to do (i.e. send to the server).
     Composes something like this for the server:
     (accel 1)(brake 0)(gear 1)(steer 0)(clutch 0)(focus 0)(meta 0) or
-    (accel 1)(brake 0)(gear 1)(steer 0)(clutch 0)(focus -90 -45 0 45 90)(meta 0)'''
+    (accel 1)(brake 0)(gear 1)(steer 0)(clutch 0)(focus -90 -45 0 45 90)(meta 0)
+    """
     def __init__(self):
        self.actionstr= str()
        # "d" is for data dictionary.
@@ -276,13 +224,6 @@ class DriverAction():
                     }
 
     def clip_to_limits(self):
-        """There pretty much is never a reason to send the server
-        something like (steer 9483.323). This comes up all the time
-        and it's probably just more sensible to always clip it than to
-        worry about when to. The "clip" command is still a snakeoil
-        utility function, but it should be used only for non standard
-        things or non obvious limits (limit the steering to the left,
-        for example). For normal limits, simply don't worry about it."""
         self.d['steer'] = np.clip(self.d['steer'], -1, 1)
         self.d['brake'] = np.clip(self.d['brake'], 0, 1)
         self.d['accel'] = np.clip(self.d['accel'], 0, 1)

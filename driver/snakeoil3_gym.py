@@ -40,12 +40,17 @@ def drive_example(c):
 
 
 if __name__ == "__main__":
-    C = Client(p=3001, maxSteps = 100)
-    while True:
-        C.R.d['meta'] = 0
-        for step in range(C.maxSteps,0,-1):
-            C.get_servers_input()
-            drive_example(C)
-            C.respond_to_server()
-        C.R.d['meta'] = 1
+    C = Client(port = 3001, maxSteps = 100000, vision = True)
+
+    import sysv_ipc as ipc
+
+    key = 1234
+    shm = ipc.SharedMemory(key, flags = 0)
+
+    for step in range(C.maxSteps,0,-1):
+        buf = shm.read()
+        C.get_servers_input()
+        drive_example(C)
+        C.respond_to_server()
     C.shutdown()
+    shm.detach()

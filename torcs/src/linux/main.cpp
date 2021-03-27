@@ -149,18 +149,19 @@ init_args(int argc, char **argv, const char **raceconfig)
 
 struct shared_use_st
 {
-    int written;
-    uint8_t data[image_width*image_height*3];
-    int pause;
-    int zmq_flag;
-    int save_flag;
+		// removed rw access flags - keep only image
+		uint8_t data[image_width*image_height*3];
+    // int written;
+    // int pause;
+    // int zmq_flag;
+    // int save_flag;
 };
 
-int* pwritten = NULL;
 uint8_t* pdata = NULL;
-int* ppause = NULL;
-int* pzmq_flag = NULL;
-int* psave_flag = NULL;
+// int* pwritten = NULL;
+// int* ppause = NULL;
+// int* pzmq_flag = NULL;
+// int* psave_flag = NULL;
 
 void *shm = NULL;
 
@@ -202,17 +203,17 @@ main(int argc, char *argv[])
     printf("\n********** Memory sharing started, attached at %X **********\n \n", shm);
     // set up shared memory
     shared = (struct shared_use_st*)shm;
-    shared->written = 0;
-    shared->pause = 0;
-    shared->zmq_flag = 0;
-    shared->save_flag = 0;
+    // shared->written = 0;
+    // shared->pause = 0;
+    // shared->zmq_flag = 0;
+    // shared->save_flag = 0;
 
 
-    pwritten=&shared->written;
+    // pwritten=&shared->written;
     pdata=shared->data;
-    ppause=&shared->pause;
-    pzmq_flag = &shared->zmq_flag;
-	psave_flag = &shared->save_flag;
+  //   ppause=&shared->pause;
+  //   pzmq_flag = &shared->zmq_flag;
+	// psave_flag = &shared->save_flag;
 
 	const char *raceconfig = "";
 
