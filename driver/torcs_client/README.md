@@ -1,20 +1,21 @@
 # Python client
 
-This client uses **snakeoil3** set up an UDP connection on port 3101 to TORCS's _scr_server_.
+This client uses **snakeoil3** set up an UDP connection on port 3001 to TORCS's _scr_server_.
 
 Actions are sent to the _scr_server_, which in turn gives back the next state.
 
-With the VTORCS modification the state can also be an image.
+The python interface to torcs, **TorcsEnv**, can be used either with the rest of the launch file or as a standalone environment.
+
+With this modified version of TORCS the state can also be an image.
 
 ## Usage
-The **TorcsEnv** class provides a simple abstraction of TORCS.
-
-The API is similar to OpenAI gym, with some peculiarities.
+The **TorcsEnv** class by itself provides a simple abstraction of TORCS. The API is similar to OpenAI gym, with some peculiarities.
 
 ### Config file
-The base config file is located at [simulation.yaml](config/simulation.yaml) and will look like this.
+The default config file is located at [simulation.yaml](config/simulation.yaml) and will look like this.
 ```yaml
-image_name : "gerkone/vtorcs"
+# docker image name. set to 0 to run torcs on host
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
@@ -71,7 +72,12 @@ run_path : "driver/test_torcs.py"
 - **mod_name** is the name of your function
 - **run_path** is the relative path to the file containing your run function, starting from the _driver/_ directory.
 
-With these settings the function with name _main_ from the file _driver/test_torcs.py_.
+With these settings the function with name _main_ from the file _driver/test_torcs.py_ will be run when _python pytorcs.py_ is run.
+
+After editing _simulation.yaml_ the environment can be started up as always with
+```
+python pytorcs.py
+```
 
 ## Example
 
@@ -123,7 +129,7 @@ The **sensors/state_filter** dictionary specifies which virtual sensor include i
 3. ```python
 env = TorcsEnv(throttle = False, verbose = verbose, state_filter = state_filter)
 ```
-  - **_throttle_** sets automatic throttle control, for simpler training.
+  - **_throttle_** sets automatic throttle control, for simpler training. This means that the action space is restricted to just steering. The throttle is controlled via a simple cruise control.
   - **_state_filter__** sets the selected sensors.
   - **_verbose_** if set prints some info from the simulation.
 
@@ -137,4 +143,4 @@ state_new, reward, terminal = env.step(action)
 ## Further customization
 An example deep reinforcement learning agent, using DDPG, is provided.
 
-The reward function and the termination clause can be customized by changing the content of the functions in **torcs_client/_reward.py_** and **torcs_client/_terminator.py_**.
+The reward function and the termination clause can be customized by changing respectively **torcs_client/reward.py** and **torcs_client/terminator.py**.

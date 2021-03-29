@@ -3,8 +3,6 @@
 # Gianluca Galletti
 
 
-import matplotlib.pyplot as plt
-
 import socket
 import sys
 import getopt
@@ -25,7 +23,7 @@ class Client():
     """
     def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None,
                 maxSteps = 10000, container_id = "0", vision=False, verbose = False,
-                img_height= 640, img_width = 480):
+                img_height= 640, img_width = 480, img_scale = 10):
 
         self.verbose = verbose
 
@@ -35,7 +33,7 @@ class Client():
 
         self.img_height = img_height
         self.img_width = img_width
-        self.img_size = self.img_width * self.img_height * 3
+        self.img_scale = img_scale
 
         self.host = host
         self.port = port
@@ -85,9 +83,6 @@ class Client():
 
         n_fail = 5
         while True:
-            # This string establishes track sensor angles! You can customize them.
-            #a= "-90 -75 -60 -45 -30 -20 -15 -10 -5 0 5 10 15 20 30 45 60 75 90"
-            # xed- Going to try something a bit more aggressive...
             a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
 
             initmsg='%s(init %s)' % (self.sid,a)
@@ -128,20 +123,22 @@ class Client():
         if(self.vision):
             if(hasattr(self, "shm")):
                 # read image size, 16 padding pits should be there otherwise
-                buf = self.shm.read(self.img_size)
+                buf = self.shm.read(self.img_width * self.img_height * 3)
                 # sent as array of 8 bit ints
                 image_buf = np.frombuffer(buf, dtype=np.int8)
 
-                return raw_to_rgb(image_buf, self.img_size, self.img_width, self.img_height)
+                return raw_to_rgb(image_buf, self.img_scale, self.img_width, self.img_height)
             else:
                 # shared memory not yet ready, get blank image
-                image_buf = np.zeros(self.img_size)
-                return raw_to_rgb(image_buf, self.img_size, self.img_width, self.img_height)
+                image_buf = np.zeros(self.img_width * self.img_height * 3)
+                return raw_to_rgb(image_buf, self.img_scale, self.img_width, self.img_height)
 
         return None
 
     def get_servers_input(self):
-        '''Server's input is stored in a ServerState object'''
+        """
+        Server's input is stored in a ServerState object
+        """
         if not self.so: return
         sockdata= str()
 

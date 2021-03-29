@@ -3,6 +3,7 @@ import time
 import os
 import re
 import numpy as np
+import cv2
 
 class bcolors:
     HEADER = '\033[95m'
@@ -75,18 +76,9 @@ def destringify(s):
         else:
             return [destringify(i) for i in s]
 
-def raw_to_rgb(img_buf, img_size, img_width, img_height):
+def raw_to_rgb(img_buf, scale, img_width, img_height):
 
-    col1 = img_buf[0:img_size:3]
-    col2 = img_buf[1:img_size:3]
-    col3 = img_buf[2:img_size:3]
+    img = np.array(img_buf.reshape((img_width, img_height, 3)))
+    img = np.flip(img, axis = 0)
 
-    col1 = np.array(col1).reshape((img_width, img_height))
-    col2 = np.array(col2).reshape((img_width, img_height))
-    col3 = np.array(col3).reshape((img_width, img_height))
-
-    col1 = np.flip(col1, axis = 0)
-    col2 = np.flip(col2, axis = 0)
-    col3 = np.flip(col3, axis = 0)
-
-    return np.dstack((col1,col2,col3))
+    return img

@@ -29,7 +29,7 @@ class TorcsEnv:
         else:
             self.container_id = "0"
 
-        # should be true if tor was just opened
+        # should be true if torcs was just opened
         self.initial_run = True
 
         if img_width != 0:
@@ -117,17 +117,14 @@ class TorcsEnv:
         # current observation
         curr_state = self.client.S.d
 
-        # Steering
-        self.client.R.d["steer"] = action["steer"]  # in [-1, 1]
+        self.client.R.d["steer"] = action["steer"]
 
-        # Simple Automatic Throttle Control by Snakeoil
         if self.throttle is False:
             self.client.R.d["accel"] = self.automatic_throttle_control(self.default_speed, curr_state, self.client.R.d["accel"], self.client.R.d["steer"])
         else:
             self.client.R.d["accel"] = action["accel"]
             self.client.R.d["brake"] = action["brake"]
 
-        #  Automatic Gear Change by Snakeoil
         if self.gear_change is False:
             self.client.R.d["gear"] = self.automatic_gearbox(curr_state["speedX"], self.client.R.d["gear"])
         else:
@@ -222,12 +219,12 @@ class TorcsEnv:
                 torcs_action.update({"accel": u[1]})
                 torcs_action.update({"brake": 0})
             else:
-                # brake is lower half
+                # brake is inveerted lower half
                 torcs_action.update({"accel": 0})
-                torcs_action.update({"brake": u[1]})
+                torcs_action.update({"brake": -u[1]})
 
 
-        if self.gear_change is True: # gear change action is enabled
+        if self.gear_change is True:
             torcs_action.update({"gear": int(u[2])})
 
         return torcs_action

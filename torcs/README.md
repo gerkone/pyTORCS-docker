@@ -24,6 +24,7 @@ becomes
 ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen);
 ```
 GfScrGetSize fails and initview start drawing below the top left corner, so that the top right corner falls on center of the screen.
+
 ### To make shared memory vision easier:
 - linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
 - libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
@@ -50,7 +51,12 @@ $ make
 $ make install
 $ make datainstall
 ```
+
 ### Run torcs
+
+```
+torcs
+```
 
 To run torcs with local installation, execute
 
@@ -58,153 +64,16 @@ To run torcs with local installation, execute
 ./your_path_to_torcs/torcs-1.3.7/BUILD/bin/torcs
 ```
 
-## Installation on Ubuntu 18.04
+### Postinstall and configuration
+To correctly set up torcs for vision the HUD should be disabled and the driver view should be set to a more suitable option, such as the frontal bumper view.
 
-For Ubuntu 18.04, please proceed as follow:
-
-### Install all necessary requirements
-
-```
-sudo apt-get install libglib2.0-dev  libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev  libplib-dev  libopenal-dev libalut-dev libxi-dev libxmu-dev libxrender-dev  libxrandr-dev libpng-dev
-```
-
-### Build torcs
+To make the process easier you should copy the pre-configured files from [configs/](https://github.com/gerkone/pyTORCS-docker/tree/master/torcs/configs) to the correct directories:
 
 ```
-$ export CFLAGS="-fPIC"
-$ export CPPFLAGS=$CFLAGS
-$ export CXXFLAGS=$CFLAGS
-$ ./configure --prefix=$(pwd)/BUILD  # local install dir
-$ make
-$ make install
-$ make datainstall
+cp -R configs/* /usr/local/share/games/torcs
+cp -R configs/* /root/.torcs
 ```
 
-### Usage with ROS
-
-If you want to run this software with the ROS adapter, you also need to install opencv uing `$apt-get install -y *opencv*`, after installing the ROS Melodic release.
-
-## Installation on Ubuntu 16.04
-
-### install torcs dependencies
-first we need to get some necessary debian packages
-
-```sudo apt-get install mesa-utils libalut-dev libvorbis-dev cmake libxrender-dev libxrender1 libxrandr-dev zlib1g-dev libpng16-dev```
-
-now check for openGL/DRI by running
-
-```glxinfo | grep direct```
-
-the result should look like
-
-```direct rendering: Yes```
-
-check for glut by running
-
-```dpkg -l | grep glut```
-
-if it is not installed run
-
-```sudo apt-get install freeglut3 freeglut3-dev```
-
-check for libpng by running
-
-```dpkg -l | grep png```
-
-
-#### install PLIB
-
-first we have to create a folder for all torcs-related stuff. Therefore, run the following commands
-
-```cd /your_desired_location/```
-
-```sudo mkdir torcs```
-
-```export TORCS_PATH=/your_desired_location/torcs```
-
-```cd $TORCS_PATH```
-
-install PLIB-dependencies
-
-```sudo apt-get install libxmu-dev libxmu6 libxi-dev```
-
-now download [PLIB 1.8.5](http://plib.sourceforge.net/download.html), unpack to the created directory and enter the plib folder by
-
-```sudo tar xfvz /path_to_downloaded_files/plib-1.8.5.tar.gz```
-
-```cd plib-1.8.5```
-
-before we compile plib we need need to set some environment variables
-
-```export CFLAGS="-fPIC"```
-
-```export CPPFLAGS=$CFLAGS```
-
-```export CXXFLAGS=$CFLAGS```
-
-now we can configure and compile PLIB
-
-```./configure```
-
-```make```
-
-```sudo make install```
-
-just for safety, wen unset our environment variables again
-
-```export CFLAGS=```
-
-```export CPPFLAGS=```
-
-```export CXXFLAGS=```
-
-#### install openal
-let's enter our base directory again
-
-```cd $TORCS_PATH```
-
-now we download [openal 1.17.2](http://kcat.strangesoft.net/openal-releases/) and unpack it
-
-```sudo tar xfvj /path_to_downloaded_files/openal-soft-1.17.2.tar.bz2 ```
-
-we enter the build folder and compile openal
-
-```cd openal-soft-1.17.2/build```
-
-```sudo cmake ..```
-
-```sudo make```
-
-```sudo make install```
-
-### install TORCS
-enter your TORCS_PATH
-
-```cd $TORCS_PATH```
-
-and clone this repository
-
-```git clone https://github.com/fmirus/torcs-1.3.7.git```
-
-now we enter our torcs folder
-
-```cd torcs-1.3.7```
-
-now build we build TORCS and log the output to a text-files as TORCS does not interrupt the build on errors
-
-```make >& error.log```
-
-now open error.log with your favourite text editor and search for errors. If there are no errors you can proceed, otherwise you have to resolve.
-
-now we are ready to install torcs by running
-
-```sudo make install```
-
-also install the torcs data-files by running
-
-```sudo make datainstall```
-
-If you made it this far, you can delete the TORCS_PATH variable by ```unset TORCS_PATH``` and are now ready to go. Congratulations :-)
 
 # Original TORCS README:
 

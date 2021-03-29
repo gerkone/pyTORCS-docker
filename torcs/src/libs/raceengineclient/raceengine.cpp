@@ -655,7 +655,7 @@ ReOneStep(double deltaTimeIncrement)
 	// if (*ppause == 1)
   //    {
     count++;
-    if (count > 10) // 25FPS
+    if (count > 20) // 25FPS
     {
        count=1;
 

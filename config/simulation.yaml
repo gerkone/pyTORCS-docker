@@ -5,6 +5,10 @@ image_name : "gerkone/vtorcs"
 mod_name : "main"
 run_path : "driver/test_torcs.py"
 
+# run module and path. change here to your agent algorithm
+algo_name: DDPG
+algo_path: driver/agents/ddpg.py
+
 # agent hyperparameters
 hyperparams:
   actor_lr : 0.000001
