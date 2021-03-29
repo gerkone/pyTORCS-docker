@@ -1,12 +1,19 @@
 import numpy as np
+import importlib.util
 
-# from agents.ddpg.ddpg import DDPG
 from torcs_client.torcs_comp import TorcsEnv
 from torcs_client.utils import bcolors
 
 N_EPISODES = 1000
 
-def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", img_width = 640, img_height = 480):
+def agent_from_module(mod_name, run_path):
+    spec = importlib.util.spec_from_file_location(mod_name, run_path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return getattr(mod, mod_name)
+
+def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs",
+        algo_name = None, algo_path = None, img_width = 640, img_height = 480):
     # Instantiate the environment
     env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors,
             image_name = image_name, img_width = img_width, img_height = img_height)
@@ -14,11 +21,10 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     state_dims = [env.observation_space.shape[0]]  # sensors input
     action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
 
-    # agent = DDPG(state_dims = state_dims, action_dims = action_dims, action_boundaries = action_boundaries,
-    #     actor_lr = hyperparams["actor_lr"], critic_lr = hyperparams["critic_lr"], batch_size = hyperparams["batch_size"],
-    #     gamma = hyperparams["gamma"], rand_steps = hyperparams["rand_steps"], buf_size = int(hyperparams["buf_size"]),
-    #     tau = hyperparams["tau"], fcl1_size = hyperparams["fcl1_size"], fcl2_size = hyperparams["fcl2_size"])
+    agent_class = agent_from_module(algo_name, algo_path)
 
+    # agent = agent_class(state_dims = state_dims, action_dims = action_dims,
+    #             action_boundaries = action_boundaries, hyperparams = hyperparams)
 
     np.random.seed(0)
     scores = []
@@ -40,5 +46,5 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             #iterate to the next state
             state = state_new
             score += reward
-            scores.append(score)
-        print(bcolors.OKBLUE + "Iteration {:d} --> score {:.2f}. Average score {:.2f}".format(i, score, np.mean(scores)) + bcolors.ENDC)
+        scores.append(score)
+        print(bcolors.OKBLUE + "Iteration {:d} --> score {:.2f}. Running average {:.2f}".format(i, score, np.mean(scores)) + bcolors.ENDC)

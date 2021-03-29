@@ -23,24 +23,20 @@ class TorcsEnv:
 
         self.image_name = image_name
 
+        self.port = port
+
         if self.image_name != "0":
             # start torcs container
-            self.container_id = start_container(self.image_name, self.verbose, port)
+            self.container_id = start_container(self.image_name, self.verbose, self.port)
         else:
             self.container_id = "0"
 
         # should be true if torcs was just opened
         self.initial_run = True
 
-        if img_width != 0:
-            self.img_width = img_width
-        else:
-            self.img_width = 64
+        self.img_width = 64
 
-        if img_height != 0:
-            self.img_height = img_height
-        else:
-            self.img_height = 64
+        self.img_height = img_height
 
         if state_filter != None:
             self.state_filter = dict(sorted(state_filter.items()))
@@ -54,15 +50,6 @@ class TorcsEnv:
             self.state_filter["speedZ"] = 300.0
             self.state_filter["wheelSpinVel"] = 1.0
             self.state_filter["rpm"] = 10000
-
-        vision = "img" in state_filter
-
-        # run torcs and start practice run
-        reset_torcs(self.container_id, vision, True)
-
-        # create new torcs client - after torcs launch
-        self.client = Client(port = port, verbose = self.verbose, container_id = self.container_id,
-                        maxSteps = np.inf, vision = vision)
 
         if throttle is False:
             self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
@@ -147,8 +134,8 @@ class TorcsEnv:
         # ################### Termination judgement ###################
         episode_terminate = custom_terminal(obs, reward, time_step = self.time_step)
 
-        # reset torcs on terminate
-        self.client.R.d["meta"] = episode_terminate
+        # reset torcs on terminate - currently useless
+        # self.client.R.d["meta"] = episode_terminate
 
         if episode_terminate:
             self.initial_run = False
@@ -161,7 +148,15 @@ class TorcsEnv:
     def reset(self):
         if self.verbose: print("Reset")
 
-        if not self.initial_run:
+        if self.initial_run:
+            vision = "img" in self.state_filter
+            # run torcs and start practice run
+            reset_torcs(self.container_id, vision, True)
+
+            # create new torcs client - after first torcs launch
+            self.client = Client(port = self.port, verbose = self.verbose, container_id = self.container_id,
+                maxSteps = np.inf, vision = vision, img_width = 640, img_height = 480)
+        else:
             # because the game restarts the UDP connection must be reset too
             self.client.restart()
 

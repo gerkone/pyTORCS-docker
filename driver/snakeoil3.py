@@ -1,5 +1,7 @@
 from numpy import pi
+
 from torcs_client.torcs_client import Client
+from torcs_client.utils import start_container, reset_torcs
 
 def drive_example(c):
     '''This is only an example. It will get around the track but the
@@ -38,19 +40,17 @@ def drive_example(c):
         R['gear']=6
     return
 
-
-if __name__ == "__main__":
-    C = Client(port = 3001, maxSteps = 100000, vision = True)
-
-    import sysv_ipc as ipc
-
-    key = 1234
-    shm = ipc.SharedMemory(key, flags = 0)
+def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", img_width = 640, img_height = 480):
+    container_id = start_container(image_name, False, 3001)
+    reset_torcs(container_id, True, kill = True)
+    C = Client(verbose = verbose, port = 3001, maxSteps = 100000, vision = True, container_id = container_id)
 
     for step in range(C.maxSteps,0,-1):
-        buf = shm.read()
         C.get_servers_input()
         drive_example(C)
         C.respond_to_server()
     C.shutdown()
-    shm.detach()
+
+
+if __name__ == "__main__":
+    main()

@@ -13,9 +13,18 @@ class DDPG(object):
     """
     DDPG agent
     """
-    def __init__(self, state_dims, action_dims, action_boundaries, actor_lr = 1e-5,
-                critic_lr = 1e-4, batch_size = 64, gamma = 0.99, actor_update_delay = 2,
-                rand_steps = 1, buf_size = 10000, tau = 1e-3, fcl1_size = 400, fcl2_size = 600):
+    def __init__(self, state_dims, action_dims, action_boundaries, hyperparams):
+
+        actor_lr = hyperparams["actor_lr"]
+        critic_lr = hyperparams["critic_lr"]
+        batch_size = hyperparams["batch_size"]
+        gamma = hyperparams["gamma"]
+        rand_steps = hyperparams["rand_steps"]
+        buf_size = int(hyperparams["buf_size"])
+        tau = hyperparams["tau"]
+        fcl1_size = hyperparams["fcl1_size"]
+        fcl2_size = hyperparams["fcl2_size"]
+
         # action size
         self.n_states = state_dims[0]
         # state size
@@ -34,7 +43,7 @@ class DDPG(object):
         # number of episodes for random action exploration
         self.rand_steps = rand_steps - 1
 
-        self.actor_update_delay = actor_update_delay
+        self.actor_update_delay = hyperparams["actor_update_delay"]
 
         # turn off most logging
         logging.getLogger("tensorflow").setLevel(logging.FATAL)

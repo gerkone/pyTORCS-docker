@@ -30,6 +30,9 @@ class Launch:
                 conf = yaml.safe_load(stream)
                 self.mod_name = conf["mod_name"]
                 self.run_path = conf["run_path"]
+                self.algo_name = conf["algo_name"]
+                self.algo_path = conf["algo_path"]
+
                 self.image_name = conf["image_name"]
 
                 self.hyperparams = conf["hyperparams"]
@@ -40,7 +43,9 @@ class Launch:
                 print(exc)
 
     def run(self):
-        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors)
+        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams,
+                sensors = self.sensors, algo_name = self.algo_name, algo_path = self.algo_path,
+                img_width = self.img_width, img_height = self.img_height)
 
 if __name__ == "__main__":
     try:

@@ -1,13 +1,13 @@
 # docker image name
-image_name : "gerkone/vtorcs"
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
-run_path : "driver/test_torcs.py"
+run_path : "driver/run_torcs.py"
 
 # run module and path. change here to your agent algorithm
-algo_name: DDPG
-algo_path: driver/agents/ddpg.py
+algo_name: "DDPG"
+algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
@@ -20,6 +20,7 @@ hyperparams:
   tau : 0.001
   fcl1_size : 128
   fcl2_size : 64
+  actor_update_delay : 2
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -35,5 +36,5 @@ sensors:
   img: 255.0
 
 # DO NOT CHANGE (for now)
-img_width : 64
-img_height : 64
+img_width : 640
+img_height : 480

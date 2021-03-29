@@ -7,8 +7,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends make g++
 
 # torcs dependencies
 RUN apt-get install -y --no-install-recommends libglib2.0-dev libgl1-mesa-dev libglu1-mesa-dev \
-            freeglut3-dev libplib-dev libopenal-dev libalut-dev libxi-dev libxmu-dev libxrender-dev \
-            libxrandr-dev libpng-dev libxxf86vm-dev libvorbis-dev
+   freeglut3-dev libplib-dev libopenal-dev libalut-dev libxi-dev libxmu-dev libxrender-dev \
+   libxrandr-dev libpng-dev libxxf86vm-dev libvorbis-dev
 
 RUN rm -rf /var/lib/apt/lists/*
 
@@ -19,7 +19,7 @@ COPY . torcs/
 
 WORKDIR torcs
 
-RUN chmod +x configure && ./configure
+RUN sh configure
 ENV CFLAGS="-fPIC"
 ENV CPPFLAGS=$CFLAGS
 ENV CXXFLAGS=$CFLAGS

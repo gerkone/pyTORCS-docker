@@ -19,7 +19,11 @@ image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
-run_path : "driver/test_torcs.py"
+run_path : "driver/run_torcs.py"
+
+# run module and path. change here to your agent algorithm
+algo_name: "DDPG"
+algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
@@ -45,8 +49,8 @@ sensors:
   img: 1.0
 
 # DO NOT CHANGE (for now)
-img_width : 64
-img_height : 64
+img_width : 640
+img_height : 480
 ```
 
 ### Arguments
@@ -57,27 +61,49 @@ The arguments are taken from the specified config file. A custom **_run/main_** 
 - **image_name** sets the name of the docker image. Set to 0 to run TORCS on your host.
 - **img_width**, **img_height** sets the size of the vision, if active.
 
-The header will look like this.
-```python
-def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
-  [...]
-```
 
-### Using your run function
-The two key parameters regarding the launch of your function are
+### Using a custom algorithm
+It is possible to use a custom algorithm. This is easily done by changing
 ```yaml
-mod_name : "main"
-run_path : "driver/test_torcs.py"
+algo_name: "DDPG"
+algo_path: "driver/agents/ddpg/ddpg.py"
 ```
-- **mod_name** is the name of your function
-- **run_path** is the relative path to the file containing your run function, starting from the _driver/_ directory.
+- **algo_name** is the name of your algorithm class. The ___init___ method header should look like this:
+```python
+  def __init__(self, state_dims, action_dims, action_boundaries, hyperparams):
+    [...]
+```
+- **algo_path** is the relative path to the file containing your algorithm. Starting from the project root folder.
 
-With these settings the function with name _main_ from the file _driver/test_torcs.py_ will be run when _python pytorcs.py_ is run.
+With these settings the function with name _main_ from the file _driver/run_torcs.py_ will be run when _python pytorcs.py_ is run.
 
 After editing _simulation.yaml_ the environment can be started up as always with
 ```
 python pytorcs.py
 ```
+
+### Using your run function
+The run function can also be easily changed. The two key parameters regarding the launch of your function are
+```yaml
+mod_name : "main"
+run_path : "driver/run_torcs.py"
+```
+- **mod_name** is the name of your function
+- **run_path** is the relative path to the file containing your run function. Starting from the project root folder.
+
+With these settings the function with name _main_ from the file _driver/run_torcs.py_ will be run when _python pytorcs.py_ is run.
+
+The important thing is that your custom run function needs to have its header like this
+```python
+def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
+  [...]
+```
+
+After editing _simulation.yaml_ the environment can be started up as always with
+```
+python pytorcs.py
+```
+
 
 ## Example
 
@@ -109,7 +135,7 @@ def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
           state = new_state
 ```
 
-A complete working example can be found in [test_torcs.py](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/test_torcs.py)
+A complete working example can be found in [run_torcs.py](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/run_torcs.py)
 ### Key parts
 
 1. ```python

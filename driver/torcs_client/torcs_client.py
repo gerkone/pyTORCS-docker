@@ -9,7 +9,7 @@ import getopt
 import numpy as np
 import sysv_ipc as ipc
 
-from torcs_client.utils import start_container, reset_torcs, destringify, raw_to_rgb
+from torcs_client.utils import reset_torcs, destringify, raw_to_rgb
 
 data_size = 2**17
 
