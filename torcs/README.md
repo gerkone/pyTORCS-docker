@@ -5,7 +5,7 @@
   + [Skip the menu:](#skip-the-menu)
   + [Skip the countdown:](#skip-the-countdown)
   + [Solve the quarter screen draw issue:](#solve-the-quarter-screen-draw-issue)
-  + [Easier shared memory (for vision):](#easier-shared-memory--for-vision)
+  + [Easier shared memory (for vision)](#easier-shared-memory--for-vision-)
 * [Installation on Ubuntu 20.04](#installation-on-ubuntu-2004)
   + [Install all necessary requirements](#install-all-necessary-requirements)
   + [Build torcs](#build-torcs)
@@ -22,13 +22,13 @@ It was additionally modified with the following changes
 
 ## My changes
 The files modified by me are limited to:
-### Skip the menu:
+### Skip the menu
 - libs/raceengineclient/raceinit.cpp - added skipMenu function
 - linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu
 - libs/client/entry.cpp - removed menu init, added skipMenu call
-### Skip the countdown:
+### Skip the countdown
 - libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
-### Solve the quarter screen draw issue:
+### Solve the quarter screen draw issue
 - libs/raceengineclient/racemain.cpp on line 321,
 ```cpp
 ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh), GR_VIEW_STD, ReInfo->_reGameScreen);  
@@ -39,7 +39,7 @@ ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen)
 ```
 GfScrGetSize fails and initview start drawing below the top left corner, so that the top right corner falls on center of the screen.
 
-### Easier shared memory (for vision):
+### Easier shared memory (for vision)
 - linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
 - libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
 
