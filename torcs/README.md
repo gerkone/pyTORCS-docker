@@ -2,16 +2,16 @@
 
 - [Intro](#intro)
 * [My changes](#my-changes)
-  + [Skip the menu:](#skip-the-menu-)
-  + [Skip the countdown:](#skip-the-countdown-)
-  + [Solve the quarter screen draw issue:](#solve-the-quarter-screen-draw-issue-)
-  + [Easier shared memory (for vision):](#easier-shared-memory--for-vision--)
+  + [Skip the menu:](#skip-the-menu)
+  + [Skip the countdown:](#skip-the-countdown)
+  + [Solve the quarter screen draw issue:](#solve-the-quarter-screen-draw-issue)
+  + [Easier shared memory (for vision):](#easier-shared-memory--for-vision)
 * [Installation on Ubuntu 20.04](#installation-on-ubuntu-2004)
   + [Install all necessary requirements](#install-all-necessary-requirements)
   + [Build torcs](#build-torcs)
   + [Run torcs](#run-torcs)
   + [Postinstall and configuration](#postinstall-and-configuration)
-- [Original TORCS README](#original-torcs-readme-)
+- [Original TORCS README](#original-torcs-readme)
 ## Intro
 Version of TORCS 1.3.7 with [SCR patch](https://github.com/barisdemirdelen/scr-torcs-1.3.7) and an additional patch to send the current game image to another application via shared memory.
 It was additionally modified with the following changes
@@ -93,12 +93,12 @@ cp -R configs/* /root/.torcs
 
 * [1. Introduction](#1-introduction)
 * [2. Documentation](#2-documentation)
-* [3. Non-Free content (in GPL sense)](#3-non-free-content--in-gpl-sense-)
+* [3. Non-Free content (in GPL sense)](#3-non-free-content--in-gpl-sense)
 * [4. Track editor](#4-track-editor)
 * [5. Linux Installation from Source](#5-linux-installation-from-source)
-* [6. Windows Installation from Source (Release version)](#6-windows-installation-from-source--release-version-)
+* [6. Windows Installation from Source (Release version)](#6-windows-installation-from-source--release-version)
   + [6.1 Windows Installation from Source, additional notes](#61-windows-installation-from-source--additional-notes)
-* [7. Windows Installation from Source (Debug version)](#7-windows-installation-from-source--debug-version-)
+* [7. Windows Installation from Source (Debug version)](#7-windows-installation-from-source--debug-version)
 * [8. Testing](#8-testing)
 * [9. Getting Help](#9-getting-help)
 * [10. Running under Valgrind with Linux](#10-running-under-valgrind-with-linux)
