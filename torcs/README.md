@@ -1,16 +1,8 @@
 # **TORCS 1.3.7**
 
 - [Intro](#intro)
-* [My changes](#my-changes)
-  + [Skip the menu:](#skip-the-menu)
-  + [Skip the countdown:](#skip-the-countdown)
-  + [Solve the quarter screen draw issue:](#solve-the-quarter-screen-draw-issue)
-  + [Easier shared memory (for vision)](#easier-shared-memory--for-vision-)
-* [Installation on Ubuntu 20.04](#installation-on-ubuntu-2004)
-  + [Install all necessary requirements](#install-all-necessary-requirements)
-  + [Build torcs](#build-torcs)
-  + [Run torcs](#run-torcs)
-  + [Postinstall and configuration](#postinstall-and-configuration)
+- [My changes](#my-changes)
+- [Installation on Ubuntu 20.04](#installation-on-ubuntu-2004)
 - [Original TORCS README](#original-torcs-readme)
 ## Intro
 Version of TORCS 1.3.7 with [SCR patch](https://github.com/barisdemirdelen/scr-torcs-1.3.7) and an additional patch to send the current game image to another application via shared memory.
