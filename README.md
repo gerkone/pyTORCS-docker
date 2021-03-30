@@ -1,11 +1,15 @@
 # pyTORCS + Docker
+  * [Requirements](#requirements)
+  * [Installation](#installation)
+  * [Host installation](#host-installation)
+  * [Usage](#usage)
+  * [Envoronment](#environment)
+  * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
+  * [References](#references)
+
 OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
 
-The **environment** is designed to be run inside a Docker container(s). This was done to simplify the installation, as torcs/TORCS can be tricky to install on some systems.
-
-Either way, everything can be still installed and run directly on the host.
-
-More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
+The **environment** is designed to be run inside a Docker container. This was done to simplify the installation and configuration, as I found TORCS to be tricky to install on some systems. Either way, everything can be still installed and run directly on the host.
 
 ## Requirements
 * Docker
@@ -92,6 +96,8 @@ If you want to run the TORCS container manually you can use
 ```
 nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm gerkone/torcs
 ```
+## Environment
+More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
 
 ## Troubleshooting and known issues
 If you get the error "_freeglut (/usr/local/lib/torcs/torcs-bin): failed to open display ':0'_" OR the torcs window does not pop up after running you might need to allow access to your X display server by using
