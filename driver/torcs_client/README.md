@@ -5,9 +5,9 @@
     + [Arguments](#arguments)
     + [Using a custom algorithm](#using-a-custom-algorithm)
     + [Using your run function](#using-your-run-function)
-  * [Example](#example)
+* [Example](#example)
     + [Key parts](#key-parts)
-  * [Further customization](#further-customization)
+* [Further customization](#further-customization)
 
 ## Intro
 
