@@ -1,4 +1,15 @@
 # Python client
+* [Intro](#intro)
+* [Usage](#usage)
+    + [Config file](#config-file)
+    + [Arguments](#arguments)
+    + [Using a custom algorithm](#using-a-custom-algorithm)
+    + [Using your run function](#using-your-run-function)
+  * [Example](#example)
+    + [Key parts](#key-parts)
+  * [Further customization](#further-customization)
+
+## Intro
 
 This client uses **snakeoil3** set up an UDP connection on port 3001 to TORCS's _scr_server_.
 
@@ -7,6 +18,7 @@ Actions are sent to the _scr_server_, which in turn gives back the next state.
 The python interface to torcs, **TorcsEnv**, can be used either with the rest of the launch file or as a standalone environment.
 
 With this modified version of TORCS the state can also be an image.
+
 
 ## Usage
 The **TorcsEnv** class by itself provides a simple abstraction of TORCS. The API is similar to OpenAI gym, with some peculiarities.
