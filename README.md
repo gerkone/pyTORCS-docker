@@ -7,14 +7,13 @@
   * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
   * [References](#references)
 
-OpenAI Gym-like, TORCS-based environment for simple autonomous driving simulations.
+OpenAI Gym-like, torcs environment with vision.
 
 The **environment** is designed to be run inside a Docker container. This was done to simplify the installation and configuration, as I found TORCS to be tricky to install on some systems. Either way, everything can be still installed and run directly on the host.
 
 ## Requirements
 * Docker
 * nvidia-docker
-* opencv-python
 
 ## Installation
 This project is designed to run on a Linux system, ideally with an Nvidia GPU.
@@ -57,9 +56,14 @@ docker pull gerkone/torcs
 docker build -t <your image name> torcs/
 ```
 
-5 (optional) **install konsole**
+5 **install python requirements**
+```
+pip install -r requirements.txt
+```
 
-Konsole is already shipped with every KDE installations.
+(optional) **install konsole**
+
+Konsole is already shipped with every KDE installation.
 
 On Ubuntu
 ```
@@ -106,10 +110,14 @@ xhost local:root
 ```
 
 ## References
-This torcs is a modified version of 1.3.7 with the following changes:
+This torcs is a modified version of 1.3.7 taken from [here](https://github.com/fmirus/torcs-1.3.7).
+
+I made the following changes to the source:
 - The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
 - The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
 - The **loading screens were also removed**. I found that this somehow saves a lot of time.
 - The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
 
-The Python torcs client is an extended version of snakeoil3.
+The torcs server used is _scr_server_ by Daniele Loiacono et al.
+
+The Python-side client is an extended version of snakeoil3.
