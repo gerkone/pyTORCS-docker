@@ -4,6 +4,9 @@ import yaml
 import importlib.util
 
 class Launch:
+    """
+    Load config files and run module and launch
+    """
     def __init__(self, args):
         self.verbose = args.verbose
         self.config_path = args.config
@@ -37,14 +40,15 @@ class Launch:
 
                 self.hyperparams = conf["hyperparams"]
                 self.sensors = conf["sensors"]
+                self.environment = conf["environment"]
                 self.img_width = conf["img_width"]
                 self.img_height = conf["img_height"]
             except yaml.YAMLError as exc:
                 print(exc)
 
     def run(self):
-        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams,
-                sensors = self.sensors, algo_name = self.algo_name, algo_path = self.algo_path,
+        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors,
+                environment = self.environment, algo_name = self.algo_name, algo_path = self.algo_path,
                 img_width = self.img_width, img_height = self.img_height)
 
 if __name__ == "__main__":
@@ -63,7 +67,8 @@ if __name__ == "__main__":
         pytorcs = Launch(args)
         # launch system
         pytorcs.run()
-    except Exception as e:
-        print(e)
+    except Exception:
+        import traceback
         import time
-        time.sleep(199999)
+        traceback.print_exc()
+        time.sleep(100000)

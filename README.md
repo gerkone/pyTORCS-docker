@@ -76,7 +76,11 @@ python pytorcs.py
 ```
 This will start the TORCS container, open a new window with the game and start running the agent.
 
-You can change some settings and options by editing the [simulation.yaml](config/simulation.yaml) file. For more details on the parameters and on how to use your test code and custom algorithm check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/torcs_client/README.md).
+You can change some settings and options by editing the [simulation.yaml](config/simulation.yaml) file.
+
+For more details on how the action and state space work check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/README.md).
+
+For more details on the parameters and on how to use your test code and custom algorithm check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/torcs_client/README.md).
 
 If you don't want to install konsole you can run it with your shell of choice with
 ```

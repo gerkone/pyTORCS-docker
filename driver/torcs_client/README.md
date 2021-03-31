@@ -48,6 +48,11 @@ sensors:
   # VISION SENSOR. set to turn vision on
   img: 1.0
 
+# environment related settings. agent throttle and gearshift
+environment:
+  throttle : False
+  gear_change : False
+
 # DO NOT CHANGE (for now)
 img_width : 640
 img_height : 480
@@ -73,6 +78,11 @@ algo_path: "driver/agents/ddpg/ddpg.py"
   def __init__(self, state_dims, action_dims, action_boundaries, hyperparams):
     [...]
 ```
+The agent class should also have the following methods:
+- **_get_action_**(state, episode)
+- (*optional*) **_learn_**(episode)
+- (*optional*) **_remember_**(state, state_new, action, reward, terminal)
+
 - **algo_path** is the relative path to the file containing your algorithm. Starting from the project root folder.
 
 With these settings the function with name _main_ from the file _driver/run_torcs.py_ will be run when _python pytorcs.py_ is run.
@@ -138,7 +148,7 @@ def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
 A complete working example can be found in [run_torcs.py](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/run_torcs.py)
 ### Key parts
 
-1. 
+1.
 ```python
 action_dims = [env.action_space.shape[0]]
 state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -148,13 +158,13 @@ action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
 
  Note that the observation space does not include the vision, only the other sensors.
 
-2. 
+2.
 ```python
 state_filter = sensors
 ```
 The **sensors/state_filter** dictionary specifies which virtual sensor include in the state. The value is the normalization scale factor of the sensor.
 
-3. 
+3.
 ```python
 env = TorcsEnv(throttle = False, verbose = verbose, state_filter = state_filter)
 ```
@@ -162,7 +172,7 @@ env = TorcsEnv(throttle = False, verbose = verbose, state_filter = state_filter)
   - **_state_filter__** sets the selected sensors.
   - **_verbose_** if set prints some info from the simulation.
 
-4. 
+4.
 ```python
 state_new, reward, terminal = env.step(action)
 ```

@@ -228,9 +228,9 @@ class TorcsEnv:
         """
         returns a numpy array with the normalized state values specified in state_filter
         """
-        obs = []
+        obs = {}
         for cat in self.state_filter:
             par = np.array(raw_obs[cat], dtype=np.float32)/self.state_filter[cat]
-            obs.append(par)
+            obs[cat] = par
 
         return obs

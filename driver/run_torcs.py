@@ -13,18 +13,18 @@ def agent_from_module(mod_name, run_path):
     return getattr(mod, mod_name)
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs",
-        algo_name = None, algo_path = None, img_width = 640, img_height = 480):
+    environment = None, algo_name = None, algo_path = None, img_width = 640, img_height = 480):
     # Instantiate the environment
-    env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors,
-            image_name = image_name, img_width = img_width, img_height = img_height)
+    env = TorcsEnv(throttle = environment["throttle"], gear_change = environment["gear_change"], verbose = verbose, state_filter = sensors,
+        image_name = image_name, img_width = img_width, img_height = img_height)
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
     action_boundaries = [env.action_space.low[0], env.action_space.high[0]]
 
     agent_class = agent_from_module(algo_name, algo_path)
 
-    # agent = agent_class(state_dims = state_dims, action_dims = action_dims,
-    #             action_boundaries = action_boundaries, hyperparams = hyperparams)
+    agent = agent_class(state_dims = state_dims, action_dims = action_dims,
+                action_boundaries = action_boundaries, hyperparams = hyperparams)
 
     np.random.seed(0)
     scores = []
@@ -35,14 +35,18 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
         while not terminal:
             #predict new action
-            action = np.random.random(action_dims) # agent.get_action(state, i)
+            action = agent.get_action(state, i)
             #perform the transition according to the predicted action
             state_new, reward, terminal = env.step(action)
 
             #store the transaction in the memory
-            # agent.remember(state, state_new, action, reward, terminal)
+            if hasattr(agent, 'remember'):
+                if callable(agent.remember):
+                    agent.remember(state, state_new, action, reward, terminal)
             #adjust the weights according to the new transaction
-            # agent.learn(i)
+            if hasattr(agent, 'learn'):
+                if callable(agent.learn):
+                    agent.learn(i)
             #iterate to the next state
             state = state_new
             score += reward

@@ -6,34 +6,42 @@ mod_name : "main"
 run_path : "driver/run_torcs.py"
 
 # run module and path. change here to your agent algorithm
-algo_name: "DDPG"
-algo_path: "driver/agents/ddpg/ddpg.py"
+algo_name: "Simple"
+algo_path: "driver/agents/simple_agent/snakeoil3.py"
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.000001
-  critic_lr : 0.000003
-  batch_size : 32
-  gamma : 0.99
-  rand_steps : 0
-  buf_size : 10000
-  tau : 0.001
-  fcl1_size : 128
-  fcl2_size : 64
-  actor_update_delay : 2
+  # actor_lr : 0.000001
+  # critic_lr : 0.000003
+  # batch_size : 32
+  # gamma : 0.99
+  # rand_steps : 0
+  # buf_size : 10000
+  # tau : 0.001
+  # fcl1_size : 128
+  # fcl2_size : 64
+  # actor_update_delay : 2
+  target_speed : 100
+  max_speed : 300
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
   # track : 200.0
-  # # angle: 3.1415
-  # speedX : 300.0
+  angle: 3.1415
+  speedX : 300.0
   # speedY : 300.0
   # speedZ : 300.0
-  # wheelSpinVel : 1.0
+  wheelSpinVel : 1.0
   # # rpm : 10000
-  # trackPos: 1.0
+  trackPos: 1.0
   # VISION SENSOR. set to turn vision on
   img: 255.0
+
+# environment related settings. automatic throttle and gearshift
+environment:
+  throttle : True
+  # manual not yet properly supported - leave it False
+  gear_change : False
 
 # DO NOT CHANGE (for now)
 img_width : 640
