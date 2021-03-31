@@ -18,7 +18,6 @@ class Simple(object):
         """
 
         speedX = state["speedX"] * self.norm_factor
-        print(state["speedX"], speedX)
 
         action = np.zeros(*self.action_dims)
         # steer to corner
