@@ -1,4 +1,10 @@
 # **TORCS 1.3.7**
+
+- [Intro](#intro)
+- [My changes](#my-changes)
+- [Installation on Ubuntu 20.04](#installation-on-ubuntu-2004)
+- [Original TORCS README](#original-torcs-readme)
+## Intro
 Version of TORCS 1.3.7 with [SCR patch](https://github.com/barisdemirdelen/scr-torcs-1.3.7) and an additional patch to send the current game image to another application via shared memory.
 It was additionally modified with the following changes
 - The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
@@ -8,13 +14,13 @@ It was additionally modified with the following changes
 
 ## My changes
 The files modified by me are limited to:
-### To skip the menu:
+### Skip the menu
 - libs/raceengineclient/raceinit.cpp - added skipMenu function
 - linux/main.cpp - changed the way raceconfig parameter is handled, now it is passed to skipMenu
 - libs/client/entry.cpp - removed menu init, added skipMenu call
-### To skip the countdown:
+### Skip the countdown
 - libs/raceengineclient/raceengine.cpp - removed countdown (ready, set, go) at race start
-### To solve the quarter screen draw issue:
+### Solve the quarter screen draw issue
 - libs/raceengineclient/racemain.cpp on line 321,
 ```cpp
 ReInfo->_reGraphicItf.initview((sw-vw)/2, (sh-vh)/2, vw, vh), GR_VIEW_STD, ReInfo->_reGameScreen);  
@@ -25,7 +31,7 @@ ReInfo->_reGraphicItf.initview(0, 0, vw, vh, GR_VIEW_STD, ReInfo->_reGameScreen)
 ```
 GfScrGetSize fails and initview start drawing below the top left corner, so that the top right corner falls on center of the screen.
 
-### To make shared memory vision easier:
+### Easier shared memory (for vision)
 - linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
 - libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
 
@@ -75,21 +81,21 @@ cp -R configs/* /root/.torcs
 ```
 
 
-# Original TORCS README:
+# Original TORCS README
 
-1.  Introduction
-2.  Documentation
-3.  Non-Free content (in GPL sense)
-4.  Track editor
-5.  Linux Installation from Source
-6.  Windows Installation from Source (Release version)
-6.1 Windows Installation from Source, additional notes
-7.  Windows Installation from Source (Debug version)
-8.  Testing
-9.  Getting Help
-10. Running under Valgrind with Linux
-11. Changes
-12. TODO/Notes
+* [1. Introduction](#1-introduction)
+* [2. Documentation](#2-documentation)
+* [3. Non-Free content (in GPL sense)](#3-non-free-content--in-gpl-sense)
+* [4. Track editor](#4-track-editor)
+* [5. Linux Installation from Source](#5-linux-installation-from-source)
+* [6. Windows Installation from Source (Release version)](#6-windows-installation-from-source--release-version)
+  + [6.1 Windows Installation from Source, additional notes](#61-windows-installation-from-source--additional-notes)
+* [7. Windows Installation from Source (Debug version)](#7-windows-installation-from-source--debug-version)
+* [8. Testing](#8-testing)
+* [9. Getting Help](#9-getting-help)
+* [10. Running under Valgrind with Linux](#10-running-under-valgrind-with-linux)
+* [11. Changes](#11-changes)
+* [12. TODO/Notes](#12-todo-notes)
 
 
 ## 1. Introduction
