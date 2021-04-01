@@ -78,7 +78,7 @@ def destringify(s):
 
 def raw_to_rgb(img_buf, scale, img_width, img_height):
 
-    img = np.array(img_buf.reshape((img_width, img_height, 3)))
+    img = np.array(img_buf.reshape((img_height, img_width, 3)))
     img = np.flip(img, axis = 0)
 
     return img
