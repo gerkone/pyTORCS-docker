@@ -52,7 +52,7 @@ def reset_torcs(container_id, vision, kill = False):
     if vision is True:
         command.extend(["-vision"])
 
-    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(command)
 
 def kill_torcs(container_id):
     command = []
@@ -60,7 +60,7 @@ def kill_torcs(container_id):
     if container_id != "0":
         command.extend(["docker", "exec", container_id])
     command.extend(["pkill", "torcs"])
-    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(command)
 
 def destringify(s):
     if not s: return s
@@ -76,9 +76,12 @@ def destringify(s):
         else:
             return [destringify(i) for i in s]
 
-def raw_to_rgb(img_buf, scale, img_width, img_height):
+def raw_to_rgb(img_buf, img_width, img_height):
 
     img = np.array(img_buf.reshape((img_height, img_width, 3)))
     img = np.flip(img, axis = 0)
 
     return img
+
+def resize_frame(img, dest_width, dest_height):
+    return cv2.resize(img, dsize=(dest_width, dest_height), interpolation=cv2.INTER_CUBIC)

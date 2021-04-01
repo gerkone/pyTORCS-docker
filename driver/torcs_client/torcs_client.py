@@ -22,8 +22,8 @@ class Client():
     extentions used in the Simulated Car Racing competitions.
     """
     def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None,
-                maxSteps = 10000, container_id = "0", vision=False, verbose = False,
-                img_height= 640, img_width = 480, img_scale = 10):
+                max_steps = 10000, container_id = "0", vision=False, verbose = False,
+                img_height= 640, img_width = 480):
 
         self.verbose = verbose
 
@@ -31,17 +31,19 @@ class Client():
 
         self.vision = vision
 
+        self.just_started = True
+
         self.img_height = img_height
         self.img_width = img_width
-        self.img_scale = img_scale
 
         self.host = host
         self.port = port
         self.sid = sid
         self.trackname = trackname
-        self.maxSteps = maxSteps  # should be 50steps/second if it had real time performance
+        self.max_steps = max_steps  # should be 50steps/second if it had real time performance
 
         self.reset()
+
         if(self.vision):
             self.setup_shm_vision()
 
@@ -59,10 +61,9 @@ class Client():
     def shutdown(self):
         if not self.so: return
         if self.verbose: print(("Race terminated or %d steps elapsed. Shutting down %d."
-               % (self.maxSteps,self.port)))
+               % (self.max_steps,self.port)))
         self.so.close()
         self.so = None
-        #sys.exit() # No need for this really.
 
     def restart(self):
         if not self.so: return
@@ -121,17 +122,19 @@ class Client():
         Return a numpy array with the whole 640x480(x3) vision
         """
         if(self.vision):
-            if(hasattr(self, "shm")):
+            # the first image in the shared memory is the last image of the previous run
+            # skip it
+            if(hasattr(self, "shm") and self.just_started):
                 # read image size, 16 padding pits should be there otherwise
                 buf = self.shm.read(self.img_width * self.img_height * 3)
                 # sent as array of 8 bit ints
                 image_buf = np.frombuffer(buf, dtype=np.int8)
 
-                return raw_to_rgb(image_buf, self.img_scale, self.img_width, self.img_height)
+                return raw_to_rgb(image_buf, self.img_width, self.img_height)
             else:
                 # shared memory not yet ready, get blank image
                 image_buf = np.zeros(self.img_width * self.img_height * 3)
-                return raw_to_rgb(image_buf, self.img_scale, self.img_width, self.img_height)
+                return raw_to_rgb(image_buf, self.img_width, self.img_height)
 
         return None
 

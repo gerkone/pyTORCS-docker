@@ -64,10 +64,16 @@ sensors:
 environment:
   throttle : False
   gear_change : False
+  # set number of steps before restarting the episode
+  max_steps : 10000
+  # total number of episodes
+  episodes : 10000
 
-# DO NOT CHANGE (for now)
-img_width : 640
-img_height : 480
+  # resized image dimensions
+  img_width : 128
+  img_height : 96
+  # frame stack size. set to 1 to disable frame stacking
+  stack_depth: 3
 ```
 
 ### Arguments
@@ -77,6 +83,7 @@ The arguments are taken from the specified config file. A custom **_run/main_** 
 - **sensors** is a dictionary describing the sensors and their scale.
 - **image_name** sets the name of the docker image. Set to 0 to run TORCS on your host.
 - **img_width**, **img_height** sets the size of the vision, if active.
+- **stack_depth** sets the number of frames to stack for each step.
 
 
 ### Using a custom algorithm

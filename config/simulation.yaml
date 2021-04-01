@@ -42,7 +42,14 @@ environment:
   throttle : True
   # manual not yet properly supported - leave it False
   gear_change : False
+  # set number of steps before restarting the episode
+  # approx 50 steps per second
+  max_steps : 1000
+  # total number of episodes
+  episodes : 10000
 
-# DO NOT CHANGE (for now)
-img_width : 640
-img_height : 480
+# resized image dimensions
+img_width : 128
+img_height : 96
+# frame stack size. set to 1 to disable frame stacking
+stack_depth: 3

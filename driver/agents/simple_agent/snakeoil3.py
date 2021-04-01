@@ -16,7 +16,6 @@ class Simple(object):
         """
         Simple proportional feedback controller
         """
-
         speedX = state["speedX"] * self.norm_factor
 
         action = np.zeros(*self.action_dims)

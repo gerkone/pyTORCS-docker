@@ -14,6 +14,7 @@ The **environment** is designed to be run inside a Docker container. This was do
 ## Requirements
 * Docker
 * nvidia-docker
+* opencv-python
 
 ## Installation
 This project is designed to run on a Linux system, ideally with an Nvidia GPU.

@@ -13,7 +13,7 @@ from torcs_client.utils import start_container, reset_torcs, kill_torcs
 
 class TorcsEnv:
     def __init__(self, throttle = False, gear_change = False, state_filter = None, default_speed = 50,
-            port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
+            max_steps = 10000, port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
         self.gear_change = gear_change
@@ -22,6 +22,8 @@ class TorcsEnv:
         self.verbose = verbose
 
         self.image_name = image_name
+
+        self.max_steps = max_steps
 
         self.port = port
 
@@ -154,8 +156,8 @@ class TorcsEnv:
             reset_torcs(self.container_id, vision, True)
 
             # create new torcs client - after first torcs launch
-            self.client = Client(port = self.port, verbose = self.verbose, container_id = self.container_id,
-                maxSteps = np.inf, vision = vision, img_width = 640, img_height = 480)
+            self.client = Client(max_steps = self.max_steps, port = self.port, verbose = self.verbose,
+                    container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
         else:
             # because the game restarts the UDP connection must be reset too
             self.client.restart()
