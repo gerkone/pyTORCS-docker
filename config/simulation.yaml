@@ -6,23 +6,24 @@ mod_name : "main"
 run_path : "driver/run_torcs.py"
 
 # run module and path. change here to your agent algorithm
-algo_name: "Simple"
-algo_path: "driver/agents/simple_agent/snakeoil3.py"
+algo_name: "DDPG"
+algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
-  # actor_lr : 0.000001
-  # critic_lr : 0.000003
-  # batch_size : 32
-  # gamma : 0.99
-  # rand_steps : 0
-  # buf_size : 10000
-  # tau : 0.001
-  # fcl1_size : 128
-  # fcl2_size : 64
-  # actor_update_delay : 2
-  target_speed : 100
-  max_speed : 300
+  actor_lr : 0.000001
+  critic_lr : 0.000003
+  batch_size : 8
+  gamma : 0.99
+  rand_steps : 0
+  buf_size : 100
+  tau : 0.001
+  fcl1_size : 128
+  fcl2_size : 64
+  actor_update_delay : 2
+  img_width : 128
+  img_height : 96
+  stack_depth: 3
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:

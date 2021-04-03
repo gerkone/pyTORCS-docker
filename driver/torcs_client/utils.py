@@ -52,7 +52,7 @@ def reset_torcs(container_id, vision, kill = False):
     if vision is True:
         command.extend(["-vision"])
 
-    subprocess.Popen(command)
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def kill_torcs(container_id):
     command = []
@@ -60,7 +60,7 @@ def kill_torcs(container_id):
     if container_id != "0":
         command.extend(["docker", "exec", container_id])
     command.extend(["pkill", "torcs"])
-    subprocess.Popen(command)
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def destringify(s):
     if not s: return s

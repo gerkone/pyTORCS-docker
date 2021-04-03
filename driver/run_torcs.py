@@ -12,12 +12,12 @@ def agent_from_module(mod_name, run_path):
     return getattr(mod, mod_name)
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs",
-    environment = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
+        environment = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
     # Instantiate the environment
     max_steps = environment["max_steps"]
 
     env = TorcsEnv(throttle = environment["throttle"], gear_change = environment["gear_change"], verbose = verbose, state_filter = sensors,
-        max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
+            max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -50,8 +50,9 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         if use_stacked_frames:
             frame_stack.clear()
             frame = resize_frame(state["img"], img_width, img_height)
-            initial_state = np.repeat(frame, stack_depth, axis=0)
-            frame_stack.extend(initial_state)
+            frame_stack.append(frame)
+            frame_stack.append(frame)
+            frame_stack.append(frame)
             state["img"] = frame_stack
 
         while not terminal and curr_step < max_steps:
