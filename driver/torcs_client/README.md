@@ -60,8 +60,8 @@ sensors:
   # VISION SENSOR. set to turn vision on
   img: 1.0
 
-# environment related settings. agent throttle and gearshift
-environment:
+# training related settings
+training:
   throttle : False
   gear_change : False
   # set number of steps before restarting the episode
@@ -74,6 +74,8 @@ environment:
   img_height : 96
   # frame stack size. set to 1 to disable frame stacking
   stack_depth: 3
+  # number of passes on data
+  epochs : 20
 ```
 
 ### Arguments

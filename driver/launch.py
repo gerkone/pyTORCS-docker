@@ -40,7 +40,7 @@ class Launch:
 
                 self.hyperparams = conf["hyperparams"]
                 self.sensors = conf["sensors"]
-                self.environment = conf["environment"]
+                self.training = conf["training"]
 
                 self.stack_depth = conf["stack_depth"]
                 self.img_width = conf["img_width"]
@@ -50,7 +50,7 @@ class Launch:
 
     def run(self):
         self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors,
-                environment = self.environment, algo_name = self.algo_name, algo_path = self.algo_path,
+                training = self.training, algo_name = self.algo_name, algo_path = self.algo_path,
                 stack_depth = self.stack_depth, img_width = self.img_width, img_height = self.img_height)
 
 if __name__ == "__main__":

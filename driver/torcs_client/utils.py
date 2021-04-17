@@ -5,7 +5,7 @@ import re
 import numpy as np
 import cv2
 
-class bcolors:
+class SimpleLogger:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -16,6 +16,23 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+    @staticmethod
+    def info(str):
+        print(SimpleLogger.OKBLUE + "[INFO:] " + str + SimpleLogger.ENDC)
+    @staticmethod
+    def alert(str):
+        print(SimpleLogger.WARNING + "[WARN:] " + str + SimpleLogger.ENDC)
+    @staticmethod
+    def error(str):
+        print(SimpleLogger.FAIL + "[ERR:] " + str + SimpleLogger.ENDC)
+    @staticmethod
+    def training(str, loss):
+        print("--> " + str + SimpleLogger.OKGREEN + "Loss {:.3f}".format(loss) + SimpleLogger.ENDC)
+    @staticmethod
+    def separator(columns):
+        print()
+        print("-" * int(columns))
+        print()
 
 def start_container(image_name, verbose, port):
     # check if the container is already up
@@ -24,19 +41,21 @@ def start_container(image_name, verbose, port):
         # not yet started
         # get display from environment
         display = "unix" + os.environ["DISPLAY"]
-        if verbose: print(bcolors.OKGREEN + "Starting TORCS container..." + bcolors.ENDC)
+        if verbose: SimpleLogger.info("Starting TORCS container...")
         subprocess.Popen(["nvidia-docker", "run", "--ipc=host", "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
-            "-e", "DISPLAY=" + display, "-p", "{p}:{p}/udp".format(p = port), "--rm", "-t", "-d", image_name])
+            "-e", "DISPLAY=" + display, "-p", "{p}:{p}/udp".format(p = port), "--rm", "-t", "-d", image_name],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)
             container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
-
-        if verbose: print(bcolors.OKGREEN + "Container started with id " + container_id + bcolors.ENDC)
+        container_id = re.sub("[^a-zA-Z0-9 -]", "", container_id)
+        if verbose: SimpleLogger.info("Container started with id {}".format(container_id))
     else:
-        if verbose: print(bcolors.OKGREEN +"Container " + container_id + " already running" + bcolors.ENDC)
+        container_id = re.sub("[^a-zA-Z0-9 -]", "", container_id)
+        if verbose: SimpleLogger.info("Container {} already running".format(container_id))
 
-    return re.sub("[^a-zA-Z0-9 -]", "", container_id)
+    return container_id
 
 def reset_torcs(container_id, vision, kill = False):
     command = []
@@ -68,7 +87,7 @@ def destringify(s):
         try:
             return float(s)
         except ValueError:
-            if self.verbose: print("Could not find a value in %s" % s)
+            if self.verbose: SimpleLogger.alert("Could not find a value in {}".format(s))
             return s
     elif type(s) is list:
         if len(s) < 2:

@@ -1,8 +1,7 @@
 import numpy as np
 
-terminal_judge_start = 100  # If after 100 timestep still no progress, terminated
-termination_limit_progress = 5  # [km/h], episode terminates if car is running slower than this limit
-boring_speed = 1
+terminal_judge_start = 200
+boring_speed = 1 # km/h, episode terminates if car is running slower than this limit
 
 def custom_terminal(obs, reward, time_step):
     terminal = False
@@ -17,10 +16,7 @@ def custom_terminal(obs, reward, time_step):
     if terminal_judge_start < time_step:
         # Episode terminates if the agent is too slow
         if speed < boring_speed:
-           terminal = True
-        # Episode terminates if the progress of agent is small
-        if reward < termination_limit_progress:
-           terminal = True
+            terminal = True
 
     if angle < 0:
         # Episode is terminated if the agent runs backward

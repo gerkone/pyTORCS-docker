@@ -9,7 +9,7 @@ import sys, signal
 from torcs_client.torcs_client import Client
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import start_container, reset_torcs, kill_torcs
+from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs
 
 class TorcsEnv:
     def __init__(self, throttle = False, gear_change = False, state_filter = None, default_speed = 50,
@@ -140,20 +140,24 @@ class TorcsEnv:
         # self.client.R.d["meta"] = episode_terminate
 
         if episode_terminate:
-            self.initial_run = False
-            reset_torcs(self.container_id, True, True)
+            if self.verbose: log.info("Episode terminated by condition")
+            vision = "img" in self.state_filter
+            reset_torcs(self.container_id, vision, True)
+
 
         self.time_step += 1
 
         return self.observation, reward, episode_terminate
 
     def reset(self):
-        if self.verbose: print("Reset")
+        if self.verbose: log.info("Reset torcs")
 
         if self.initial_run:
             vision = "img" in self.state_filter
             # run torcs and start practice run
             reset_torcs(self.container_id, vision, True)
+
+            self.initial_run = False
 
             # create new torcs client - after first torcs launch
             self.client = Client(max_steps = self.max_steps, port = self.port, verbose = self.verbose,
@@ -166,7 +170,6 @@ class TorcsEnv:
 
         # Get the initial full-observation from torcs
         obs = self.client.S.d
-
 
         self.observation = self.make_observaton(obs)
 

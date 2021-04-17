@@ -26,3 +26,10 @@ libs/raceengineclient/racemain.cpp line 321, ReInfo->_reGraphicItf.initview((sw-
 Vision:
 linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
 libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
+
+SOCKET BUFFER TOO LARGE ISSUE:
+clients slower than torcs (20 ms each step) will run into an issue where they read from the tail of an evergrowing udp buffer, preventing them to get new data.
+check scr_server.cpp on line 225. possibly set small buffer size (3?) set with int setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
+es
+int bufsize = 3;
+setsockopt(listenSocket[index], SOL_SOCKET, SO_RCVBUF, &bufsize, sizeof(bufsize));

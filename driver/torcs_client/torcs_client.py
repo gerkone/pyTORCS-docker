@@ -9,7 +9,7 @@ import getopt
 import numpy as np
 import sysv_ipc as ipc
 
-from torcs_client.utils import reset_torcs, destringify, raw_to_rgb
+from torcs_client.utils import SimpleLogger as log, reset_torcs, destringify, raw_to_rgb
 
 data_size = 2**17
 
@@ -60,14 +60,14 @@ class Client():
 
     def shutdown(self):
         if not self.so: return
-        if self.verbose: print(("Race terminated or %d steps elapsed. Shutting down %d."
+        if self.verbose: log.info(("Race terminated or %d steps elapsed. Shutting down %d."
                % (self.max_steps,self.port)))
         self.so.close()
         self.so = None
 
     def restart(self):
         if not self.so: return
-        if self.verbose: print("Restarting race...")
+        if self.verbose: log.info("Restarting race...")
         self.so.close()
         self.so = None
         self.reset()
@@ -77,16 +77,17 @@ class Client():
         try:
             self.so= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         except socket.error as emsg:
-            if self.verbose: print('Error: Could not create socket...')
+            if self.verbose: log.error("Could not create socket.")
             sys.exit(-1)
         # == Initialize Connection To Server ==
         self.so.settimeout(1)
 
         n_fail = 5
+        if self.verbose: log.info("Waiting for server on port {}".format(self.port))
         while True:
             a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
 
-            initmsg='%s(init %s)' % (self.sid,a)
+            initmsg="%s(init %s)" % (self.sid,a)
 
             try:
                 self.so.sendto(initmsg.encode(), (self.host, self.port))
@@ -95,19 +96,17 @@ class Client():
             sockdata= str()
             try:
                 sockdata,addr= self.so.recvfrom(data_size)
-                sockdata = sockdata.decode('utf-8')
+                sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
-                if self.verbose: print("Waiting for server on %d............" % self.port)
-                if self.verbose: print("Count Down : " + str(n_fail))
                 if n_fail < 0:
-                    if self.verbose: print("Relaunch torcs")
+                    if self.verbose: log.info("Relaunch torcs")
                     reset_torcs(self.container_id, self.vision, True)
                     n_fail = 5
                 n_fail -= 1
 
-            identify = '***identified***'
+            identify = "***identified***"
             if identify in sockdata:
-                if self.verbose: print("Client connected on %d.............." % self.port)
+                if self.verbose: log.info("Client connected on port {}".format(self.port))
                 break
 
     def setup_shm_vision(self):
@@ -140,7 +139,7 @@ class Client():
 
     def get_servers_input(self):
         """
-        Server's input is stored in a ServerState object
+        Server"s input is stored in a ServerState object
         """
         if not self.so: return
         sockdata= str()
@@ -149,21 +148,18 @@ class Client():
             try:
                 # Receive server data
                 sockdata,addr= self.so.recvfrom(data_size)
-                sockdata = sockdata.decode('utf-8')
+                sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
-                if self.verbose: print('.', end=' ')
-                #if self.verbose: print "Waiting for data on %d.............." % self.port
-            if '***identified***' in sockdata:
-                if self.verbose: print("Client connected on %d.............." % self.port)
+                pass
+            if "***identified***" in sockdata:
+                if self.verbose: log.info("Client connected on port {}".format(self.port))
                 continue
-            elif '***shutdown***' in sockdata:
-                if self.verbose: print((("Server has stopped the race on %d. "+
-                        "You were in %d place.") %
-                        (self.port,self.S.d['racePos'])))
+            elif "***shutdown***" in sockdata:
+                if self.verbose: log.alert("Server has stopped the race on {}. You were in {} place".format(self.port, self.S.d["racePos"]))
                 self.shutdown()
                 return
-            elif '***restart***' in sockdata:
-                if self.verbose: print("Server has restarted the race on %d." % self.port)
+            elif "***restart***" in sockdata:
+                if self.verbose: log.alert("Server has restarted the race on port {}.".format(self.port))
                 # reset UDP, reset client
                 self.restart()
                 return
@@ -179,7 +175,7 @@ class Client():
             message = repr(self.R)
             self.so.sendto(message.encode(), (self.host, self.port))
         except socket.error as emsg:
-            if self.verbose: print("Error sending to server: %s Message %s" % (emsg[1],str(emsg[0])))
+            if self.verbose: log.error("Error sending to server: {} Message {}".format(emsg[1], str(emsg[0])))
             sys.exit(-1)
 
 class ServerState():
@@ -195,9 +191,9 @@ class ServerState():
         Parse the server string.
         """
         self.servstr= server_string.strip()[:-1]
-        sslisted= self.servstr.strip().lstrip('(').rstrip(')').split(')(')
+        sslisted= self.servstr.strip().lstrip("(").rstrip(")").split(")(")
         for i in sslisted:
-            w= i.split(' ')
+            w= i.split(" ")
             self.d[w[0]]= destringify(w[1:])
 
         if(image is not None):
@@ -214,36 +210,36 @@ class DriverAction():
     def __init__(self):
        self.actionstr= str()
        # "d" is for data dictionary.
-       self.d= { 'accel':0.2,
-                   'brake':0,
-                  'clutch':0,
-                    'gear':1,
-                   'steer':0,
-                   'focus':[-90,-45,0,45,90],
-                    'meta':0
+       self.d= { "accel":0.2,
+                   "brake":0,
+                  "clutch":0,
+                    "gear":1,
+                   "steer":0,
+                   "focus":[-90,-45,0,45,90],
+                    "meta":0
                     }
 
     def clip_to_limits(self):
-        self.d['steer'] = np.clip(self.d['steer'], -1, 1)
-        self.d['brake'] = np.clip(self.d['brake'], 0, 1)
-        self.d['accel'] = np.clip(self.d['accel'], 0, 1)
-        self.d['clutch'] = np.clip(self.d['clutch'], 0, 1)
-        if self.d['gear'] not in [-1, 0, 1, 2, 3, 4, 5, 6]:
-            self.d['gear']= 0
-        if self.d['meta'] not in [0,1]:
-            self.d['meta']= 0
-        if type(self.d['focus']) is not list or min(self.d['focus'])<-180 or max(self.d['focus'])>180:
-            self.d['focus']= 0
+        self.d["steer"] = np.clip(self.d["steer"], -1, 1)
+        self.d["brake"] = np.clip(self.d["brake"], 0, 1)
+        self.d["accel"] = np.clip(self.d["accel"], 0, 1)
+        self.d["clutch"] = np.clip(self.d["clutch"], 0, 1)
+        if self.d["gear"] not in [-1, 0, 1, 2, 3, 4, 5, 6]:
+            self.d["gear"]= 0
+        if self.d["meta"] not in [0,1]:
+            self.d["meta"]= 0
+        if type(self.d["focus"]) is not list or min(self.d["focus"])<-180 or max(self.d["focus"])>180:
+            self.d["focus"]= 0
 
     def __repr__(self):
         self.clip_to_limits()
         out= str()
         for k in self.d:
-            out+= '('+k+' '
+            out+= "("+k+" "
             v= self.d[k]
             if not type(v) is list:
-                out+= '%.3f' % v
+                out+= "%.3f" % v
             else:
-                out+= ' '.join([str(x) for x in v])
-            out+= ')'
+                out+= " ".join([str(x) for x in v])
+            out+= ")"
         return out

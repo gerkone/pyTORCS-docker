@@ -1,9 +1,11 @@
 import numpy as np
 import importlib.util
 import collections
+import time
+import os
 
 from torcs_client.torcs_comp import TorcsEnv
-from torcs_client.utils import bcolors, resize_frame
+from torcs_client.utils import SimpleLogger as log, resize_frame
 
 def agent_from_module(mod_name, run_path):
     spec = importlib.util.spec_from_file_location(mod_name, run_path)
@@ -12,11 +14,14 @@ def agent_from_module(mod_name, run_path):
     return getattr(mod, mod_name)
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs",
-        environment = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
-    # Instantiate the environment
-    max_steps = environment["max_steps"]
+        training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
-    env = TorcsEnv(throttle = environment["throttle"], gear_change = environment["gear_change"], verbose = verbose, state_filter = sensors,
+    max_steps = training["max_steps"]
+    n_epochs = training["epochs"]
+    episodes = training["episodes"]
+
+    # Instantiate the environment
+    env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], verbose = verbose, state_filter = sensors,
             max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
@@ -32,6 +37,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     agent = agent_class(state_dims = state_dims, action_dims = action_dims,
             action_boundaries = action_boundaries, hyperparams = hyperparams)
 
+    _, columns = os.popen('stty size', 'r').read().split()
+
     np.random.seed(0)
     scores = []
     curr_step = 0
@@ -39,14 +46,13 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     if use_stacked_frames:
         frame_stack = collections.deque(maxlen=stack_depth)
 
-    for i in range(environment["episodes"]):
+    for i in range(episodes):
         state = env.reset()
-
+        time_start = time.time()
         terminal = False
         score = 0
-
+        avg_loss = []
         curr_step = 0
-
         if use_stacked_frames:
             frame_stack.clear()
             frame = resize_frame(state["img"], img_width, img_height)
@@ -55,7 +61,13 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             frame_stack.append(frame)
             state["img"] = frame_stack
 
+        log.alert("Episode {}/{} started".format(i, episodes))
+        log.separator(columns)
+
         while not terminal and curr_step < max_steps:
+            # time_1 = time.time()
+            if curr_step >= max_steps:
+                if self.verbose: log.info("Episode terminated by steps: {} steps done.".format(max_steps))
             # predict new action
             action = agent.get_action(state, i)
             # perform the transition according to the choosen action
@@ -68,13 +80,28 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             if hasattr(agent, "remember"):
                 if callable(agent.remember):
                     agent.remember(state, state_new, action, reward, terminal)
-            # adjust the weights according to the new transaction
-            if hasattr(agent, "learn"):
-                if callable(agent.learn):
-                    agent.learn(i)
             #iterate to the next
             state = state_new
             curr_step += 1
             score += reward
+            # time_2 = time.time()
+            # log.info("{:.2f}".format(1000.0 * (time_2 - time_1)))
+        time_end = time.time()
+
         scores.append(score)
-        print(bcolors.OKBLUE + "Iteration {:d} --> score {:.2f}. Running average {:.2f}".format(i, score, np.mean(scores)) + bcolors.ENDC)
+        log.info("Iteration {:d} --> Duration {:.2f} ms. Score {:.2f}. Running average {:.2f}".format(
+            i, 1000.0 * (time_end - time_start), score, np.mean(scores)))
+        log.separator(columns)
+        if hasattr(agent, "learn"):
+            if callable(agent.learn):
+                log.alert("Starting training -> {:d} epochs".format(n_epochs))
+                time_start = time.time()
+                for e in range(n_epochs):
+                    # adjust the weights according to the new transaction
+                    loss = agent.learn(i)
+                    avg_loss.append(loss)
+                    if verbose:
+                        log.training("Epoch {}. ".format(e), loss)
+                time_end = time.time()
+                log.alert("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
+                    n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
