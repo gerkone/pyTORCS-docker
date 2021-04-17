@@ -11,7 +11,12 @@ import sysv_ipc as ipc
 
 from torcs_client.utils import SimpleLogger as log, reset_torcs, destringify, raw_to_rgb
 
+UDP_MSGLEN = 800
+
 data_size = 2**17
+# bufsize of the incoming packets (bytes)
+bufsize = 4 * UDP_MSGLEN
+
 
 SHMKEY = 1234
 
@@ -79,15 +84,18 @@ class Client():
         except socket.error as emsg:
             if self.verbose: log.error("Could not create socket.")
             sys.exit(-1)
-        # == Initialize Connection To Server ==
+        # Initialize Connection To Server
         self.so.settimeout(1)
+        # set socket receive buffer to about 4 packets (maximum observation delay of around 200 ms)
+        # this is done to evoid bufferbloat and packet accumulation
+        self.so.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, bufsize)
 
         n_fail = 5
         if self.verbose: log.info("Waiting for server on port {}".format(self.port))
         while True:
             a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
 
-            initmsg="%s(init %s)" % (self.sid,a)
+            initmsg="{}(init {})".format(self.sid, a)
 
             try:
                 self.so.sendto(initmsg.encode(), (self.host, self.port))
@@ -147,10 +155,10 @@ class Client():
         while True:
             try:
                 # Receive server data
-                sockdata,addr= self.so.recvfrom(data_size)
+                sockdata, addr= self.so.recvfrom(data_size)
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
-                pass
+                log.error("Socket error raised: {}".format(emsg))
             if "***identified***" in sockdata:
                 if self.verbose: log.info("Client connected on port {}".format(self.port))
                 continue
@@ -175,7 +183,7 @@ class Client():
             message = repr(self.R)
             self.so.sendto(message.encode(), (self.host, self.port))
         except socket.error as emsg:
-            if self.verbose: log.error("Error sending to server: {} Message {}".format(emsg[1], str(emsg[0])))
+            log.error("Error sending to server: {} Message {}".format(emsg[1], str(emsg[0])))
             sys.exit(-1)
 
 class ServerState():

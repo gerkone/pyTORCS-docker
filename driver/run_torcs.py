@@ -94,7 +94,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         log.separator(columns)
         if hasattr(agent, "learn"):
             if callable(agent.learn):
-                log.alert("Starting training -> {:d} epochs".format(n_epochs))
+                log.alert("Starting training: {:d} epochs".format(n_epochs))
                 time_start = time.time()
                 for e in range(n_epochs):
                     # adjust the weights according to the new transaction

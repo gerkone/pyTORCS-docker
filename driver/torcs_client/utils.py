@@ -18,13 +18,13 @@ class SimpleLogger:
 
     @staticmethod
     def info(str):
-        print(SimpleLogger.OKBLUE + "[INFO:] " + str + SimpleLogger.ENDC)
+        print(SimpleLogger.OKBLUE + "[INFO]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def alert(str):
-        print(SimpleLogger.WARNING + "[WARN:] " + str + SimpleLogger.ENDC)
+        print(SimpleLogger.WARNING + "[WARN]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def error(str):
-        print(SimpleLogger.FAIL + "[ERR:] " + str + SimpleLogger.ENDC)
+        print(SimpleLogger.FAIL + "[ERR]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def training(str, loss):
         print("--> " + str + SimpleLogger.OKGREEN + "Loss {:.3f}".format(loss) + SimpleLogger.ENDC)
