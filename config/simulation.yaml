@@ -20,7 +20,7 @@ hyperparams:
   batch_size : 8
   gamma : 0.99
   rand_steps : 0
-  buf_size : 100
+  buf_size : 10000
   tau : 0.001
   fcl1_size : 128
   fcl2_size : 64
@@ -46,7 +46,8 @@ sensors:
 
 # environment and training related settings
 training:
-  throttle : True
+  # automatic throttle control
+  throttle : False
   # manual not yet properly supported - leave it False
   gear_change : False
   # set number of steps before restarting the episode
@@ -56,6 +57,8 @@ training:
   episodes : 10000
   # number of passes on data
   epochs : 20
+  # number of events before each training
+  train_freq : 5
 
 # resized image dimensions
 img_width : 128

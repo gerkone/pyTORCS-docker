@@ -19,6 +19,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     max_steps = training["max_steps"]
     n_epochs = training["epochs"]
     episodes = training["episodes"]
+    train_freq = training["train_freq"]
 
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], verbose = verbose, state_filter = sensors,
@@ -61,8 +62,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             frame_stack.append(frame)
             state["img"] = frame_stack
 
+        log.separator(int(columns) / 2)
         log.alert("Episode {}/{} started".format(i, episodes))
-        log.separator(columns)
 
         while not terminal and curr_step < max_steps:
             # time_1 = time.time()
@@ -91,9 +92,9 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         scores.append(score)
         log.info("Iteration {:d} --> Duration {:.2f} ms. Score {:.2f}. Running average {:.2f}".format(
             i, 1000.0 * (time_end - time_start), score, np.mean(scores)))
-        log.separator(columns)
-        if hasattr(agent, "learn"):
-            if callable(agent.learn):
+        if hasattr(agent, "learn") and callable(agent.learn):
+            # accumulate some training data before training
+            if (i % train_freq == 1):
                 log.alert("Starting training: {:d} epochs".format(n_epochs))
                 time_start = time.time()
                 for e in range(n_epochs):

@@ -31,7 +31,7 @@ The action space is variable in size, depending on how the environment is config
 - **_speedY_** - Speed of the car along its transverse axis.
 - **_speedZ_** - Speed of the car along its Z axis.
 - **_wheelSpinVel_** - Vector of 4 sensors representing the rotation speed of wheels.
-- **_rpm_** - Number of rotation per minute of the car engine (used by the gearshift).
+- **_rpm_** - Number of rotation per minute of the car engine (could be used by the gearshift).
 - **_trackPos_** - Distance between the car and the track axis.
 - **_img_** - Vision from the driver perspective. By default a rgb 640x480 image.
 

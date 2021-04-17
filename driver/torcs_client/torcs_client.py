@@ -15,7 +15,7 @@ UDP_MSGLEN = 800
 
 data_size = 2**17
 # bufsize of the incoming packets (bytes)
-bufsize = 4 * UDP_MSGLEN
+bufsize = 2 * UDP_MSGLEN
 
 
 SHMKEY = 1234
