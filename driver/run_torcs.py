@@ -63,7 +63,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             state["img"] = frame_stack
 
         log.separator(int(columns) / 2)
-        log.alert("Episode {}/{} started".format(i, episodes))
+        log.info("Episode {}/{} started".format(i, episodes))
 
         while not terminal and curr_step < max_steps:
             # time_1 = time.time()
@@ -90,19 +90,24 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         time_end = time.time()
 
         scores.append(score)
+        duration = 1000.0 * (time_end - time_start)
+        avg_iteration = duration / curr_step
+        packet_loss = (avg_iteration / (1000 / 50)) * 100
         log.info("Iteration {:d} --> Duration {:.2f} ms. Score {:.2f}. Running average {:.2f}".format(
-            i, 1000.0 * (time_end - time_start), score, np.mean(scores)))
+            i, duration, score, np.mean(scores)))
+        if packet_loss > 350:
+            if verbose: log.alert("High packet loss: {:.2f}%. Running {:2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
         if hasattr(agent, "learn") and callable(agent.learn):
             # accumulate some training data before training
-            if (i % train_freq == 1):
-                log.alert("Starting training: {:d} epochs".format(n_epochs))
+            if (i % train_freq == 0 and i > 4):
+                log.info("Starting training: {:d} epochs".format(n_epochs))
                 time_start = time.time()
                 for e in range(n_epochs):
                     # adjust the weights according to the new transaction
                     loss = agent.learn(i)
                     avg_loss.append(loss)
                     if verbose:
-                        log.training("Epoch {}. ".format(e), loss)
+                        log.training("Epoch {}. ".format(e + 1), loss)
                 time_end = time.time()
-                log.alert("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
+                log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))

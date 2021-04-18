@@ -33,10 +33,7 @@ class TorcsEnv:
         else:
             self.container_id = "0"
 
-        # should be true if torcs was just opened
-        self.initial_run = True
-
-        self.img_width = 64
+        self.img_width = img_width
 
         self.img_height = img_height
 
@@ -115,7 +112,7 @@ class TorcsEnv:
             self.client.R.d["brake"] = action["brake"]
 
         if self.gear_change is False:
-            self.client.R.d["gear"] = self.automatic_gearbox(curr_state["speedX"], self.client.R.d["gear"])
+            self.client.R.d["gear"] = self.automatic_gearbox(curr_state["rpm"], self.client.R.d["gear"])
         else:
             self.client.R.d["gear"] = action["gear"]
 
@@ -141,9 +138,6 @@ class TorcsEnv:
 
         if episode_terminate:
             if self.verbose: log.info("Episode terminated by condition")
-            vision = "img" in self.state_filter
-            reset_torcs(self.container_id, vision, True)
-
 
         self.time_step += 1
 
@@ -151,14 +145,11 @@ class TorcsEnv:
 
     def reset(self):
         if self.verbose: log.info("Reset torcs")
+        vision = "img" in self.state_filter
+        # run torcs and start practice run
+        reset_torcs(self.container_id, vision, True)
 
-        if self.initial_run:
-            vision = "img" in self.state_filter
-            # run torcs and start practice run
-            reset_torcs(self.container_id, vision, True)
-
-            self.initial_run = False
-
+        if not hasattr(self, "client"):
             # create new torcs client - after first torcs launch
             self.client = Client(max_steps = self.max_steps, port = self.port, verbose = self.verbose,
                     container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
@@ -194,20 +185,16 @@ class TorcsEnv:
 
         return accel
 
-    def automatic_gearbox(self, speed, gear):
-        #  Automatic Gear Change by Snakeoil is possible
-        if speed > 50:
-            gear = 2
-        if speed > 80:
-            gear = 3
-        if speed > 110:
-            gear = 4
-        if speed > 140:
-            gear = 5
-        if speed > 170:
-            gear = 6
+    def automatic_gearbox(self, rpm, gear):
+        if rpm > 8000 and gear < 6:
+            gear += 1
+        if rpm < 2500 and gear > 1:
+            gear -= 1
 
         return gear
+
+    def get_max_packets(self):
+        return self.client.max_packets
 
     def agent_to_torcs(self, u):
         torcs_action = {"steer": u[0]}

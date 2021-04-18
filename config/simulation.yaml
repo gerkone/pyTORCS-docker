@@ -15,14 +15,14 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.000001
-  critic_lr : 0.000003
-  batch_size : 8
+  actor_lr : 0.00001
+  critic_lr : 0.00003
+  batch_size : 64
   gamma : 0.99
   rand_steps : 0
-  buf_size : 10000
+  buf_size : 100000
   tau : 0.001
-  fcl1_size : 128
+  fcl1_size : 256
   fcl2_size : 64
   actor_update_delay : 2
   img_width : 128
@@ -46,7 +46,7 @@ sensors:
 
 # environment and training related settings
 training:
-  # automatic throttle control
+  # manual throttle control
   throttle : False
   # manual not yet properly supported - leave it False
   gear_change : False

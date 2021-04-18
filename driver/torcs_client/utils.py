@@ -27,7 +27,7 @@ class SimpleLogger:
         print(SimpleLogger.FAIL + "[ERR]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def training(str, loss):
-        print("--> " + str + SimpleLogger.OKGREEN + "Loss {:.3f}".format(abs(loss)) + SimpleLogger.ENDC)
+        print("--> " + str + SimpleLogger.OKGREEN + "Loss {:.3f}".format(loss) + SimpleLogger.ENDC)
     @staticmethod
     def separator(columns):
         print()

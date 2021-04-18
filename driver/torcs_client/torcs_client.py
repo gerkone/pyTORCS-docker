@@ -11,12 +11,8 @@ import sysv_ipc as ipc
 
 from torcs_client.utils import SimpleLogger as log, reset_torcs, destringify, raw_to_rgb
 
+# max message length
 UDP_MSGLEN = 800
-
-data_size = 2**17
-# bufsize of the incoming packets (bytes)
-bufsize = 2 * UDP_MSGLEN
-
 
 SHMKEY = 1234
 
@@ -28,8 +24,12 @@ class Client():
     """
     def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None,
                 max_steps = 10000, container_id = "0", vision=False, verbose = False,
-                img_height= 640, img_width = 480):
+                img_height= 640, img_width = 480, max_packets = 2):
 
+        self.data_size = 2**17
+        # bufsize of the incoming packets (bytes)
+        self.max_packets = max_packets
+        self.bufsize = self.max_packets * UDP_MSGLEN
         self.verbose = verbose
 
         self.container_id = container_id
@@ -65,14 +65,13 @@ class Client():
 
     def shutdown(self):
         if not self.so: return
-        if self.verbose: log.info(("Race terminated or %d steps elapsed. Shutting down %d."
+        if self.verbose: log.alert(("Race terminated or %d steps elapsed. Shutting down %d."
                % (self.max_steps,self.port)))
         self.so.close()
         self.so = None
 
     def restart(self):
         if not self.so: return
-        if self.verbose: log.info("Restarting race...")
         self.so.close()
         self.so = None
         self.reset()
@@ -88,9 +87,8 @@ class Client():
         self.so.settimeout(1)
         # set socket receive buffer to about 4 packets (maximum observation delay of around 200 ms)
         # this is done to evoid bufferbloat and packet accumulation
-        self.so.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, bufsize)
-
-        n_fail = 5
+        self.so.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.bufsize)
+        n_fail = 3
         if self.verbose: log.info("Waiting for server on port {}".format(self.port))
         while True:
             a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
@@ -103,13 +101,13 @@ class Client():
                 sys.exit(-1)
             sockdata= str()
             try:
-                sockdata,addr= self.so.recvfrom(data_size)
+                sockdata,addr= self.so.recvfrom(self.data_size)
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
                 if n_fail < 0:
-                    if self.verbose: log.info("Relaunch torcs")
+                    if self.verbose: log.alert("Could not connect to port {}. Relaunch torcs".format(self.port))
                     reset_torcs(self.container_id, self.vision, True)
-                    n_fail = 5
+                    n_fail = 3
                 n_fail -= 1
 
             identify = "***identified***"
@@ -155,7 +153,7 @@ class Client():
         while True:
             try:
                 # Receive server data
-                sockdata, addr= self.so.recvfrom(data_size)
+                sockdata, addr= self.so.recvfrom(self.data_size)
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
                 log.error("Socket error raised: {}".format(emsg))
