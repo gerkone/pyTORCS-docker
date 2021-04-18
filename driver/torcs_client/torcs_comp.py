@@ -12,12 +12,12 @@ from torcs_client.terminator import custom_terminal
 from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs
 
 class TorcsEnv:
-    def __init__(self, throttle = False, gear_change = False, state_filter = None, default_speed = 50,
+    def __init__(self, throttle = False, gear_change = False, state_filter = None, target_speed = 50,
             max_steps = 10000, port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
         self.gear_change = gear_change
-        self.default_speed = default_speed
+        self.target_speed = target_speed
 
         self.verbose = verbose
 
@@ -106,7 +106,7 @@ class TorcsEnv:
         self.client.R.d["steer"] = action["steer"]
 
         if self.throttle is False:
-            self.client.R.d["accel"] = self.automatic_throttle_control(self.default_speed, curr_state, self.client.R.d["accel"], self.client.R.d["steer"])
+            self.client.R.d["accel"] = self.automatic_throttle_control(self.target_speed, curr_state, self.client.R.d["accel"], self.client.R.d["steer"])
         else:
             self.client.R.d["accel"] = action["accel"]
             self.client.R.d["brake"] = action["brake"]

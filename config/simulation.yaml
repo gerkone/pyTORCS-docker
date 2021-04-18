@@ -48,6 +48,7 @@ sensors:
 training:
   # manual throttle control
   throttle : False
+  target_speed : 50
   # manual not yet properly supported - leave it False
   gear_change : False
   # set number of steps before restarting the episode

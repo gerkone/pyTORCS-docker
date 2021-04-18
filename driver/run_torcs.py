@@ -23,7 +23,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], verbose = verbose, state_filter = sensors,
-            max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
+            target_speed = training["target_speed"], max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -47,6 +47,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     if use_stacked_frames:
         frame_stack = collections.deque(maxlen=stack_depth)
 
+    log.separator(int(columns) / 2)
+
     for i in range(episodes):
         state = env.reset()
         time_start = time.time()
@@ -62,7 +64,6 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             frame_stack.append(frame)
             state["img"] = frame_stack
 
-        log.separator(int(columns) / 2)
         log.info("Episode {}/{} started".format(i, episodes))
 
         while not terminal and curr_step < max_steps:
@@ -111,3 +112,4 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 time_end = time.time()
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
+        log.separator(int(columns) / 2)
