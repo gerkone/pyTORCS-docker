@@ -15,9 +15,9 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.00001
-  critic_lr : 0.00003
-  batch_size : 64
+  actor_lr : 0.0001
+  critic_lr : 0.001
+  batch_size : 32
   gamma : 0.99
   rand_steps : 0
   buf_size : 100000

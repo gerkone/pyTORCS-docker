@@ -51,9 +51,9 @@ class TorcsEnv:
             self.state_filter["rpm"] = 10000
 
         if throttle is False:
-            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
+            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
         else:
-            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,))
+            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
 
         high = np.array([])
         low = np.array([])
@@ -84,7 +84,7 @@ class TorcsEnv:
             high = np.append(high, np.array([np.inf, np.inf, np.inf, np.inf]))
             low = np.append(low, np.zeros(4))
 
-        self.observation_space = spaces.Box(low=low, high=high)
+        self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
 
         # kill torcs on sigint, avoid leaving the open window
         def kill_torcs_and_close(sig, frame):
