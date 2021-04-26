@@ -124,14 +124,14 @@ class TorcsEnv:
         obs = curr_state
 
         # initialize previous observation (for reward and termination)
-        if not hasattr(self, "obs_prev"):
+        if self.time_step == 0:
             self.obs_prev = copy.deepcopy(curr_state)
 
         # Make an obsevation from a raw observation vector from TORCS
         self.observation = self.make_observaton(obs)
 
         # ################### Reward ###################
-        reward = custom_reward(obs, self.obs_prev)
+        reward = custom_reward(obs, self.obs_prev, action)
 
         # ################### Termination ###################
         episode_terminate = custom_terminal(obs, reward, time_step = self.time_step)

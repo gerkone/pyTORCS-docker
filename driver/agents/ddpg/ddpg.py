@@ -86,7 +86,6 @@ class DDPG(object):
 
     def simple_controller(self, state):
         speedX = state["speedX"]
-
         action = np.zeros(self.n_actions)
         # steer to corner
         steer = state["angle"] * 10
@@ -95,7 +94,7 @@ class DDPG(object):
 
         accel = self.prev_accel
 
-        if speedX < 0.15 - (steer * 50):
+        if speedX < 0.6 - (steer * 50):
             accel += .01
         else:
             accel -= .01
@@ -103,7 +102,7 @@ class DDPG(object):
         if accel > 0.2:
             accel = 0.2
 
-        if speedX < 10:
+        if speedX < 0.3:
             accel += 1 / (speedX + .1)
 
         action[0] = steer
