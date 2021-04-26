@@ -22,11 +22,11 @@ class DDPG(object):
         critic_lr = hyperparams["critic_lr"]
         batch_size = hyperparams["batch_size"]
         gamma = hyperparams["gamma"]
-        rand_steps = hyperparams["rand_steps"]
         buf_size = int(hyperparams["buf_size"])
         tau = hyperparams["tau"]
         fcl1_size = hyperparams["fcl1_size"]
         fcl2_size = hyperparams["fcl2_size"]
+        self.guided_steps = hyperparams["guided_steps"] - 1
 
         # action size
         self.n_states = state_dims[0]
@@ -45,8 +45,7 @@ class DDPG(object):
         # Bellman discount factor
         self.gamma = gamma
 
-        # number of episodes for random action exploration
-        self.rand_steps = rand_steps - 1
+        self.prev_accel = 0
 
         # turn off most logging
         logging.getLogger("tensorflow").setLevel(logging.FATAL)
@@ -71,7 +70,7 @@ class DDPG(object):
         in training. Noise added for exploration
         """
         #take only random actions for the first episode
-        if(step > self.rand_steps):
+        if(step > self.guided_steps):
             noise = self._noise()
             state = np.hstack(list(state.values()))
             state = tf.expand_dims(state, axis = 0)
@@ -80,10 +79,39 @@ class DDPG(object):
             action_p = action_p[0]
         else:
             #explore the action space quickly
-            action_p = np.random.uniform(self.lower_bound, self.upper_bound, self.n_actions)
+            action_p = self.simple_controller(state)
         #clip the resulting action with the bounds
         action_p = np.clip(action_p, self.lower_bound, self.upper_bound)
         return action_p
+
+    def simple_controller(self, state):
+        speedX = state["speedX"]
+
+        action = np.zeros(self.n_actions)
+        # steer to corner
+        steer = state["angle"] * 10
+        # steer to center
+        steer -= state["trackPos"] * .10
+
+        accel = self.prev_accel
+
+        if speedX < 0.15 - (steer * 50):
+            accel += .01
+        else:
+            accel -= .01
+
+        if accel > 0.2:
+            accel = 0.2
+
+        if speedX < 10:
+            accel += 1 / (speedX + .1)
+
+        action[0] = steer
+        action[1] = accel
+
+        self.prev_accel = accel
+
+        return action
 
 
     def learn(self, i):

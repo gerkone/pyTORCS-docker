@@ -1,6 +1,6 @@
 import numpy as np
 
-terminal_judge_start = 100
+terminal_judge_start = 200
 boring_speed = 3 # km/h, episode terminates if car is running slower than this limit
 
 def custom_terminal(obs, reward, time_step):

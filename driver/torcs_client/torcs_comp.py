@@ -116,8 +116,6 @@ class TorcsEnv:
         else:
             self.client.R.d["gear"] = action["gear"]
 
-        # Save the privious full-obs from torcs for the reward calculation
-        obs_prev = copy.deepcopy(curr_state)
 
         # Apply the agent"s action into torcs
         self.client.respond_to_server()
@@ -125,12 +123,17 @@ class TorcsEnv:
         # Get the current full-observation from torcs
         obs = curr_state
 
+        # initialize previous observation (for reward and termination)
+        if not hasattr(self, "obs_prev"):
+            self.obs_prev = copy.deepcopy(curr_state)
+
         # Make an obsevation from a raw observation vector from TORCS
         self.observation = self.make_observaton(obs)
 
-        # ################### Reward setting Here ###################
-        reward = custom_reward(obs, obs_prev)
-        # ################### Termination judgement ###################
+        # ################### Reward ###################
+        reward = custom_reward(obs, self.obs_prev)
+
+        # ################### Termination ###################
         episode_terminate = custom_terminal(obs, reward, time_step = self.time_step)
 
         # reset torcs on terminate - currently useless
@@ -140,6 +143,8 @@ class TorcsEnv:
             if self.verbose: log.info("Episode terminated by condition")
 
         self.time_step += 1
+
+        self.obs_prev = copy.deepcopy(curr_state)
 
         return self.observation, reward, episode_terminate
 
@@ -186,9 +191,9 @@ class TorcsEnv:
         return accel
 
     def automatic_gearbox(self, rpm, gear):
-        if rpm > 8000 and gear < 6:
+        if rpm > 9500 and gear < 6:
             gear += 1
-        if rpm < 2500 and gear > 1:
+        if rpm < 4500 and gear > 1:
             gear -= 1
 
         return gear

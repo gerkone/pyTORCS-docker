@@ -50,7 +50,7 @@ class Launch:
 
     def run(self):
         self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors,
-                training = self.training, algo_name = self.algo_name, algo_path = self.algo_path,
+                training = self.training, algo_name = self.algo_name, algo_path = self.algo_path, image_name = self.image_name,
                 stack_depth = self.stack_depth, img_width = self.img_width, img_height = self.img_height)
 
 if __name__ == "__main__":

@@ -35,6 +35,28 @@ The action space is variable in size, depending on how the environment is config
 - **_trackPos_** - Distance between the car and the track axis.
 - **_img_** - Vision from the driver perspective. By default a rgb 640x480 image.
 
+Many other values are sent by torcs, but most of them are (currently) not useful for our purpose. The full list is:
+```
+angle
+curLapTim
+damage
+distFromStart
+distRaced
+fuel
+gear
+lastLapTime
+opponents
+racePos
+rpm
+speedX
+speedT
+speedZ
+track
+trackPos
+wheelSpinVel
+z
+```
+
 More info on the sensors can be found in the original [scr paper](https://arxiv.org/pdf/1304.1672.pdf).
 
 ## State space
