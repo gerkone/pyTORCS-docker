@@ -16,14 +16,14 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 # agent hyperparameters
 hyperparams:
   actor_lr : 0.00001
-  critic_lr : 0.0002
+  critic_lr : 0.00002
   batch_size : 64
   gamma : 0.99
   guided_steps : 1
   buf_size : 10000
   tau : 0.001
-  fcl1_size : 256
-  fcl2_size : 64
+  fcl1_size : 600
+  fcl2_size : 400
   actor_update_delay : 2
   # img_width : 128
   # img_height : 96
@@ -53,13 +53,13 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # approx 50 steps per second
-  max_steps : 1000
+  max_steps : 1500
   # total number of episodes
   episodes : 10000
   # number of passes on data
-  epochs : 20
+  epochs : 10
   # number of events before each training
-  train_freq : 2
+  train_freq : 4
 
 # resized image dimensions
 img_width : 128

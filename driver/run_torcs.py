@@ -49,6 +49,11 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     log.separator(int(columns) / 2)
 
+    collection_steps = 0
+
+    # buffer episodes in between training steps
+    episode_buffer = np.empty(max_steps * train_freq, dtype = object)
+
     for i in range(episodes):
         state = env.reset()
         time_start = time.time()
@@ -78,16 +83,14 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 frame = resize_frame(state_new["img"], img_width, img_height)
                 frame_stack.append(frame)
                 state_new["img"] = frame_stack
-            # store the transaction in the memory
-            if hasattr(agent, "remember"):
-                if callable(agent.remember):
-                    agent.remember(state, state_new, action, reward, terminal)
+
+            # save step in buffer
+            episode_buffer[collection_steps] = (state, state_new, action, reward, terminal)
+            collection_steps += 1
             #iterate to the next
             state = state_new
             curr_step += 1
             score += reward
-            # time_2 = time.time()
-            # log.info("{:.2f}".format(1000.0 * (time_2 - time_1)))
         time_end = time.time()
 
         scores.append(score)
@@ -98,18 +101,28 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             i, duration, score, np.mean(scores)))
         if packet_loss > 350:
             if verbose: log.alert("High packet loss: {:.2f}%. Running {:2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
-        if hasattr(agent, "learn") and callable(agent.learn):
+
+        ##################### TRAINING #####################
+
+        if hasattr(agent, "learn") and callable(agent.learn) and hasattr(agent, "remember") and callable(agent.remember):
             # accumulate some training data before training
-            if (i % train_freq == 0 and i > 4):
-                log.info("Starting training: {:d} epochs".format(n_epochs))
+            if (i + 1) % train_freq == 0:
+                log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collection_steps))
                 time_start = time.time()
                 for e in range(n_epochs):
-                    # adjust the weights according to the new transaction
-                    loss = agent.learn(i)
-                    avg_loss.append(loss)
+                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collection_steps - 1]:
+                        # store the transaction in the memory
+                        agent.remember(state, state_new, action, reward, terminal)
+                        # adjust the weights according to the new transaction
+                        loss = agent.learn(i)
+                        avg_loss.append(loss)
                     if verbose:
                         log.training("Epoch {}. ".format(e + 1), loss)
                 time_end = time.time()
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
+                # reset lived collection steps
+                collection_steps = 0
+                # empty episode buffer
+                episode_buffer = np.empty(max_steps * train_freq, dtype = object)
         log.separator(int(columns) / 2)
