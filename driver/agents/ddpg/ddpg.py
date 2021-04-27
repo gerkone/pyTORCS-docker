@@ -71,15 +71,15 @@ class DDPG(object):
         """
         #take only random actions for the first episode
         if(step > self.guided_steps):
-            noise = self._noise()
             state = np.hstack(list(state.values()))
             state = tf.expand_dims(state, axis = 0)
-            action = self.actor.model.predict(state)
-            action_p = action + noise
-            action_p = action_p[0]
+            action = self.actor.model.predict(state)[0]
         else:
             #explore the action space quickly
-            action_p = self.simple_controller(state)
+            action = self.simple_controller(state)
+
+        noise = self._noise()
+        action_p = action + noise
         #clip the resulting action with the bounds
         action_p = np.clip(action_p, self.lower_bound, self.upper_bound)
         return action_p

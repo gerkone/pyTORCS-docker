@@ -16,10 +16,10 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 # agent hyperparameters
 hyperparams:
   actor_lr : 0.00001
-  critic_lr : 0.00002
-  batch_size : 64
+  critic_lr : 0.0002
+  batch_size : 32
   gamma : 0.99
-  guided_steps : 1
+  guided_steps : 2
   buf_size : 10000
   tau : 0.001
   fcl1_size : 600
@@ -38,7 +38,7 @@ sensors:
   speedX : 300.0
   speedY : 300.0
   speedZ : 300.0
-  # wheelSpinVel : 1.0
+  wheelSpinVel : 1.0
   # # rpm : 10000
   trackPos: 1.0
   # VISION SENSOR. set to turn vision on
@@ -58,8 +58,8 @@ training:
   episodes : 10000
   # number of passes on data
   epochs : 10
-  # number of events before each training
-  train_freq : 4
+  # number of steps before each training
+  train_freq : 1000
 
 # resized image dimensions
 img_width : 128

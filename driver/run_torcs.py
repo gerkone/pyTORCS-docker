@@ -49,7 +49,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     log.separator(int(columns) / 2)
 
-    collection_steps = 0
+    collected_steps = 0
 
     # buffer episodes in between training steps
     episode_buffer = np.empty(max_steps * train_freq, dtype = object)
@@ -85,8 +85,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 state_new["img"] = frame_stack
 
             # save step in buffer
-            episode_buffer[collection_steps] = (state, state_new, action, reward, terminal)
-            collection_steps += 1
+            episode_buffer[collected_steps] = (state, state_new, action, reward, terminal)
+            collected_steps += 1
             #iterate to the next
             state = state_new
             curr_step += 1
@@ -106,11 +106,11 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
         if hasattr(agent, "learn") and callable(agent.learn) and hasattr(agent, "remember") and callable(agent.remember):
             # accumulate some training data before training
-            if (i + 1) % train_freq == 0:
-                log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collection_steps))
+            if collected_steps > train_freq:
+                log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collected_steps))
                 time_start = time.time()
                 for e in range(n_epochs):
-                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collection_steps - 1]:
+                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
                         # store the transaction in the memory
                         agent.remember(state, state_new, action, reward, terminal)
                         # adjust the weights according to the new transaction
@@ -122,7 +122,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
                 # reset lived collection steps
-                collection_steps = 0
+                collected_steps = 0
                 # empty episode buffer
                 episode_buffer = np.empty(max_steps * train_freq, dtype = object)
         log.separator(int(columns) / 2)
