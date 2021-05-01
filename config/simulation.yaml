@@ -15,15 +15,15 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.00001
-  critic_lr : 0.0002
+  actor_lr : 0.00005
+  critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_steps : 2
-  buf_size : 10000
+  guided_steps : 1
+  buf_size : 25000
   tau : 0.001
-  fcl1_size : 600
-  fcl2_size : 400
+  fcl1_size : 700
+  fcl2_size : 500
   actor_update_delay : 2
   # img_width : 128
   # img_height : 96
@@ -59,7 +59,7 @@ training:
   # number of passes on data
   epochs : 10
   # number of steps before each training
-  train_freq : 1000
+  train_req : 1000
 
 # resized image dimensions
 img_width : 128

@@ -9,6 +9,8 @@ from agents.ddpg.utils.action_noise import OUActionNoise
 from agents.ddpg.network.actor import Actor
 from agents.ddpg.network.critic import Critic
 
+save_dir = "driver/agents/ddpg/model"
+
 class DDPG(object):
     """
     DDPG agent
@@ -57,12 +59,13 @@ class DDPG(object):
         # actor class
         self.actor = Actor(state_dims = state_dims, action_dims = action_dims,
                             lr = actor_lr, batch_size = batch_size, tau = tau,
-                            upper_bound = self.upper_bound,
+                            upper_bound = self.upper_bound, save_dir = save_dir,
                             fcl1_size = fcl1_size, fcl2_size = fcl2_size)
         # critic class
         self.critic = Critic(state_dims = state_dims, action_dims = action_dims,
                             lr = critic_lr, batch_size = batch_size, tau = tau,
-                            fcl1_size = fcl1_size, fcl2_size = fcl2_size)
+                            save_dir = save_dir, fcl1_size = fcl1_size, fcl2_size = fcl2_size)
+
 
     def get_action(self, state, step):
         """
@@ -118,10 +121,17 @@ class DDPG(object):
         Fill the buffer up to the batch size, then train both networks with
         experience from the replay buffer.
         """
-        actor_loss = -1
+        actor_loss = 0
         if self._memory.isReady(self.batch_size):
             actor_loss = self.train_helper()
         return actor_loss
+
+    def save_models(self):
+        self.actor.model.save(save_dir + "/actor")
+        self.actor.target_model.save(save_dir + "/actor_target")
+        self.critic.model.save(save_dir + "/critic")
+        self.critic.target_model.save(save_dir + "/critic_target")
+
     """
     Train helper methods
     train_helper

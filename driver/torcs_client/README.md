@@ -103,6 +103,7 @@ The agent class should also have the following methods:
 - **_get_action_**(state, episode)
 - (*optional*) **_learn_**(episode)
 - (*optional*) **_remember_**(state, state_new, action, reward, terminal)
+- (*optional*) **_save_models_**()
 
 - **algo_path** is the relative path to the file containing your algorithm. Starting from the project root folder.
 

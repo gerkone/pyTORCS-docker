@@ -2,9 +2,11 @@ import numpy as np
 import tensorflow as tf
 
 from tensorflow.keras.models import Model, load_model
-from tensorflow.keras.layers import Dense, Input, BatchNormalization, Activation, Lambda
+from tensorflow.keras.layers import Dense, Input, Multiply
 from tensorflow.keras.initializers import RandomUniform
 from tensorflow.keras.optimizers import Adam
+
+from torcs_client.utils import SimpleLogger as log
 
 """
 Actor network:
@@ -13,7 +15,7 @@ stochastic funcion approssimator for the deterministic policy map u : S -> A
 """
 class Actor(object):
     def __init__(self, state_dims, action_dims, lr, batch_size, tau,
-                    fcl1_size, fcl2_size, upper_bound):
+                    fcl1_size, fcl2_size, upper_bound, save_dir):
         self.state_dims = state_dims
         self.action_dims = action_dims
         self.lr = lr
@@ -25,12 +27,17 @@ class Actor(object):
         self.fcl2_size = fcl2_size
         self.upper_bound = upper_bound
 
-        self.model = self.build_network()
-        self.model.summary()
-        #duplicate model for target
-        self.target_model = self.build_network()
-        self.target_model.set_weights(self.model.get_weights())
-
+        try:
+            # load model if present
+            self.model = tf.keras.models.load_model(save_dir + "/actor")
+            self.target_model = tf.keras.models.load_model(save_dir + "/actor_target")
+            log.info("Loaded saved actor models")
+        except:
+            self.model = self.build_network()
+            #duplicate model for target
+            self.target_model = self.build_network()
+            self.target_model.set_weights(self.model.get_weights())
+            self.model.summary()
         self.optimizer = Adam(self.lr)
 
 
@@ -41,23 +48,16 @@ class Actor(object):
         # -- input layer --
         input_layer = Input(shape = self.state_dims)
         # -- first fully connected layer --
-        fcl1 = Dense(self.fcl1_size)(input_layer)
-        fcl1 = BatchNormalization()(fcl1)
-        #activation applied after batchnorm
-        fcl1 = Activation("relu")(fcl1)
+        fcl1 = Dense(self.fcl1_size, activation = "relu")(input_layer)
         # -- second fully connected layer --
-        fcl2 = Dense(self.fcl2_size)(fcl1)
-        fcl2 = BatchNormalization()(fcl2)
-        #activation applied after batchnorm
-        fcl2 = Activation("relu")(fcl2)
+        fcl2 = Dense(self.fcl2_size, activation = "relu")(fcl1)
+        # -- third fully connected layer --
+        fcl3 = Dense(self.fcl1_size, activation = "relu")(fcl2)
         # -- output layer --
         f3 = 0.003
         output_layer = Dense(*self.action_dims, activation="tanh", kernel_initializer = RandomUniform(-f3, f3),
                         bias_initializer = RandomUniform(-f3, f3),
                         kernel_regularizer=tf.keras.regularizers.l2(0.01))(fcl2)
-        #scale the output
-        output_layer = Lambda(lambda i : i * self.upper_bound)(output_layer)
-        # output_layer =  output_layer * self.upper_bound
         model = Model(input_layer, output_layer)
         return model
 

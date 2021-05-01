@@ -19,7 +19,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     max_steps = training["max_steps"]
     n_epochs = training["epochs"]
     episodes = training["episodes"]
-    train_freq = training["train_freq"]
+    train_req = training["train_req"]
 
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], verbose = verbose, state_filter = sensors,
@@ -34,6 +34,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
 
     agent_class = agent_from_module(algo_name, algo_path)
+
+    os.path.isdir('new_folder')
 
     agent = agent_class(state_dims = state_dims, action_dims = action_dims,
             action_boundaries = action_boundaries, hyperparams = hyperparams)
@@ -52,7 +54,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     collected_steps = 0
 
     # buffer episodes in between training steps
-    episode_buffer = np.empty(max_steps * train_freq, dtype = object)
+    episode_buffer = np.empty(max_steps * train_req, dtype = object)
 
     for i in range(episodes):
         state = env.reset()
@@ -106,23 +108,27 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
         if hasattr(agent, "learn") and callable(agent.learn) and hasattr(agent, "remember") and callable(agent.remember):
             # accumulate some training data before training
-            if collected_steps > train_freq:
+            if collected_steps > train_req:
                 log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collected_steps))
                 time_start = time.time()
+                for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
+                    # store the transaction in the memory
+                    agent.remember(state, state_new, action, reward, terminal)
                 for e in range(n_epochs):
-                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
-                        # store the transaction in the memory
-                        agent.remember(state, state_new, action, reward, terminal)
+                    for i in range(collected_steps):
                         # adjust the weights according to the new transaction
                         loss = agent.learn(i)
                         avg_loss.append(loss)
-                    if verbose:
-                        log.training("Epoch {}. ".format(e + 1), loss)
+                    if verbose: log.training("Epoch {}. ".format(e + 1), loss)
                 time_end = time.time()
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
+                log.info("Saving models...")
+                agent.save_models()
                 # reset lived collection steps
                 collected_steps = 0
                 # empty episode buffer
                 episode_buffer = np.empty(max_steps * train_freq, dtype = object)
+
+
         log.separator(int(columns) / 2)
