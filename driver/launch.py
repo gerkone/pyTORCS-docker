@@ -42,9 +42,15 @@ class Launch:
                 self.sensors = conf["sensors"]
                 self.training = conf["training"]
 
-                self.stack_depth = conf["stack_depth"]
-                self.img_width = conf["img_width"]
-                self.img_height = conf["img_height"]
+                try:
+                    self.stack_depth = conf["stack_depth"]
+                    self.img_width = conf["img_width"]
+                    self.img_height = conf["img_height"]
+                except:
+                    self.stack_depth = None
+                    self.img_width = None
+                    self.img_height = None
+                    
             except yaml.YAMLError as exc:
                 print(exc)
 

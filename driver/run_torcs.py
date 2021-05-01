@@ -41,8 +41,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             action_boundaries = action_boundaries, hyperparams = hyperparams)
 
     _, columns = os.popen('stty size', 'r').read().split()
-
-    np.random.seed(0)
+    
     scores = []
     curr_step = 0
 
@@ -63,12 +62,12 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         score = 0
         avg_loss = []
         curr_step = 0
+        state["img"] = resize_frame(state["img"], img_width, img_height)
         if use_stacked_frames:
             frame_stack.clear()
-            frame = resize_frame(state["img"], img_width, img_height)
-            frame_stack.append(frame)
-            frame_stack.append(frame)
-            frame_stack.append(frame)
+            frame_stack.append(state["img"])
+            frame_stack.append(state["img"])
+            frame_stack.append(state["img"])
             state["img"] = frame_stack
 
         log.info("Episode {}/{} started".format(i, episodes))
@@ -81,9 +80,9 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             action = agent.get_action(state, i)
             # perform the transition according to the choosen action
             state_new, reward, terminal = env.step(action)
+            state_new["img"] = resize_frame(state_new["img"], img_width, img_height)
             if use_stacked_frames:
-                frame = resize_frame(state_new["img"], img_width, img_height)
-                frame_stack.append(frame)
+                frame_stack.append(state_new["img"])
                 state_new["img"] = frame_stack
 
             # save step in buffer
@@ -102,7 +101,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         log.info("Iteration {:d} --> Duration {:.2f} ms. Score {:.2f}. Running average {:.2f}".format(
             i, duration, score, np.mean(scores)))
         if packet_loss > 350:
-            if verbose: log.alert("High packet loss: {:.2f}%. Running {:2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
+            if verbose: log.alert("High packet loss: {:.2f}%. Running {:.2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
 
         ##################### TRAINING #####################
 
@@ -123,12 +122,13 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 time_end = time.time()
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
-                log.info("Saving models...")
-                agent.save_models()
                 # reset lived collection steps
                 collected_steps = 0
                 # empty episode buffer
                 episode_buffer = np.empty(max_steps * train_req, dtype = object)
 
 
+        if hasattr(agent, "save_models") and callable(agent.save_models):
+            log.info("Saving models...")
+            agent.save_models()
         log.separator(int(columns) / 2)
