@@ -128,7 +128,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 # reset lived collection steps
                 collected_steps = 0
                 # empty episode buffer
-                episode_buffer = np.empty(max_steps * train_freq, dtype = object)
+                episode_buffer = np.empty(max_steps * train_req, dtype = object)
 
 
         log.separator(int(columns) / 2)
