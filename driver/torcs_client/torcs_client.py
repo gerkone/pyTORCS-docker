@@ -104,7 +104,7 @@ class Client():
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
                 if n_fail < 0:
-                    if self.verbose: log.alert("Could not connect to port {}: error {}. Relaunch torcs".format(self.port, emsg))
+                    if self.verbose: log.alert("Could not connect to port {}: {}. Relaunch torcs".format(self.port, emsg))
                     reset_torcs(self.container_id, self.vision, True)
                     n_fail = 4
                 n_fail -= 1

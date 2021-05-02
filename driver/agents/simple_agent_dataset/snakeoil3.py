@@ -10,10 +10,13 @@ class Simple(object):
         self.norm_factor = hyperparams["max_speed"]
         self.noise_scale = hyperparams["noise_scale"]
         self.frame_freq = hyperparams["frame_freq"]
+        self.max_steps = hyperparams["max_steps"]
+        self.train_req = hyperparams["train_req"]
 
         self.action_dims = action_dims
 
-        self.episode_dataset = np.empty(shape = 0, dtype = object)
+        self.episode_dataset = np.empty(max(self.max_steps, self.train_req) * 2, dtype = object)
+        self.ctr = 0
 
         self.prev_accel = 0
 
@@ -67,12 +70,14 @@ class Simple(object):
         state = np.array(list(state.values()), dtype = object)
         state = np.append(state, img)
 
-        self.episode_dataset = np.append(self.episode_dataset, state)
+        self.episode_dataset[self.ctr] = state
+        self.ctr += 1
 
     def save_models(self):
         self.curr_step = 0
         with open("dataset/ep_{}.npy".format(self.curr_episode), "wb") as f:
             np.save(f, self.episode_dataset)
-            
+
         del self.episode_dataset
-        self.episode_dataset = np.empty(shape = 0, dtype = object)
+        self.episode_dataset = np.empty(max(self.max_steps, self.train_req) * 2, dtype = object)
+        self.ctr = 0

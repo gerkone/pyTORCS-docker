@@ -54,7 +54,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     collected_steps = 0
 
     # buffer episodes in between training steps
-    episode_buffer = np.empty(max_steps * train_req, dtype = object)
+    episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
 
     for i in range(episodes):
         state = env.reset()
@@ -108,11 +108,13 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
 
         # accumulate some training data before training
-        if collected_steps > train_req:
-            
+        if collected_steps >= train_req:
+
             has_remember = hasattr(agent, "remember") and callable(agent.remember)
             if has_remember:
+                i = 0
                 for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
+                    i += 1
                     # store the transaction in the memory
                     agent.remember(state, state_new, action, reward, terminal)
 
@@ -134,7 +136,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 collected_steps = 0
                 # empty episode buffer
                 del episode_buffer
-                episode_buffer = np.empty(max_steps * train_req, dtype = object)
+                episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
 
             has_save = hasattr(agent, "save_models") and callable(agent.save_models)
             if has_save:

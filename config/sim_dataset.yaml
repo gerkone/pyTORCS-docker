@@ -14,8 +14,10 @@ algo_path: "driver/agents/simple_agent_dataset/snakeoil3.py"
 hyperparams:
   target_speed : 90
   max_speed : 300
-  noise_scale : 0.1
+  noise_scale : 0.3
   frame_freq: 3
+  max_steps : 5000
+  train_req : 1000
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
