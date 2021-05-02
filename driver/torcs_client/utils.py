@@ -80,6 +80,13 @@ def kill_torcs(container_id):
     command.extend(["pkill", "torcs"])
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+def kill_container(container_id):
+    command = []
+
+    if container_id != "0":
+        command.extend(["docker", "kill", container_id])
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
 def destringify(s):
     if not s: return s
     if type(s) is str:

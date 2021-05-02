@@ -9,7 +9,7 @@ import sys, signal
 from torcs_client.torcs_client import Client
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs
+from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container
 
 class TorcsEnv:
     def __init__(self, throttle = False, gear_change = False, state_filter = None, target_speed = 50,
@@ -95,7 +95,7 @@ class TorcsEnv:
 
     def step(self, u):
         # get the state from torcs - simulation step
-        self.client.get_servers_input()
+        error_restart = self.client.get_servers_input()
 
         # convert u to the actual torcs actionstr
         action = self.agent_to_torcs(u)
@@ -142,9 +142,8 @@ class TorcsEnv:
         if episode_terminate:
             if self.verbose: log.info("Episode terminated by condition")
 
-        if self.client.error_restart:
+        if error_restart:
             if self.verbose: log.alert("Episode terminated by error timeout")
-            self.client.error_restart = False
             episode_terminate = True
 
         self.time_step += 1
@@ -154,17 +153,26 @@ class TorcsEnv:
         return self.observation, reward, episode_terminate
 
     def reset(self):
-        if self.verbose: log.info("Reset torcs")
-        vision = "img" in self.state_filter
-        # run torcs and start practice run
-        reset_torcs(self.container_id, vision, True)
+        """
+        episode either terminated or just started
+        """
 
-        if not hasattr(self, "client"):
+        if self.verbose: log.info("Reset torcs")
+
+        vision = "img" in self.state_filter
+        first_run = not hasattr(self, "client")
+
+        if first_run:
+            # launch torcs for the first time
+            reset_torcs(self.container_id, vision, True)
             # create new torcs client - after first torcs launch
             self.client = Client(max_steps = self.max_steps, port = self.port, verbose = self.verbose,
                     container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
         else:
-            # because the game restarts the UDP connection must be reset too
+            # restart torcs without closing - tell scr_server to restart race
+            self.client.R.d["meta"] = True
+            self.client.respond_to_server()
+            # reset UDP, reset client
             self.client.restart()
 
         self.time_step = 0
@@ -175,6 +183,11 @@ class TorcsEnv:
         self.observation = self.make_observaton(obs)
 
         return self.observation
+
+    def terminate(self):
+        kill_torcs(self.container_id)
+        kill_container(self.container_id)
+        self.client.shutdown()
 
     def automatic_throttle_control(self, target_speed, curr_state, accel, steer):
         if curr_state["speedX"] < target_speed - (steer*50):

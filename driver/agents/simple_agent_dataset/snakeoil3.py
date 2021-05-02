@@ -17,8 +17,6 @@ class Simple(object):
 
         self.prev_accel = 0
 
-        self.curr_step = 0
-
     def get_action(self, state, i):
         """
         Simple proportional feedback controller
@@ -56,14 +54,12 @@ class Simple(object):
 
         action_noised = action + noise_scaled
 
-        self.curr_step += 1
         self.curr_episode = i
 
-        if self.curr_step % self.frame_freq == 0:
-            self.store_state(state)
-
-
         return action_noised
+
+    def remember(self, state, state_new, action, reward, terminal):
+        self.store_state(state)
 
     def store_state(self, state):
         img = np.asarray(state["img"])
@@ -77,4 +73,6 @@ class Simple(object):
         self.curr_step = 0
         with open("dataset/ep_{}.npy".format(self.curr_episode), "wb") as f:
             np.save(f, self.episode_dataset)
+            
+        del self.episode_dataset
         self.episode_dataset = np.empty(shape = 0, dtype = object)

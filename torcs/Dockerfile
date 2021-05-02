@@ -33,7 +33,7 @@ RUN mkdir -p /root/.torcs/
 RUN cp -R configs/* /usr/local/share/games/torcs
 RUN cp -R configs/* /root/.torcs
 
-# remove build tools
+# # remove build tools
 RUN apt-get remove -y make g++
 
 RUN cd .. && rm -rf torcs

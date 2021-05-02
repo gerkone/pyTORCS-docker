@@ -109,13 +109,18 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
         # accumulate some training data before training
         if collected_steps > train_req:
-            if hasattr(agent, "learn") and callable(agent.learn) and hasattr(agent, "remember") and callable(agent.remember):
-                ##################### TRAINING #####################
-                log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collected_steps))
-                time_start = time.time()
+            
+            has_remember = hasattr(agent, "remember") and callable(agent.remember)
+            if has_remember:
                 for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
                     # store the transaction in the memory
                     agent.remember(state, state_new, action, reward, terminal)
+
+            ##################### TRAINING #####################
+            has_train = hasattr(agent, "learn") and callable(agent.learn)
+            if has_train:
+                log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collected_steps))
+                time_start = time.time()
                 for e in range(n_epochs):
                     for i in range(collected_steps):
                         # adjust the weights according to the new transaction
@@ -128,9 +133,15 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 # reset lived collection steps
                 collected_steps = 0
                 # empty episode buffer
+                del episode_buffer
                 episode_buffer = np.empty(max_steps * train_req, dtype = object)
 
-            if hasattr(agent, "save_models") and callable(agent.save_models):
+            has_save = hasattr(agent, "save_models") and callable(agent.save_models)
+            if has_save:
                 log.info("Saving models...")
                 agent.save_models()
             log.separator(int(columns) / 2)
+
+    log.info("All done. Closing...")
+    env.terminate()
+    input("...")

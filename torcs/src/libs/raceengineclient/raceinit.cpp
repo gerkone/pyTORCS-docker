@@ -953,5 +953,6 @@ skipMenu(const char* raceconfig) {
 	// skip menu with the state machine, directly to race initialization
 	ReStateApply((void *) RE_STATE_EVENT_INIT);
 
-	GfParmReleaseHandle(ReInfo->params);
+	// causes restart to crash!
+	// GfParmReleaseHandle(ReInfo->params);
 }

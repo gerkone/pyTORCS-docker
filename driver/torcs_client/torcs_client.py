@@ -47,8 +47,6 @@ class Client():
         self.trackname = trackname
         self.max_steps = max_steps  # should be 50steps/second if it had real time performance
 
-        self.error_restart = False
-
         self.reset()
 
         if(self.vision):
@@ -67,8 +65,7 @@ class Client():
 
     def shutdown(self):
         if not self.so: return
-        if self.verbose: log.alert(("Race terminated or %d steps elapsed. Shutting down %d."
-               % (self.max_steps,self.port)))
+        if self.verbose: log.alert("Shutting down client")
         self.so.close()
         self.so = None
 
@@ -107,7 +104,7 @@ class Client():
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
                 if n_fail < 0:
-                    if self.verbose: log.alert("Could not connect to port {}. Relaunch torcs".format(self.port))
+                    if self.verbose: log.alert("Could not connect to port {}: error {}. Relaunch torcs".format(self.port, emsg))
                     reset_torcs(self.container_id, self.vision, True)
                     n_fail = 4
                 n_fail -= 1
@@ -148,6 +145,7 @@ class Client():
     def get_servers_input(self):
         """
         Server"s input is stored in a ServerState object
+        returns true if an error occurred more than 5 times
         """
         if not self.so: return
         sockdata= str()
@@ -162,9 +160,8 @@ class Client():
                 log.error("Socket error raised: {}".format(emsg))
                 if self.errors > 5:
                     # torcs did not respond for more than 5 seconds
-                    if self.verbose: log.alert("Server is not responding. Restarting torcs")
-                    self.error_restart = True
-                    break
+                    if self.verbose: log.alert("Server is not responding...")
+                    return True
             if "***identified***" in sockdata:
                 if self.verbose: log.info("Client connected on port {}".format(self.port))
                 continue
@@ -173,15 +170,14 @@ class Client():
                 self.shutdown()
                 return
             elif "***restart***" in sockdata:
-                if self.verbose: log.alert("Server has restarted the race on port {}.".format(self.port))
-                # reset UDP, reset client
-                self.restart()
-                return
+                if self.verbose: log.info("Server has restarted the race on port {}.".format(self.port))
+                continue
             elif not sockdata: # Empty?
                 continue       # Try again.
             else:
                 self.S.parse_server_str(sockdata, self.get_vision())
                 break # Can now return from this function.
+        return False
 
     def respond_to_server(self):
         if not self.so: return

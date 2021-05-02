@@ -50,7 +50,7 @@ class Launch:
                     self.stack_depth = None
                     self.img_width = None
                     self.img_height = None
-                    
+
             except yaml.YAMLError as exc:
                 print(exc)
 
@@ -77,6 +77,5 @@ if __name__ == "__main__":
         pytorcs.run()
     except Exception:
         import traceback
-        import time
         traceback.print_exc()
-        time.sleep(100000)
+        input("pytorcs crashed")
