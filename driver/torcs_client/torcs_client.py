@@ -47,6 +47,8 @@ class Client():
         self.trackname = trackname
         self.max_steps = max_steps  # should be 50steps/second if it had real time performance
 
+        self.error_restart = False
+
         self.reset()
 
         if(self.vision):
@@ -88,7 +90,7 @@ class Client():
         # set socket receive buffer to about 4 packets (maximum observation delay of around 200 ms)
         # this is done to evoid bufferbloat and packet accumulation
         self.so.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.bufsize)
-        n_fail = 3
+        n_fail = 4
         if self.verbose: log.info("Waiting for server on port {}".format(self.port))
         while True:
             a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
@@ -107,7 +109,7 @@ class Client():
                 if n_fail < 0:
                     if self.verbose: log.alert("Could not connect to port {}. Relaunch torcs".format(self.port))
                     reset_torcs(self.container_id, self.vision, True)
-                    n_fail = 3
+                    n_fail = 4
                 n_fail -= 1
 
             identify = "***identified***"
@@ -149,14 +151,20 @@ class Client():
         """
         if not self.so: return
         sockdata= str()
-
+        self.errors = 0
         while True:
             try:
                 # Receive server data
                 sockdata, addr= self.so.recvfrom(self.data_size)
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
+                self.errors += 1
                 log.error("Socket error raised: {}".format(emsg))
+                if self.errors > 5:
+                    # torcs did not respond for more than 5 seconds
+                    if self.verbose: log.alert("Server is not responding. Restarting torcs")
+                    self.error_restart = True
+                    break
             if "***identified***" in sockdata:
                 if self.verbose: log.info("Client connected on port {}".format(self.port))
                 continue

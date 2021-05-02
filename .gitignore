@@ -6,3 +6,5 @@ export/
 .depend
 *-bin
 gennmtab
+dataset/
+model/

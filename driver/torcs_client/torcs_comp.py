@@ -142,6 +142,11 @@ class TorcsEnv:
         if episode_terminate:
             if self.verbose: log.info("Episode terminated by condition")
 
+        if self.client.error_restart:
+            if self.verbose: log.alert("Episode terminated by error timeout")
+            self.client.error_restart = False
+            episode_terminate = True
+
         self.time_step += 1
 
         self.obs_prev = copy.deepcopy(curr_state)
