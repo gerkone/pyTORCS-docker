@@ -21,11 +21,14 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     episodes = training["episodes"]
     train_req = training["train_req"]
     track = None
+    car = None
     if "track" in training.keys(): track = training["track"]
+    if "car" in training.keys(): car = training["car"]
 
     # Instantiate the environment
-    env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], track = track, verbose = verbose, state_filter = sensors,
-            target_speed = training["target_speed"], max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
+    env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], track = track, car = car,
+            verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], max_steps = max_steps,
+            image_name = image_name, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -52,7 +55,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         frame_stack = collections.deque(maxlen=stack_depth)
 
     log.info("Starting {} episodes on track {}".format(episodes, track))
-    
+
     log.separator(int(columns) / 2)
 
     collected_steps = 0

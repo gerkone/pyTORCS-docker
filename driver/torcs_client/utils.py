@@ -42,11 +42,17 @@ def start_container(image_name, verbose, port):
         # get display from environment
         display = "unix" + os.environ["DISPLAY"]
         torcs_config_dir = os.path.join(os.getcwd(), "torcs/configs/config")
+        scr_config_dir = os.path.join(os.getcwd(), "torcs/configs/drivers/scr_server/scr_server.xml")
+        scr_car_dir = os.path.join(os.getcwd(), "torcs/configs/drivers/scr_server/0")
         if verbose: SimpleLogger.info("Starting TORCS container...")
         subprocess.Popen(["nvidia-docker", "run", "--ipc=host",
             "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
             "-v", "{}:/usr/local/share/games/torcs/config:ro".format(torcs_config_dir),
-            "-v", "{}:/root/.torcs/config:ro".format(torcs_config_dir),
+            "-v", "{}:/usr/local/share/games/torcs/drivers/scr_server/scr_server.xml:ro".format(scr_config_dir),
+            "-v", "{}:/usr/local/share/games/torcs/drivers/scr_server/0:ro".format(scr_car_dir),
+            # "-v", "{}:/root/.torcs/config:ro".format(torcs_config_dir),
+            # "-v", "{}:/root/.torcs/drivers/scr_server/scr_server.xml:ro".format(scr_config_dir),
+            # "-v", "{}:/root/.torcs/drivers/scr_server/0:ro".format(scr_car_dir),
             "-e", "DISPLAY=" + display,
             "-p", "{p}:{p}/udp".format(p = port),
             "--rm", "-t",
@@ -110,6 +116,20 @@ def change_track(race_type, track, tracks_categories):
                     attr.set("val", cat)
 
     with open(torcs_race_xml, "wb") as doc:
+        doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        doc.write(etree.tostring(config, pretty_print = True))
+
+def change_car(race_type, car):
+    from lxml import etree
+    scr_xml = os.path.join(os.getcwd(), "torcs/configs/drivers/scr_server/scr_server.xml")
+    config = etree.parse(scr_xml)
+    for section in config.iter("section"):
+        if section.get("name") == "0":
+            for attr in section.iter("attstr"):
+                if attr.get("name") == "car name":
+                    attr.set("val", car)
+
+    with open(scr_xml, "wb") as doc:
         doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         doc.write(etree.tostring(config, pretty_print = True))
 

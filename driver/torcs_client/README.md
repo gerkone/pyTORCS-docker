@@ -6,6 +6,7 @@
     + [Using a custom algorithm](#using-a-custom-algorithm)
     + [Using your run function](#using-your-run-function)
     + [Changing track](#changing-track)
+    + [Changing car](#changing-car)
 * [Example](#example)
     + [Key parts](#key-parts)
 * [Further customization](#further-customization)
@@ -73,6 +74,19 @@ training:
   #
   # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track: "g-track-1"
+
+  # choosen car
+  # can be choosen between
+  # 155-DTM       car1-trb3  p406        kc-conrero        kc-grifo   pw-corollawrc
+  # acura-nsx-sz  car2-trb1  kc-2000gt   kc-corvette-ttop  kc-gt40    pw-evoviwrc
+  # baja-bug      car3-trb1  kc-5300gt   kc-daytona        kc-gto     pw-focuswrc
+  # buggy         car4-trb1  kc-a110     kc-db4z           kc-p4      pw-imprezawrc
+  # car1-ow1      car5-trb1  kc-alfatz2  kc-dbs            pw-306wrc
+  # car1-stock1   car6-trb1  kc-bigh     kc-dino           p406
+  # car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
+  # car1-trb1     car8-trb1  kc-coda     kc-giulietta
+  car: "car1-trb1"
+
   throttle : False
   gear_change : False
   # set number of steps before restarting the episode
@@ -148,7 +162,7 @@ python pytorcs.py
 ```
 
 ### Changing track
-Racing on another track is as simple as changing the value of the parameter training.track. The TORCS config file will be edited accordingly.
+Racing on another track is as simple as changing the value of the parameter _training.track_. The TORCS config file will be edited accordingly.
 
 The track can be choosen from:
 ```
@@ -160,6 +174,23 @@ ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-tra
 
 OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
 ```
+
+### Changing car
+Choosing the racecar is also simple, by changing _training.car_.
+
+The track can be choosen from:
+```
+155-DTM       car1-trb3  p406        kc-conrero        kc-grifo   pw-corollawrc
+acura-nsx-sz  car2-trb1  kc-2000gt   kc-corvette-ttop  kc-gt40    pw-evoviwrc
+baja-bug      car3-trb1  kc-5300gt   kc-daytona        kc-gto     pw-focuswrc
+buggy         car4-trb1  kc-a110     kc-db4z           kc-p4      pw-imprezawrc
+car1-ow1      car5-trb1  kc-alfatz2  kc-dbs            pw-306wrc
+car1-stock1   car6-trb1  kc-bigh     kc-dino           p406
+car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
+car1-trb1     car8-trb1  kc-coda     kc-giulietta
+```
+
+The default car for scr_server is _car1-trb1_.
 
 ## Example
 

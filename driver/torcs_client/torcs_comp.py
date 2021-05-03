@@ -9,10 +9,10 @@ import sys, signal
 from torcs_client.torcs_client import Client
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track
+from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track, change_car
 
 class TorcsEnv:
-    def __init__(self, throttle = False, gear_change = False, track = "g-track-1", state_filter = None, target_speed = 50,
+    def __init__(self, throttle = False, gear_change = False, track = None, car = None,  state_filter = None, target_speed = 50,
             max_steps = 10000, port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
@@ -26,6 +26,12 @@ class TorcsEnv:
         self.max_steps = max_steps
 
         self.port = port
+
+        if track is None:
+            track = "g-track-1"
+
+        if car is None:
+            car = "car1-trb1"
 
         if self.image_name != "0":
             # start torcs container
@@ -97,8 +103,11 @@ class TorcsEnv:
 
         self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
 
-
         change_track(self.race_type, track, self.tracks_categories)
+        if self.verbose: log.info("Track selected: {}".format(track))
+
+        change_car(self.race_type, car)
+        if self.verbose: log.info("Car selected: {}".format(car))
 
 
         # kill torcs on sigint, avoid leaving the open window
