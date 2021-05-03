@@ -1,5 +1,5 @@
 # docker image name
-image_name : "test_torcs" #"gerkone/torcs"
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
@@ -17,7 +17,7 @@ hyperparams:
   noise_scale : 0.3
   frame_freq: 3
   max_steps : 5000
-  train_req : 1000
+  train_req : 1
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -30,7 +30,7 @@ sensors:
   # rpm : 10000
   trackPos: 1.0
   # VISION SENSOR. set to turn vision on
-  img: 255.0
+  img: 1.0
 
 # environment and training related settings
 training:
@@ -47,7 +47,7 @@ training:
   # number of passes on data
   epochs : 10
   # number of steps before each training
-  train_req : 1000
+  train_req : 1
 
 # resized image dimensions
 img_width : 128

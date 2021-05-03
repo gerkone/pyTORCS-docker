@@ -120,21 +120,19 @@ class TorcsEnv:
         # Apply the agent"s action into torcs
         self.client.respond_to_server()
 
-        # Get the current full-observation from torcs
-        obs = curr_state
-
         # initialize previous observation (for reward and termination)
         if self.time_step == 0:
             self.obs_prev = copy.deepcopy(curr_state)
+            self.action_prev = copy.deepcopy(action)
 
         # Make an obsevation from a raw observation vector from TORCS
-        self.observation = self.make_observaton(obs)
+        self.observation = self.make_observaton(curr_state)
 
         # ################### Reward ###################
-        reward = custom_reward(obs, self.obs_prev, action)
+        reward = custom_reward(curr_state, self.obs_prev, action, self.action_prev)
 
         # ################### Termination ###################
-        episode_terminate = custom_terminal(obs, reward, time_step = self.time_step)
+        episode_terminate = custom_terminal(curr_state, reward, time_step = self.time_step)
 
         # reset torcs on terminate - currently useless
         # self.client.R.d["meta"] = episode_terminate

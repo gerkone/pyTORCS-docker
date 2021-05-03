@@ -41,9 +41,16 @@ def start_container(image_name, verbose, port):
         # not yet started
         # get display from environment
         display = "unix" + os.environ["DISPLAY"]
+        torcs_config_dir = os.path.join(os.getcwd(), "torcs/configs/config")
         if verbose: SimpleLogger.info("Starting TORCS container...")
-        subprocess.Popen(["nvidia-docker", "run", "--ipc=host", "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
-            "-e", "DISPLAY=" + display, "-p", "{p}:{p}/udp".format(p = port), "--rm", "-t", "-d", image_name], stdout=subprocess.DEVNULL)
+        subprocess.Popen(["nvidia-docker", "run", "--ipc=host",
+            "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
+            "-v", "{}:/usr/local/share/games/torcs/config:ro".format(torcs_config_dir),
+            "-v", "{}:/root/.torcs/config:ro".format(torcs_config_dir),
+            "-e", "DISPLAY=" + display,
+            "-p", "{p}:{p}/udp".format(p = port),
+            "--rm", "-t",
+            "-d", image_name], stdout=subprocess.DEVNULL)
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)

@@ -35,6 +35,8 @@ GfScrGetSize fails and initview start drawing below the top left corner, so that
 - linux/main.cpp - Removed shared memory access attribues from shared_use_st structure
 - libs/raceengineclient/raceengine.cpp - Removed pausing of shared memory write
 
+### Front camera Z position
+- modules/graphic/ssggraph/grcam.cpp - cGrCarCamInsideFixedCar class, increased "eye" z by 0.7.
 
 ## Installation on Ubuntu 20.04
 

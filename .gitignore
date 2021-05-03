@@ -7,4 +7,5 @@ export/
 *-bin
 gennmtab
 dataset/
-model/
+model
+model_*

@@ -67,9 +67,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             state["img"] = resize_frame(state["img"], img_width, img_height)
         if use_stacked_frames:
             frame_stack.clear()
-            frame_stack.append(state["img"])
-            frame_stack.append(state["img"])
-            frame_stack.append(state["img"])
+            for k in range(stack_depth):
+                frame_stack.append(state["img"])
             state["img"] = frame_stack
 
         log.info("Episode {}/{} started".format(i, episodes))
@@ -132,16 +131,18 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                 time_end = time.time()
                 log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(
                     n_epochs, 1000.0 * (time_end - time_start), np.mean(avg_loss)))
-                # reset lived collection steps
-                collected_steps = 0
-                # empty episode buffer
-                del episode_buffer
-                episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
 
             has_save = hasattr(agent, "save_models") and callable(agent.save_models)
             if has_save:
                 log.info("Saving models...")
                 agent.save_models()
+
+            # reset lived collection steps
+            collected_steps = 0
+            # empty episode buffer
+            del episode_buffer
+            episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
+
             log.separator(int(columns) / 2)
 
     log.info("All done. Closing...")

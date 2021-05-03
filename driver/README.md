@@ -49,7 +49,7 @@ opponents
 racePos
 rpm
 speedX
-speedT
+speedY
 speedZ
 track
 trackPos

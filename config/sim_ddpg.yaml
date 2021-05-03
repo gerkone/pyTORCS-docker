@@ -15,7 +15,7 @@ hyperparams:
   critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_steps : 2
+  guided_steps : 0
   buf_size : 25000
   tau : 0.001
   fcl1_size : 200
@@ -47,4 +47,4 @@ training:
   # number of passes on data
   epochs : 10
   # number of steps before each training
-  train_req : 1000
+  train_req : 1500

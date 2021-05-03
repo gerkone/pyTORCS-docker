@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 from tensorflow.keras.models import Model, load_model
-from tensorflow.keras.layers import Dense, Input, Multiply
+from tensorflow.keras.layers import Dense, Input, Multiply, BatchNormalization, Activation
 from tensorflow.keras.initializers import RandomUniform
 from tensorflow.keras.optimizers import Adam
 
@@ -48,16 +48,22 @@ class Actor(object):
         # -- input layer --
         input_layer = Input(shape = self.state_dims)
         # -- first fully connected layer --
-        fcl1 = Dense(self.fcl1_size, activation = "relu")(input_layer)
+        fcl1 = Dense(self.fcl1_size)(input_layer)
+        fcl1 = BatchNormalization()(fcl1)
+        # activation applied after batchnorm
+        fcl1 = Activation("relu")(fcl1)
         # -- second fully connected layer --
         fcl2 = Dense(self.fcl2_size, activation = "relu")(fcl1)
+        fcl2 = BatchNormalization()(fcl2)
+        fcl2 = Activation("relu")(fcl2)
         # -- third fully connected layer --
         fcl3 = Dense(self.fcl1_size, activation = "relu")(fcl2)
+        fcl3 = BatchNormalization()(fcl3)
+        fcl3 = Activation("relu")(fcl3)
         # -- output layer --
         f3 = 0.003
         output_layer = Dense(*self.action_dims, activation="tanh", kernel_initializer = RandomUniform(-f3, f3),
-                        bias_initializer = RandomUniform(-f3, f3),
-                        kernel_regularizer=tf.keras.regularizers.l2(0.01))(fcl2)
+                        bias_initializer = RandomUniform(-f3, f3), kernel_regularizer=tf.keras.regularizers.l2(0.01))(fcl3)
         model = Model(input_layer, output_layer)
         return model
 

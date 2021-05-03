@@ -65,13 +65,12 @@ class Simple(object):
         self.store_state(state)
 
     def store_state(self, state):
-        img = np.asarray(state["img"])
-        del state["img"]
-        state = np.array(list(state.values()), dtype = object)
-        state = np.append(state, img)
+        if "img" in state.keys():
+            img = np.asarray(state["img"], dtype = np.uint8)
+            del state["img"]
 
-        self.episode_dataset[self.ctr] = state
-        self.ctr += 1
+            self.episode_dataset[self.ctr] = np.array([np.hstack(list(state.values())), img])
+            self.ctr += 1
 
     def save_models(self):
         self.curr_step = 0
