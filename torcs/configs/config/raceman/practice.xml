@@ -54,7 +54,7 @@
       <attnum name="distance between columns" val="20"/>
       <attnum name="offset within a column" val="10"/>
       <attnum name="initial speed" unit="km/h" val="0"/>
-      <attnum name="initial height" unit="m" val="100.2"/>
+      <attnum name="initial height" unit="m" val="0.2"/>
     </section>
 
   </section>
