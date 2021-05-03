@@ -20,9 +20,11 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     n_epochs = training["epochs"]
     episodes = training["episodes"]
     train_req = training["train_req"]
+    track = None
+    if "track" in training.keys(): track = training["track"]
 
     # Instantiate the environment
-    env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], verbose = verbose, state_filter = sensors,
+    env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], track = track, verbose = verbose, state_filter = sensors,
             target_speed = training["target_speed"], max_steps = max_steps, image_name = image_name, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
@@ -49,12 +51,15 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     if use_stacked_frames:
         frame_stack = collections.deque(maxlen=stack_depth)
 
+    log.info("Starting {} episodes on track {}".format(episodes, track))
+    
     log.separator(int(columns) / 2)
 
     collected_steps = 0
 
     # buffer episodes in between training steps
     episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
+
 
     for i in range(episodes):
         state = env.reset()

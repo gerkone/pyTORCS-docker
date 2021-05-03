@@ -81,7 +81,6 @@ def reset_torcs(container_id, vision, kill = False):
 
 def kill_torcs(container_id):
     command = []
-
     if container_id != "0":
         command.extend(["docker", "exec", container_id])
     command.extend(["pkill", "torcs"])
@@ -89,10 +88,30 @@ def kill_torcs(container_id):
 
 def kill_container(container_id):
     command = []
-
     if container_id != "0":
         command.extend(["docker", "kill", container_id])
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def change_track(race_type, track, tracks_categories):
+    from lxml import etree
+    filename = race_type + ".xml"
+    torcs_race_xml = os.path.join(os.getcwd(), "torcs/configs/config/raceman", filename)
+    config = etree.parse(torcs_race_xml)
+    for section in config.iter("section"):
+        if section.get("name") == "Tracks":
+            for attr in section.iter("attstr"):
+                if attr.get("name") == "name":
+                    attr.set("val", track)
+                if attr.get("name") == "category":
+                    cat = ""
+                    for c in tracks_categories.keys():
+                        if track in tracks_categories[c]:
+                            cat = c
+                    attr.set("val", cat)
+
+    with open(torcs_race_xml, "wb") as doc:
+        doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        doc.write(etree.tostring(config, pretty_print = True))
 
 def destringify(s):
     if not s: return s

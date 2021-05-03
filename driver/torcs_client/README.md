@@ -5,6 +5,7 @@
     + [Arguments](#arguments)
     + [Using a custom algorithm](#using-a-custom-algorithm)
     + [Using your run function](#using-your-run-function)
+    + [Changing track](#changing-track)
 * [Example](#example)
     + [Key parts](#key-parts)
 * [Further customization](#further-customization)
@@ -62,6 +63,16 @@ sensors:
 
 # training related settings
 training:
+  # choosen track
+  # can be choosen betwen
+  # DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
+  #
+  # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
+  #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
+  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #
+  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  track: "g-track-1"
   throttle : False
   gear_change : False
   # set number of steps before restarting the episode
@@ -136,10 +147,23 @@ After editing _simulation.yaml_ the environment can be started up as always with
 python pytorcs.py
 ```
 
+### Changing track
+Racing on another track is as simple as changing the value of the parameter training.track. The TORCS config file will be edited accordingly.
+
+The track can be choosen from:
+```
+DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
+
+ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
+       ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
+       e-track-5 a-speedway eroad e-track-4 g-track-1
+
+OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+```
 
 ## Example
 
-```python
+`python
 from torcs_client.torcs_comp import TorcsEnv
 def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
   env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors)

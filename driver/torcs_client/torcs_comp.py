@@ -9,10 +9,10 @@ import sys, signal
 from torcs_client.torcs_client import Client
 from torcs_client.reward import custom_reward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container
+from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track
 
 class TorcsEnv:
-    def __init__(self, throttle = False, gear_change = False, state_filter = None, target_speed = 50,
+    def __init__(self, throttle = False, gear_change = False, track = "g-track-1", state_filter = None, target_speed = 50,
             max_steps = 10000, port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
@@ -34,8 +34,19 @@ class TorcsEnv:
             self.container_id = "0"
 
         self.img_width = img_width
-
         self.img_height = img_height
+
+        # TODO support other races
+        self.race_type = "practice"
+        self.tracks_categories = {}
+        self.tracks_categories["dirt"] = ["dirt-1", "dirt-2", "dirt-3", "dirt-4", "dirt-5", "dirt-6", "mixed-1", "mixed-2"]
+        self.tracks_categories["road"] = ["alpine-1", "corkscrew", "e-track-3", "g-track-2", "ole-road-1", "street-1", "alpine-2",
+                        "e-track-6", "g-track-3", "ruudskogen", "wheel-1", "brondehach", "e-track-2", "forza", "spring", "wheel-2",
+                        "aalborg", "e-track-1", "e-track-5", "e-track-1", "e-track-5", "a-speedway", "eroad", "e-track-4", "g-track-1"]
+        self.tracks_categories["oval"] = ["b-speedway", "e-speedway", "g-speedway", "michigan", "c-speedway", "d-speedway", "f-speedway"]
+
+
+
 
         if state_filter != None:
             self.state_filter = dict(sorted(state_filter.items()))
@@ -85,6 +96,10 @@ class TorcsEnv:
             low = np.append(low, np.zeros(4))
 
         self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
+
+
+        change_track(self.race_type, track, self.tracks_categories)
+
 
         # kill torcs on sigint, avoid leaving the open window
         def kill_torcs_and_close(sig, frame):

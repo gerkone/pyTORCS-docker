@@ -34,6 +34,17 @@ sensors:
 
 # environment and training related settings
 training:
+    # choosen track
+    # can be choosen betwen
+
+    # DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
+    #
+    # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
+    #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
+    #        e-track-5 a-speedway eroad e-track-4 g-track-1
+    #
+    # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+    track: "g-track-1"
   # manual throttle control
   throttle : True
   target_speed : 50
