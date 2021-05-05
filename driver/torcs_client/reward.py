@@ -1,7 +1,7 @@
 import numpy as np
 
 max_steer_frame = 0.2
-damage_w = 0.3
+damage_w = 0.1
 dist_w = 0.9
 
 def custom_reward(obs, obs_prev, action, action_prev):

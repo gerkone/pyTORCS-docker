@@ -15,7 +15,7 @@ hyperparams:
   critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_steps : 0
+  guided_episode : 3
   buf_size : 25000
   tau : 0.001
   fcl1_size : 200

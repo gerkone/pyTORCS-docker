@@ -77,7 +77,7 @@ class DDPG(object):
                             save_dir = save_dir, fcl1_size = fcl1_size, fcl2_size = fcl2_size)
 
 
-    def get_action(self, state, step):
+    def get_action(self, state, step, track):
         """
         Return the best action in the passed state, according to the model
         in training. Noise added for exploration

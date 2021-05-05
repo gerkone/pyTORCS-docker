@@ -157,5 +157,4 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     if  hasattr(agent, "dataset_file"):
         # save dataset
         agent.dataset_file.close()
-    
     input("...")

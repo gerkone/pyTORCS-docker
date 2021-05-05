@@ -55,19 +55,19 @@ class Critic(object):
         # -- hidden fully connected layers --
         f1 = 1. / np.sqrt(self.fcl1_size)
         fcl1 = Dense(self.fcl1_size, kernel_initializer = RandomUniform(-f1, f1),
-                    bias_initializer = RandomUniform(-f1, f1))(state_input_layer)
+                    bias_initializer = "zeros")(state_input_layer)
         fcl1 = BatchNormalization()(fcl1)
         #activation applied after batchnorm
         fcl1 = Activation("relu")(fcl1)
         f2 = 1. / np.sqrt(self.fcl2_size)
         fcl2 = Dense(self.fcl2_size, kernel_initializer = RandomUniform(-f2, f2),
-                    bias_initializer = RandomUniform(-f2, f2))(fcl1)
+                    bias_initializer = "zeros")(fcl1)
         fcl2 = BatchNormalization()(fcl2)
         #activation applied after batchnorm
         # fcl2 = Activation("linear")(fcl2)
         # Introduce action after the second layer
         action_layer =  Dense(self.fcl2_size, kernel_initializer = RandomUniform(-f2, f2),
-                    bias_initializer = RandomUniform(-f2, f2))(action_input_layer)
+                    bias_initializer = "zeros")(action_input_layer)
         action_layer = Activation("relu")(action_layer)
         concat = Add()([fcl2, action_layer])
         concat = Activation("relu")(concat)

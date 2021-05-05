@@ -28,7 +28,7 @@ class DDPG(object):
         tau = hyperparams["tau"]
         fcl1_size = hyperparams["fcl1_size"]
         fcl2_size = hyperparams["fcl2_size"]
-        self.guided_steps = hyperparams["guided_steps"] - 1
+        self.guided_episode = hyperparams["guided_episode"] - 1
 
         # action size
         self.n_states = state_dims[0]
@@ -67,13 +67,13 @@ class DDPG(object):
                             save_dir = save_dir, fcl1_size = fcl1_size, fcl2_size = fcl2_size)
 
 
-    def get_action(self, state, step):
+    def get_action(self, state, episode, track):
         """
         Return the best action in the passed state, according to the model
         in training. Noise added for exploration
         """
         #take only random actions for the first episode
-        if(step > self.guided_steps):
+        if(episode > self.guided_episode):
             state = np.hstack(list(state.values()))
             state = tf.expand_dims(state, axis = 0)
             action = self.actor.model.predict(state)[0]
@@ -91,22 +91,25 @@ class DDPG(object):
         speedX = state["speedX"]
         action = np.zeros(self.n_actions)
         # steer to corner
-        steer = state["angle"] * 10
+        steer = state["angle"] * 20
         # steer to center
-        steer -= state["trackPos"] * .10
+        steer -= state["trackPos"] * .20
 
         accel = self.prev_accel
 
-        if speedX < 0.6 - (steer * 50):
-            accel += .01
+        if speedX < 90 - (steer * 50):
+            accel += .04
         else:
-            accel -= .01
-
-        if accel > 0.2:
-            accel = 0.2
+            accel -= .02
 
         if speedX < 0.3:
-            accel += 1 / (speedX + .1)
+            accel = 0.7
+
+        if accel > 0.7 and speedX < 0.3:
+            accel = 0.7
+
+
+        self.prev_accel = accel
 
         action[0] = steer
         action[1] = accel

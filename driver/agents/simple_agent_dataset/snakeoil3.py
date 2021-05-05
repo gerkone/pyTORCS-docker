@@ -9,6 +9,7 @@ class Simple(object):
         # normalized target speed
         self.target_speed = hyperparams["target_speed"]
         self.noise_scale = hyperparams["noise_scale"]
+        self.save_each = hyperparams["save_each"]
         self.state_dims = state_dims
         self.action_dims = action_dims
 
@@ -21,6 +22,8 @@ class Simple(object):
         self.first_step = True
         self.passed = False
 
+        self.step = 0
+
         self.prev_accel = 0
 
     def get_action(self, state, i, track):
@@ -31,6 +34,7 @@ class Simple(object):
             self.episode = i
             self.total_episodes += 1
             self.first_step = True
+            self.step = 0
 
         speedX = state["speedX"]
 
@@ -74,7 +78,10 @@ class Simple(object):
 
         action_noised = action + noise_scaled
 
-        self.store_state(state, track)
+        if self.step > 0 and (self.step % self.save_each == 0):
+            self.store_state(state, track)
+
+        self.step += 1
 
         return action_noised
 
@@ -83,6 +90,8 @@ class Simple(object):
             img = np.asarray(state["img"], dtype = np.uint8)
             img = np.expand_dims(img, axis = 0)
             del state["img"]
+            # not collecting speed - bad estimation
+            del state["speedX"]
             sensors = np.hstack(list(state.values()))
             sensors = np.expand_dims(sensors, axis = 0)
             if self.first_step:

@@ -82,7 +82,7 @@ class DDPG(object):
             noise_bound = self.upper_bound / 10, fcl1_size = fcl1_size, fcl2_size = fcl2_size, encoder = self.encoder)
 
 
-    def get_action(self, state, step):
+    def get_action(self, state, step, track):
         """
         Return the best action in the passed state, according to the model
         in training. Noise added for exploration

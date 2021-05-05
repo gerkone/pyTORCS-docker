@@ -15,6 +15,7 @@ hyperparams:
   target_speed : 120
   max_speed : 300
   noise_scale : 0.4
+  save_each : 4
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -22,8 +23,6 @@ sensors:
   track : 200.0
   angle: 3.1415
   speedX : 1.0
-  speedY : 1.0
-  speedZ : 1.0
   trackPos: 1.0
   # input
   img : 1.0
@@ -41,12 +40,6 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "g-track-1"
-    - "g-track-1"
-    - "g-track-1"
-    - "g-track-1"
-    - "michigan"
-    - "corkscrew"
     - "corkscrew"
     - "g-track-2"
 
@@ -69,9 +62,9 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 1000
+  max_steps : 4000
   # total number of episodes
-  episodes : 4
+  episodes : 15
   # number of passes on data
   epochs : 10
   # number of steps before each training

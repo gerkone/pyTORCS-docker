@@ -12,7 +12,7 @@ class Simple(object):
 
         self.prev_accel = 0
 
-    def get_action(self, state, i):
+    def get_action(self, state, i, track):
         """
         Simple proportional feedback controller
         """
