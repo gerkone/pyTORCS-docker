@@ -12,25 +12,21 @@ algo_path: "driver/agents/simple_agent_dataset/snakeoil3.py"
 
 # agent hyperparameters
 hyperparams:
-  target_speed : 90
+  target_speed : 120
   max_speed : 300
-  noise_scale : 0.3
-  frame_freq: 3
-  max_steps : 5000
-  train_req : 1
+  noise_scale : 0.4
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
+  # output
   track : 200.0
   angle: 3.1415
-  speedX : 300.0
-  speedY : 300.0
-  speedZ : 300.0
-  # wheelSpinVel : 1.0
-  # rpm : 10000
+  speedX : 1.0
+  speedY : 1.0
+  speedZ : 1.0
   trackPos: 1.0
-  # VISION SENSOR. set to turn vision on
-  img: 1.0
+  # input
+  img : 1.0
 
 # environment and training related settings
 training:
@@ -41,10 +37,18 @@ training:
   #
   # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
   #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #        e-track-5 eroad e-track-4 g-track-1
   #
-  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
-  track: "alpine-1"
+  # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  track:
+    - "g-track-1"
+    - "g-track-1"
+    - "g-track-1"
+    - "g-track-1"
+    - "michigan"
+    - "corkscrew"
+    - "corkscrew"
+    - "g-track-2"
 
   # choosen car
   # can be choosen between
@@ -65,16 +69,16 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 5000
+  max_steps : 1000
   # total number of episodes
-  episodes : 10
+  episodes : 4
   # number of passes on data
   epochs : 10
   # number of steps before each training
   train_req : 1
 
 # resized image dimensions
-img_width : 128
-img_height : 96
+img_width : 320
+img_height : 240
 # frame stack size. set to 1 to disable frame stacking
 stack_depth: 1

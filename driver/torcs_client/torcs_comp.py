@@ -12,7 +12,7 @@ from torcs_client.terminator import custom_terminal
 from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track, change_car
 
 class TorcsEnv:
-    def __init__(self, throttle = False, gear_change = False, track = None, car = None,  state_filter = None, target_speed = 50,
+    def __init__(self, throttle = False, gear_change = False, car = None,  state_filter = None, target_speed = 50,
             max_steps = 10000, port = 3001, img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
@@ -26,9 +26,6 @@ class TorcsEnv:
         self.max_steps = max_steps
 
         self.port = port
-
-        if track is None:
-            track = "g-track-1"
 
         if car is None:
             car = "car1-trb1"
@@ -48,11 +45,11 @@ class TorcsEnv:
         self.tracks_categories["dirt"] = ["dirt-1", "dirt-2", "dirt-3", "dirt-4", "dirt-5", "dirt-6", "mixed-1", "mixed-2"]
         self.tracks_categories["road"] = ["alpine-1", "corkscrew", "e-track-3", "g-track-2", "ole-road-1", "street-1", "alpine-2",
                         "e-track-6", "g-track-3", "ruudskogen", "wheel-1", "brondehach", "e-track-2", "forza", "spring", "wheel-2",
-                        "aalborg", "e-track-1", "e-track-5", "e-track-1", "e-track-5", "a-speedway", "eroad", "e-track-4", "g-track-1"]
-        self.tracks_categories["oval"] = ["b-speedway", "e-speedway", "g-speedway", "michigan", "c-speedway", "d-speedway", "f-speedway"]
+                        "aalborg", "e-track-1", "e-track-5", "e-track-1", "e-track-5", "eroad", "e-track-4", "g-track-1"]
+        self.tracks_categories["oval"] = ["a-speedway", "b-speedway", "e-speedway", "g-speedway", "michigan", "c-speedway", "d-speedway", "f-speedway"]
 
-
-
+        # restart request ( relaunches torcs on environment reset )
+        self.restart_needed = True
 
         if state_filter != None:
             self.state_filter = dict(sorted(state_filter.items()))
@@ -103,11 +100,8 @@ class TorcsEnv:
 
         self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
 
-        change_track(self.race_type, track, self.tracks_categories)
-        if self.verbose: log.info("Track selected: {}".format(track))
-
         change_car(self.race_type, car)
-        if self.verbose: log.info("Car selected: {}".format(car))
+        if self.verbose: log.info("Car: {}".format(car))
 
 
         # kill torcs on sigint, avoid leaving the open window
@@ -140,7 +134,6 @@ class TorcsEnv:
         else:
             self.client.R.d["gear"] = action["gear"]
 
-
         # Apply the agent"s action into torcs
         self.client.respond_to_server()
 
@@ -157,9 +150,6 @@ class TorcsEnv:
 
         # ################### Termination ###################
         episode_terminate = custom_terminal(curr_state, reward, time_step = self.time_step)
-
-        # reset torcs on terminate - currently useless
-        # self.client.R.d["meta"] = episode_terminate
 
         if episode_terminate:
             if self.verbose: log.info("Episode terminated by condition")
@@ -184,9 +174,11 @@ class TorcsEnv:
         vision = "img" in self.state_filter
         first_run = not hasattr(self, "client")
 
-        if first_run:
+        if self.restart_needed:
+            self.restart_needed = False
             # launch torcs for the first time
             reset_torcs(self.container_id, vision, True)
+        if first_run:
             # create new torcs client - after first torcs launch
             self.client = Client(max_steps = self.max_steps, port = self.port, verbose = self.verbose,
                     container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
@@ -210,6 +202,13 @@ class TorcsEnv:
         kill_torcs(self.container_id)
         kill_container(self.container_id)
         self.client.shutdown()
+
+    def set_track(self, track):
+        if track is None:
+            track = "g-track-1"
+        change_track(self.race_type, track, self.tracks_categories)
+        # torcs needs to be restarted for the config to be loaded
+        self.restart_needed = True
 
     def automatic_throttle_control(self, target_speed, curr_state, accel, steer):
         if curr_state["speedX"] < target_speed - (steer*50):

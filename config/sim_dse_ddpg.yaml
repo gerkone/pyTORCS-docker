@@ -7,7 +7,7 @@ run_path : "driver/run_torcs.py"
 
 # run module and path. change here to your agent algorithm
 algo_name: "DDPG"
-algo_path: "driver/agents/ddpg_vision/ddpg.py"
+algo_path: "driver/agents/dse_ddpg/ddpg.py"
 
 # agent hyperparameters
 hyperparams:
@@ -15,29 +15,22 @@ hyperparams:
   critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_steps : 2
+  guided_steps : 10
   buf_size : 25000
   tau : 0.001
   fcl1_size : 200
   fcl2_size : 600
   actor_update_delay : 2
 
+  # resized image dimensions
   img_width : 128
   img_height : 96
+  # frame stack size. set to 1 to disable frame stacking
   stack_depth: 3
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
-  track : 200.0
-  angle: 3.1415
-  speedX : 300.0
-  speedY : 300.0
-  speedZ : 300.0
-  # wheelSpinVel : 1.0
-  # rpm : 10000
-  trackPos: 1.0
-  # VISION SENSOR. set to turn vision on
-  img: 255.0
+  img : 1.0
 
 # environment and training related settings
 training:
@@ -79,7 +72,7 @@ training:
   # number of passes on data
   epochs : 10
   # number of steps before each training
-  train_req : 1000
+  train_req : 1500
 
 # resized image dimensions
 img_width : 128

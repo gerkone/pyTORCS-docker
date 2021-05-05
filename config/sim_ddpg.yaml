@@ -26,10 +26,9 @@ hyperparams:
 sensors:
   track : 200.0
   angle: 3.1415
-  speedX : 300.0
-  speedY : 300.0
-  speedZ : 300.0
-  wheelSpinVel : 1.0
+  speedX : 1.0
+  speedY : 1.0
+  speedZ : 1.0
   trackPos: 1.0
 
 # environment and training related settings
@@ -44,7 +43,8 @@ training:
   #        e-track-5 a-speedway eroad e-track-4 g-track-1
   #
   # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
-  track: "g-track-1"
+  track:
+    - "g-track-1"
 
   # choosen car
   # can be choosen between
@@ -57,7 +57,7 @@ training:
   # car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
   # car1-trb1     car8-trb1  kc-coda     kc-giulietta
   car: "car1-trb1"
-  
+
   # manual throttle control
   throttle : True
   target_speed : 50
