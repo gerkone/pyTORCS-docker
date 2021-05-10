@@ -15,7 +15,7 @@ hyperparams:
   critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_steps : 10
+  guided_steps : 0
   buf_size : 25000
   tau : 0.001
   fcl1_size : 200
@@ -23,13 +23,22 @@ hyperparams:
   actor_update_delay : 2
 
   # resized image dimensions
-  img_width : 128
-  img_height : 96
+  img_width : 160
+  img_height : 120
   # frame stack size. set to 1 to disable frame stacking
-  stack_depth: 3
+  stack_depth: 1
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
+  # other sensors
+  speedX : 1.0
+  speedZ : 1.0
+  speedY : 1.0
+  wheelSpinVel : 1.0
+  # estimated sensors
+  # track : 200.0
+  # angle: 3.1415
+  # trackPos: 1.0
   img : 1.0
 
 # environment and training related settings
@@ -75,7 +84,7 @@ training:
   train_req : 1500
 
 # resized image dimensions
-img_width : 128
-img_height : 96
+img_width : 160
+img_height : 120
 # frame stack size. set to 1 to disable frame stacking
-stack_depth: 3
+stack_depth: 1

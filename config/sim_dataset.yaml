@@ -14,18 +14,19 @@ algo_path: "driver/agents/simple_agent_dataset/snakeoil3.py"
 hyperparams:
   target_speed : 120
   max_speed : 300
-  noise_scale : 0.4
+  noise_scale : 0.7
   save_each : 4
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
   # output
-  track : 200.0
-  angle: 3.1415
-  speedX : 1.0
-  trackPos: 1.0
+  angle: 3.1415 # at sensors[0]
+  track : 200.0 # at sensors[2:-2]
+  trackPos: 1.0 # at sensors[:-1]
   # input
   img : 1.0
+  # other
+  speedX : 1.0
 
 # environment and training related settings
 training:
@@ -40,8 +41,11 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "corkscrew"
-    - "g-track-2"
+    - "street-1"
+    # - "a-speedway"
+    - "michigan"
+    # - "e-track-2"
+    # - "ruudskogen"
 
   # choosen car
   # can be choosen between
@@ -64,14 +68,14 @@ training:
   # max 50 steps per second
   max_steps : 4000
   # total number of episodes
-  episodes : 15
+  episodes : 20
   # number of passes on data
   epochs : 10
   # number of steps before each training
   train_req : 1
 
 # resized image dimensions
-img_width : 320
-img_height : 240
+img_width : 160
+img_height : 120
 # frame stack size. set to 1 to disable frame stacking
 stack_depth: 1

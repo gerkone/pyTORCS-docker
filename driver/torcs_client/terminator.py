@@ -1,9 +1,9 @@
 import numpy as np
 
-terminal_judge_start = 200
+terminal_judge_start = 150
 boring_speed = 3 # km/h, episode terminates if car is running slower than this limit
 
-def custom_terminal(obs, reward, time_step):
+def custom_terminal(obs, curr_step):
     terminal = False
 
     angle = np.cos(obs["angle"])
@@ -13,7 +13,7 @@ def custom_terminal(obs, reward, time_step):
     # Episode is terminated if the car is out of track, too cruel to start
         # terminal = True
 
-    if terminal_judge_start < time_step:
+    if terminal_judge_start < curr_step:
         # Episode terminates if the agent is too slow
         if speed < boring_speed:
             terminal = True

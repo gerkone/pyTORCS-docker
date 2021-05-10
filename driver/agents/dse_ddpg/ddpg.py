@@ -15,7 +15,7 @@ from torcs_client.utils import SimpleLogger as log
 
 cur_dir = "driver/agents/dse_ddpg"
 save_dir = cur_dir + "/model"
-dse_dir = cur_dir + "/dse_model_resnet"
+dse_dir = cur_dir + "/dse_model_plain"
 
 class DDPG(object):
     """
@@ -37,7 +37,7 @@ class DDPG(object):
         self.guided_steps = hyperparams["guided_steps"] - 1
 
         # action size - needs to be hardcoded
-        self.n_states = 24
+        self.n_states = 28
         # state size
         self.n_actions = action_dims[0]
         self.batch_size = batch_size
@@ -83,30 +83,68 @@ class DDPG(object):
         in training. Noise added for exploration
         """
         frames = np.asarray(state["img"])
-        frames = np.array([cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) for frame in frames])
 
-        del state
+        if len(frames.shape) == 4:
+            frames = np.array([cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) for frame in frames])
+        else:
+            frames = np.array(cv2.cvtColor(frames, cv2.COLOR_BGR2GRAY))
 
-        # if frames[0][0].any(0):
-        #     from PIL import Image
-        #
-        #     img = Image.fromarray(frames[0], "RGB")
-        #     img.show()
-        #     input("next")
+        # from PIL import Image
+        # img = Image.fromarray(frames[0,...])
+        # img.show()
+        # input(frames[0].shape)
+
+        del state["img"]
+        # state[0] = angle
+        # state[1] = speedX
+        # state[2] = speedY
+        # state[3] = speedZ
+        # state[4,..22] = track
+        # state[23] = trackPos
+        # state[24,25,26,27] = wheelSpinVel
+
+        #         {'angle': 0.004747795623217383, 'speedX': -0.006684910040348768, 'speedY': 0.041558898985385895, 'speedZ': -0.008202389813959599, 'track': array([0.0576535 , 0.3080025 , 0.24738051, 0.2081425 , 0.186822  ,
+        #        0.1768675 , 0.17175949, 0.16740601, 0.1643635 , 0.161378  ,
+        #        0.158448  , 0.1555745 , 0.151646  , 0.147292  , 0.1395125 ,
+        #        0.125422  , 0.10596   , 0.0857255 , 0.0501905 ], dtype=float32), 'trackPos': 0.0025410999078303576, 'wheelSpinVel': array([ 0.     ,  0.     ,  2.31036, -2.40034], dtype=float32)}
+        # tf.Tensor(
+        # [[ 0.0047478  -0.00668491  0.0415589  -0.00820239  0.0576535   0.3080025
+        #    0.24738051  0.2081425   0.186822    0.1768675   0.17175949  0.16740601
+        #    0.1643635   0.161378    0.158448    0.1555745   0.151646    0.147292
+        #    0.13951249  0.125422    0.10596     0.0857255   0.0501905   0.0025411
+        #    0.          0.          2.31035995 -2.40034008]], shape=(1, 28), dtype=float64)
+
+        composite_state = np.zeros(shape = (self.n_states))
+
+        # standard sensors
+        composite_state[1] = state["speedX"]
+        composite_state[2] = state["speedY"]
+        composite_state[3] = state["speedZ"]
+        composite_state[24:] = state["wheelSpinVel"]
+
 
         frames = frames.reshape((self.img_height, self.img_width, self.stack_depth))
 
         frames = tf.expand_dims(frames, axis = 0)
         # use the estimator model to get the current state
-        state = self.estimator_model.predict(frames)[0]
+        estimated_state = self.estimator_model.predict(frames)[0]
+
+        # angle at sensors[0]
+        # track at sensors[1:-1]
+        # trackPos at sensors[:-1]
+
+
+        composite_state[0] = estimated_state[0]
+        composite_state[3:22] = estimated_state[1:-1]
+        composite_state[24] = estimated_state[-1]
 
         #take only random actions for the first episode
         if(step > self.guided_steps):
-            state = tf.expand_dims(state, axis = 0)
-            action = self.actor.model.predict(state)[0]
+            composite_state = tf.expand_dims(composite_state, axis = 0)
+            action = self.actor.model.predict(composite_state)[0]
         else:
             #explore the action space quickly
-            action = self.simple_controller(state)
+            action = self.simple_controller(composite_state)
 
         noise = self._noise()
         action_p = action + noise

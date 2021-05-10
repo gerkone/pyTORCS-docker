@@ -6,6 +6,7 @@ export/
 .depend
 *-bin
 gennmtab
-dataset/
+dataset/*
+!dataset/clean.py
 model
 model_*

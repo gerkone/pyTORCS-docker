@@ -36,6 +36,8 @@ class TorcsEnv:
         else:
             self.container_id = "0"
 
+        self.shift_debounce = 0
+
         self.img_width = img_width
         self.img_height = img_height
 
@@ -103,7 +105,6 @@ class TorcsEnv:
         change_car(self.race_type, car)
         if self.verbose: log.info("Car: {}".format(car))
 
-
         # kill torcs on sigint, avoid leaving the open window
         def kill_torcs_and_close(sig, frame):
             kill_torcs(self.container_id)
@@ -130,6 +131,8 @@ class TorcsEnv:
             self.client.R.d["brake"] = action["brake"]
 
         if self.gear_change is False:
+            # debounce used to avoid shifting 2 or more gears at once ( engine did not ave the time to slow down )
+            self.shift_debounce -=  1
             self.client.R.d["gear"] = self.automatic_gearbox(curr_state["rpm"], self.client.R.d["gear"])
         else:
             self.client.R.d["gear"] = action["gear"]
@@ -138,18 +141,19 @@ class TorcsEnv:
         self.client.respond_to_server()
 
         # initialize previous observation (for reward and termination)
-        if self.time_step == 0:
+        if self.curr_step == 0:
             self.obs_prev = copy.deepcopy(curr_state)
             self.action_prev = copy.deepcopy(action)
 
         # Make an obsevation from a raw observation vector from TORCS
         self.observation = self.make_observaton(curr_state)
 
-        # ################### Reward ###################
-        reward = custom_reward(curr_state, self.obs_prev, action, self.action_prev)
 
         # ################### Termination ###################
-        episode_terminate = custom_terminal(curr_state, reward, time_step = self.time_step)
+        episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
+
+        # ################### Reward ###################
+        reward = custom_reward(curr_state, self.obs_prev, action, self.action_prev, self.curr_step, terminal = episode_terminate)
 
         if episode_terminate:
             if self.verbose: log.info("Episode terminated by condition")
@@ -158,7 +162,7 @@ class TorcsEnv:
             if self.verbose: log.alert("Episode terminated by error timeout")
             episode_terminate = True
 
-        self.time_step += 1
+        self.curr_step += 1
 
         self.obs_prev = copy.deepcopy(curr_state)
 
@@ -189,7 +193,7 @@ class TorcsEnv:
             # reset UDP, reset client
             self.client.restart()
 
-        self.time_step = 0
+        self.curr_step = 0
 
         # Get the initial full-observation from torcs
         obs = self.client.S.d
@@ -230,9 +234,11 @@ class TorcsEnv:
         return accel
 
     def automatic_gearbox(self, rpm, gear):
-        if rpm > 9500 and gear < 6:
+        if rpm > 9500 and gear < 6 and self.shift_debounce <= 0:
+            self.shift_debounce = 5
             gear += 1
-        if rpm < 4500 and gear > 1:
+        if rpm < 4500 and gear > 1  and self.shift_debounce <= 0:
+            self.shift_debounce = 5
             gear -= 1
 
         return gear

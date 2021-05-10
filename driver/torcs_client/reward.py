@@ -1,29 +1,22 @@
 import numpy as np
 
 max_steer_frame = 0.2
-damage_w = 0.1
+damage_w = 1
 dist_w = 0.9
 
-def custom_reward(obs, obs_prev, action, action_prev):
-    # basic reward
-    reward = (obs["distRaced"] - obs_prev["distRaced"]) * dist_w
-    if obs["speedX"] < 0:
-        reward -= .1
-        if action["brake"] > 0:
-            reward -= .5
+reward_rate = 50
 
-    if np.cos(obs["angle"]) < 0:
-        reward -= 5
+
+def custom_reward(obs, obs_prev, action, action_prev, cur_step, terminal):
+    # basic reward
+    distance = obs["distRaced"] - obs_prev["distRaced"]
+    reward = distance * dist_w
 
     # punishment for damage
-    reward -= np.clip(obs["damage"] - obs_prev["damage"], 0, 100) * damage_w
+    if obs["damage"] > obs_prev["damage"]:
+        reward = -10
 
-    # # punishment for too much steering
-    # if action["steer"] > 0.5:
-    #     reward -= 0.05
-    #
-    # punishment for wobbly steering
-    if action["steer"] > action_prev["steer"] + max_steer_frame or action["steer"] < action_prev["steer"] - max_steer_frame:
-        reward -= 0.5
+    if np.cos(obs["angle"]) < 0:
+        reward = -50
 
     return reward

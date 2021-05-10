@@ -24,13 +24,16 @@ class Simple(object):
 
         self.step = 0
 
+        self.track = ""
+
         self.prev_accel = 0
 
     def get_action(self, state, i, track):
         """
         Simple proportional feedback controller
         """
-        if self.episode < i or (i == 0 and self.total_episodes > 0 and self.episode != 0):
+        if self.episode < i or (i == 0 and self.total_episodes > 0 and self.episode != 0) or track != self.track:
+            self.track = track
             self.episode = i
             self.total_episodes += 1
             self.first_step = True
@@ -41,8 +44,13 @@ class Simple(object):
         action = np.zeros(*self.action_dims)
         # steer to corner
         steer = state["angle"] * 12
-        # steer to center
+        # # steer to center
         steer -= state["trackPos"] * .2
+
+        # if self.step % 280 <= 140:
+        #     steer -= 1
+        # else:
+        #     steer += 1
 
         # if speedX < 150 and self.passed == False:
         #     accel = 0.3
@@ -72,18 +80,18 @@ class Simple(object):
         action[0] = steer
         action[1] = accel
 
-        noise = np.random.uniform(low = -1, high = 1, size = 2)
+        noise = np.random.uniform(low = -1, high = 1)
 
         noise_scaled = noise * self.noise_scale
 
-        action_noised = action + noise_scaled
+        action[0] = action[0] + noise_scaled
 
         if self.step > 0 and (self.step % self.save_each == 0):
             self.store_state(state, track)
 
         self.step += 1
 
-        return action_noised
+        return action
 
     def store_state(self, state, track):
         if "img" in state.keys():
@@ -96,7 +104,7 @@ class Simple(object):
             sensors = np.expand_dims(sensors, axis = 0)
             if self.first_step:
                 self.first_step = False
-                self.dataset_file = h5py.File("dataset/ep_{}_{}.h5".format(self.total_episodes, track.replace("-", "")), "a")
+                self.dataset_file = h5py.File("dataset/ep_ph3_{}_{}.h5".format(self.total_episodes, track.replace("-", "")), "a")
                 self.dataset_file.create_dataset("img", data=img, compression="gzip", chunks=True, maxshape=(None, img.shape[1], img.shape[2], img.shape[3]))
                 self.dataset_file.create_dataset("sensors", data=sensors, compression="gzip", chunks=True, maxshape=(None, *self.state_dims))
             else:
