@@ -103,7 +103,7 @@ python pytorcs.py --noconsole
 
 If you want to run the TORCS container manually you can use
 ```
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm gerkone/torcs
+nvidia-docker run --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm -d gerkone/torcs
 ```
 ## Environment
 More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
