@@ -6,10 +6,15 @@
   * [Envoronment](#environment)
   * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
   * [References](#references)
+ 
 
-OpenAI Gym-like, torcs environment with vision.
-
-The **environment** is designed to be run inside a Docker container. This was done to simplify the installation and configuration, as I found TORCS to be tricky to install on some systems. Either way, everything can be still installed and run directly on the host.
+## Features
+* OpenAI gym style api
+* supports RGB vision and standard _scr_server_ [sensors](https://github.com/gerkone/pyTORCS-docker/tree/master/driver#sensor-description)
+* torcs is run on Docker, for a simpler installation and configuration
+* **no need for xautomation**, as the menu is skipped automatically
+* extensive configuration though _.yaml_ files (eg car and track can be changed through a parameter). More info [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client#usage)
+* latest torcs version (1.3.7)
 
 ## Requirements
 * Docker
