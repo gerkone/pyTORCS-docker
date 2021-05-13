@@ -1,5 +1,5 @@
 # pyTORCS + Docker
-  * [Requirements](#requirements)
+  * [Features](#features)
   * [Installation](#installation)
   * [Host installation](#host-installation)
   * [Usage](#usage)
@@ -7,7 +7,6 @@
   * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
   * [References](#references)
  
-
 ## Features
 * OpenAI gym style api
 * supports RGB vision and standard _scr_server_ [sensors](https://github.com/gerkone/pyTORCS-docker/tree/master/driver#sensor-description)
@@ -15,11 +14,6 @@
 * **no need for xautomation**, as the menu is skipped automatically
 * extensive configuration though _.yaml_ files (eg car and track can be changed through a parameter). More info [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client#usage)
 * latest torcs version (1.3.7)
-
-## Requirements
-* Docker
-* nvidia-docker
-* opencv-python
 
 ## Installation
 This project is designed to run on a Linux system, ideally with an Nvidia GPU.
