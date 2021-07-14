@@ -1,20 +1,19 @@
 # pyTORCS + Docker
-  * [Requirements](#requirements)
+  * [Features](#features)
   * [Installation](#installation)
   * [Host installation](#host-installation)
   * [Usage](#usage)
   * [Envoronment](#environment)
   * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
   * [References](#references)
-
-OpenAI Gym-like, torcs environment with vision.
-
-The **environment** is designed to be run inside a Docker container. This was done to simplify the installation and configuration, as I found TORCS to be tricky to install on some systems. Either way, everything can be still installed and run directly on the host.
-
-## Requirements
-* Docker
-* nvidia-docker
-* opencv-python
+ 
+## Features
+* OpenAI gym style api
+* supports RGB vision and standard _scr_server_ [sensors](https://github.com/gerkone/pyTORCS-docker/tree/master/driver#sensor-description)
+* torcs is run on Docker, for a simpler installation and configuration
+* **no need for xautomation**, as the menu is skipped automatically
+* extensive configuration though _.yaml_ files (eg car and track can be changed through a parameter). More info [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client#usage)
+* latest torcs version (1.3.7)
 
 ## Installation
 This project is designed to run on a Linux system, ideally with an Nvidia GPU.
@@ -103,7 +102,7 @@ python pytorcs.py --noconsole
 
 If you want to run the TORCS container manually you can use
 ```
-nvidia-docker run -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm gerkone/torcs
+nvidia-docker run --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix$DISPLAY -p 3001:3001/udp -it --rm -d gerkone/torcs
 ```
 ## Environment
 More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
@@ -120,7 +119,6 @@ This torcs is a modified version of 1.3.7 taken from [here](https://github.com/f
 I made the following changes to the source:
 - The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
 - The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
-- The **loading screens were also removed**. I found that this somehow saves a lot of time.
 - The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
 
 The torcs server used is _scr_server_ by Daniele Loiacono et al.

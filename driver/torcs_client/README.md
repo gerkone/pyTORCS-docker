@@ -26,7 +26,7 @@ With this modified version of TORCS the state can also be an image.
 The **TorcsEnv** class by itself provides a simple abstraction of TORCS. The API is similar to OpenAI gym, with some peculiarities.
 
 ### Config file
-The default config file is located at [simulation.yaml](config/simulation.yaml) and will look like this.
+The example config file is located at [sim_ddpg.yaml](config/sim_ddpg.yaml) and will look like this.
 ```yaml
 # docker image name. set to 0 to run torcs on host
 image_name : "gerkone/torcs"
@@ -70,9 +70,9 @@ training:
   #
   # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
   #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #        e-track-5 eroad e-track-4 g-track-1
   #
-  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track: "g-track-1"
 
   # choosen car
@@ -170,10 +170,11 @@ DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
 
 ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-       e-track-5 a-speedway eroad e-track-4 g-track-1
+       e-track-5 eroad e-track-4 g-track-1
 
-OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
 ```
+The environment takes in a list of tracks. The track will be changed after the choosen number of episodes are completed.
 
 ### Changing car
 Choosing the racecar is also simple, by changing _training.car_.
