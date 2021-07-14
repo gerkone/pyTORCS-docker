@@ -47,3 +47,6 @@ class ReplayBuffer(object):
         Buffer is ready to be sampled from
         """
         return(self._buf_ctr > batch_size)
+
+    def __len__(self):
+        return min(self._buf_ctr, self.buf_size)

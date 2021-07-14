@@ -15,7 +15,7 @@ from torcs_client.utils import SimpleLogger as log
 
 cur_dir = "driver/agents/dse_ddpg"
 save_dir = cur_dir + "/model"
-dse_dir = cur_dir + "/dse_model_plain"
+dse_dir = cur_dir + "/dse_model_resnet"
 
 class DDPG(object):
     """
@@ -103,17 +103,6 @@ class DDPG(object):
         # state[23] = trackPos
         # state[24,25,26,27] = wheelSpinVel
 
-        #         {'angle': 0.004747795623217383, 'speedX': -0.006684910040348768, 'speedY': 0.041558898985385895, 'speedZ': -0.008202389813959599, 'track': array([0.0576535 , 0.3080025 , 0.24738051, 0.2081425 , 0.186822  ,
-        #        0.1768675 , 0.17175949, 0.16740601, 0.1643635 , 0.161378  ,
-        #        0.158448  , 0.1555745 , 0.151646  , 0.147292  , 0.1395125 ,
-        #        0.125422  , 0.10596   , 0.0857255 , 0.0501905 ], dtype=float32), 'trackPos': 0.0025410999078303576, 'wheelSpinVel': array([ 0.     ,  0.     ,  2.31036, -2.40034], dtype=float32)}
-        # tf.Tensor(
-        # [[ 0.0047478  -0.00668491  0.0415589  -0.00820239  0.0576535   0.3080025
-        #    0.24738051  0.2081425   0.186822    0.1768675   0.17175949  0.16740601
-        #    0.1643635   0.161378    0.158448    0.1555745   0.151646    0.147292
-        #    0.13951249  0.125422    0.10596     0.0857255   0.0501905   0.0025411
-        #    0.          0.          2.31035995 -2.40034008]], shape=(1, 28), dtype=float64)
-
         composite_state = np.zeros(shape = (self.n_states))
 
         # standard sensors
@@ -121,7 +110,6 @@ class DDPG(object):
         composite_state[2] = state["speedY"]
         composite_state[3] = state["speedZ"]
         composite_state[24:] = state["wheelSpinVel"]
-
 
         frames = frames.reshape((self.img_height, self.img_width, self.stack_depth))
 
@@ -132,7 +120,6 @@ class DDPG(object):
         # angle at sensors[0]
         # track at sensors[1:-1]
         # trackPos at sensors[:-1]
-
 
         composite_state[0] = estimated_state[0]
         composite_state[3:22] = estimated_state[1:-1]
@@ -186,10 +173,12 @@ class DDPG(object):
         Fill the buffer up to the batch size, then train both networks with
         experience from the replay buffer.
         """
-        actor_loss = 0
+        avg_loss = 0
         if self._memory.isReady(self.batch_size):
-            actor_loss = self.train_helper()
-        return actor_loss
+            for r in range(int(len(self._memory) / self.batch_size)):
+                avg_loss += self.train_helper()
+
+        return avg_loss / (len(self._memory) / self.batch_size)
 
     def save_models(self):
         self.actor.model.save(save_dir + "/actor")

@@ -15,11 +15,11 @@ hyperparams:
   critic_lr : 0.0003
   batch_size : 32
   gamma : 0.99
-  guided_episode : 1
-  buf_size : 25000
+  guided_episode : 4
+  buf_size : 10000
   tau : 0.001
   fcl1_size : 200
-  fcl2_size : 600
+  fcl2_size : 400
   actor_update_delay : 2
 
 # dict with key: observation name, val: normalization scale (sensor max value)
@@ -45,8 +45,7 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "street-1"
-    # - "g-track-1"
+    - "g-track-1"
 
   # choosen car
   # can be choosen between
@@ -69,8 +68,8 @@ training:
   # max 50 steps per second
   max_steps : 1500
   # total number of episodes
-  episodes : 10000
+  episodes : 700
   # number of passes on data
-  epochs : 1
+  epochs : 6
   # number of steps before each training
-  train_req : 1500
+  train_req : 1000

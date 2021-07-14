@@ -90,9 +90,10 @@ class Client():
         n_fail = 4
         if self.verbose: log.info("Waiting for server on port {}".format(self.port))
         while True:
-            a= "-45 -19 -12 -7 -4 -2.5 -1.7 -1 -.5 0 .5 1 1.7 2.5 4 7 12 19 45"
+            rangefinder_angles = [-45, -19, -12, -7, -4, -2.5, -1.7, -1, -.5, 0, .5, 1, 1.7, 2.5, 4, 7, 12, 19, 45]
+            a = " ".join([str(x) for x in rangefinder_angles])
 
-            initmsg="{}(init {})".format(self.sid, a)
+            initmsg = "{}(init {})".format(self.sid, a)
 
             try:
                 self.so.sendto(initmsg.encode(), (self.host, self.port))

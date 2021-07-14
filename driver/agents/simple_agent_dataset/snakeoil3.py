@@ -104,7 +104,7 @@ class Simple(object):
             sensors = np.expand_dims(sensors, axis = 0)
             if self.first_step:
                 self.first_step = False
-                self.dataset_file = h5py.File("dataset/ep_ph3_{}_{}.h5".format(self.total_episodes, track.replace("-", "")), "a")
+                self.dataset_file = h5py.File("dataset/ep_ph4_{}_{}.h5".format(self.total_episodes, track.replace("-", "")), "a")
                 self.dataset_file.create_dataset("img", data=img, compression="gzip", chunks=True, maxshape=(None, img.shape[1], img.shape[2], img.shape[3]))
                 self.dataset_file.create_dataset("sensors", data=sensors, compression="gzip", chunks=True, maxshape=(None, *self.state_dims))
             else:

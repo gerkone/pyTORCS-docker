@@ -41,6 +41,9 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
+    # - "g-track-1"
+    # - "g-track-1"
+    # - "g-track-1"
     - "street-1"
     # - "a-speedway"
     - "michigan"
@@ -68,7 +71,7 @@ training:
   # max 50 steps per second
   max_steps : 4000
   # total number of episodes
-  episodes : 20
+  episodes : 40
   # number of passes on data
   epochs : 10
   # number of steps before each training

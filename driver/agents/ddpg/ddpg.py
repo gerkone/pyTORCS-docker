@@ -24,7 +24,7 @@ class DDPG(object):
         critic_lr = hyperparams["critic_lr"]
         batch_size = hyperparams["batch_size"]
         gamma = hyperparams["gamma"]
-        buf_size = int(hyperparams["buf_size"])
+        self.buf_size = int(hyperparams["buf_size"])
         tau = hyperparams["tau"]
         fcl1_size = hyperparams["fcl1_size"]
         fcl2_size = hyperparams["fcl2_size"]
@@ -41,7 +41,7 @@ class DDPG(object):
         self.upper_bound = action_boundaries[1]
 
         # experience replay buffer
-        self._memory = ReplayBuffer(buf_size, input_shape = state_dims, output_shape = action_dims)
+        self._memory = ReplayBuffer(self.buf_size, input_shape = state_dims, output_shape = action_dims)
         # noise generator
         self._noise = OUActionNoise(mu=np.zeros(action_dims))
         # Bellman discount factor
@@ -91,22 +91,22 @@ class DDPG(object):
         speedX = state["speedX"]
         action = np.zeros(self.n_actions)
         # steer to corner
-        steer = state["angle"] * 20
-        # steer to center
-        steer -= state["trackPos"] * .20
+        steer = state["angle"] * 12
+        # # steer to center
+        steer -= state["trackPos"] * .2
 
         accel = self.prev_accel
 
-        if speedX < 90 - (steer * 50):
-            accel += .04
+        if speedX < 120 - (steer * 50):
+            accel += .03
         else:
-            accel -= .02
+            accel -= .03
 
-        if speedX < 0.3:
-            accel = 0.7
+        if accel > 0.5:
+            accel = 0.5
 
-        if accel > 0.7 and speedX < 0.3:
-            accel = 0.7
+        if speedX < 10:
+            accel += 1 / (speedX + .1)
 
 
         self.prev_accel = accel
@@ -124,10 +124,12 @@ class DDPG(object):
         Fill the buffer up to the batch size, then train both networks with
         experience from the replay buffer.
         """
-        actor_loss = 0
+        avg_loss = 0
         if self._memory.isReady(self.batch_size):
-            actor_loss = self.train_helper()
-        return actor_loss
+            for r in range(int(len(self._memory) / self.batch_size)):
+                avg_loss += self.train_helper()
+
+        return avg_loss / (len(self._memory) / self.batch_size)
 
     def save_models(self):
         self.actor.model.save(save_dir + "/actor")

@@ -145,14 +145,10 @@ class TorcsEnv:
             self.obs_prev = copy.deepcopy(curr_state)
             self.action_prev = copy.deepcopy(action)
 
-        # Make an obsevation from a raw observation vector from TORCS
-        self.observation = self.make_observaton(curr_state)
-
-
-        # ################### Termination ###################
+        ################### Termination ###################
         episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
 
-        # ################### Reward ###################
+        ################### Reward ###################
         reward = custom_reward(curr_state, self.obs_prev, action, self.action_prev, self.curr_step, terminal = episode_terminate)
 
         if episode_terminate:
@@ -166,7 +162,7 @@ class TorcsEnv:
 
         self.obs_prev = copy.deepcopy(curr_state)
 
-        return self.observation, reward, episode_terminate
+        return self.make_observaton(curr_state), reward, episode_terminate
 
     def reset(self):
         """
@@ -198,9 +194,7 @@ class TorcsEnv:
         # Get the initial full-observation from torcs
         obs = self.client.S.d
 
-        self.observation = self.make_observaton(obs)
-
-        return self.observation
+        return self.make_observaton(obs)
 
     def terminate(self):
         kill_torcs(self.container_id)

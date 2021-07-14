@@ -108,14 +108,17 @@ class DDPG(object):
         return action_p
 
 
-    def learn(self, step):
+    def learn(self, i):
         """
         Fill the buffer up to the batch size, then train both networks with
         experience from the replay buffer.
         """
+        avg_loss = 0
         if self._memory.isReady(self.batch_size):
-            actor_loss = self.train_helper(step)
-        return actor_loss
+            for r in range(int(len(self._memory) / self.batch_size)):
+                avg_loss += self.train_helper()
+
+        return avg_loss / (len(self._memory) / self.batch_size)
 
     """
     Train helper methods

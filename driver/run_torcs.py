@@ -130,10 +130,9 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                     log.info("Starting training: {:d} epochs over {:d} collected steps".format(n_epochs, collected_steps))
                     time_start = time.time()
                     for e in range(n_epochs):
-                        for i in range(collected_steps):
-                            # adjust the weights according to the new transaction
-                            loss = agent.learn(i)
-                            avg_loss.append(loss)
+                        # adjust the weights according to the new transaction
+                        loss = agent.learn(i)
+                        avg_loss.append(loss)
                         if verbose: log.training("Epoch {}. ".format(e + 1), loss)
                     time_end = time.time()
                     log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(

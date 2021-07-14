@@ -5,41 +5,20 @@ image_name : "gerkone/torcs"
 mod_name : "main"
 run_path : "driver/run_torcs.py"
 
-# run module and path. change here to your agent algorithm
-algo_name: "DDPG"
-algo_path: "driver/agents/dse_ddpg/ddpg.py"
+# # run module and path. change here to your agent algorithm
+algo_name: "Simple"
+algo_path: "driver/agents/simple_agent/snakeoil3.py"
+
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.00005
-  critic_lr : 0.0003
-  batch_size : 32
-  gamma : 0.99
-  guided_steps : 1
-  buf_size : 25000
-  tau : 0.001
-  fcl1_size : 200
-  fcl2_size : 600
-  actor_update_delay : 2
-
-  # resized image dimensions
-  img_width : 160
-  img_height : 120
-  # frame stack size. set to 1 to disable frame stacking
-  stack_depth: 1
+  target_speed : 120
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
-  # other sensors
+  angle: 3.1415
+  trackPos: 1.0
   speedX : 1.0
-  speedZ : 1.0
-  speedY : 1.0
-  wheelSpinVel : 1.0
-  # estimated sensors
-  # track : 200.0
-  # angle: 3.1415
-  # trackPos: 1.0
-  img : 1.0
 
 # environment and training related settings
 training:
@@ -50,11 +29,15 @@ training:
   #
   # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
   #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #        e-track-5 eroad e-track-4 g-track-1
   #
-  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "g-track-1"
+    # - "street-1"
+    # - "a-speedway"
+    - "michigan"
+    # - "e-track-2"
+    # - "ruudskogen"
 
   # choosen car
   # can be choosen between
@@ -75,13 +58,13 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 1500
+  max_steps : 4000
   # total number of episodes
-  episodes : 10000
+  episodes : 20
   # number of passes on data
   epochs : 10
   # number of steps before each training
-  train_req : 1500
+  train_req : 1
 
 # resized image dimensions
 img_width : 160

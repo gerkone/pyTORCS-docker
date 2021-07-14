@@ -7,7 +7,6 @@ class Simple(object):
     def __init__(self, state_dims, action_dims, action_boundaries, hyperparams):
         # normalized target speed
         self.target_speed = hyperparams["target_speed"]
-        self.norm_factor = hyperparams["max_speed"]
         self.action_dims = action_dims
 
         self.prev_accel = 0
@@ -16,7 +15,7 @@ class Simple(object):
         """
         Simple proportional feedback controller
         """
-        speedX = state["speedX"] * self.norm_factor
+        speedX = state["speedX"]
 
         action = np.zeros(*self.action_dims)
         # steer to corner
