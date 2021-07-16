@@ -29,7 +29,7 @@ RUN make install && make datainstall
 
 # copy custom configure files (remove old stuff first)
 RUN rm -rf /usr/local/share/games/torcs/config
-RUN rm -rf /usr/local/share/games/torcs/drivers/human
+RUN rm -rf /usr/local/share/games/torcs/drivers
 RUN mkdir -p /root/.torcs/
 RUN cp -R configs/* /usr/local/share/games/torcs
 RUN cp -R configs/* /root/.torcs

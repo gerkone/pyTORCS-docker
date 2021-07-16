@@ -1,5 +1,5 @@
 # docker image name
-image_name : "0"
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
