@@ -13,7 +13,7 @@ def agent_from_module(mod_name, run_path):
     spec.loader.exec_module(mod)
     return getattr(mod, mod_name)
 
-def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs",
+def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", driver = None,
         training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
     max_steps = training["max_steps"]
@@ -22,13 +22,29 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     train_req = training["train_req"]
     track_list = [None]
     car = None
+
+    # never stop due to steps
+    infinite = max_steps == -1
+
     if "track" in training.keys(): track_list = training["track"]
     if "car" in training.keys(): car = training["car"]
 
+    if driver != None:
+        sid = driver["sid"]
+        port = driver["port"]
+        driver_id = driver["index"]
+        driver_module = driver["module"]
+    else:
+        sid = None
+        port = None
+        driver_id = None
+        driver_module = None
+
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], car = car,
-            verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], max_steps = max_steps,
-            image_name = image_name, img_width = img_width, img_height = img_height)
+            verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], sid = sid,
+            port = port, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
+            img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -56,8 +72,9 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     collected_steps = 0
 
-    # buffer episodes in between training steps
-    episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
+    if not infinite:
+        # buffer episodes in between training steps
+        episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
 
     for track in track_list:
         log.info("Starting {} episodes on track {}".format(episodes, track))
@@ -80,10 +97,11 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
             log.info("Episode {}/{} started".format(i + 1, episodes))
 
-            while not terminal and curr_step < max_steps:
+            while not terminal and (curr_step < max_steps or infinite):
                 # time_1 = time.time()
-                if curr_step >= max_steps:
-                    if self.verbose: log.info("Episode terminated by steps: {} steps done.".format(max_steps))
+                if not infinite:
+                    if curr_step >= max_steps:
+                        if self.verbose: log.info("Episode terminated by steps: {} steps done.".format(max_steps))
                 # predict new action
                 action = agent.get_action(state, i, track)
                 # perform the transition according to the choosen action
@@ -94,9 +112,11 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                     frame_stack.append(state_new["img"])
                     state_new["img"] = frame_stack
 
-                # save step in buffer
-                episode_buffer[collected_steps] = (state, state_new, action, reward, terminal)
-                collected_steps += 1
+                if not infinite:
+                    # save step in buffer
+                    episode_buffer[collected_steps] = (state, state_new, action, reward, terminal)
+                    collected_steps += 1
+
                 #iterate to the next
                 state = state_new
                 curr_step += 1
@@ -114,8 +134,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
 
             # accumulate some training data before training
-            if collected_steps >= train_req:
-
+            if collected_steps >= train_req and not infinite:
                 has_remember = hasattr(agent, "remember") and callable(agent.remember)
                 if has_remember:
                     i = 0

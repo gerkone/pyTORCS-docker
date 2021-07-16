@@ -16,6 +16,8 @@ hyperparams:
   max_speed : 300
   noise_scale : 0.7
   save_each : 4
+  sway : True
+  prefix : ""
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -27,6 +29,15 @@ sensors:
   img : 1.0
   # other
   speedX : 1.0
+
+
+# DO NOT CHANGE THIS
+# unless you know what you are doing
+driver :
+  module : "scr_server"
+  index : "0"
+  sid : "SCR"
+  port : 3001
 
 # environment and training related settings
 training:
@@ -41,12 +52,12 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
+    - "g-track-1"
     # - "g-track-1"
     # - "g-track-1"
-    # - "g-track-1"
-    - "street-1"
+    # - "street-1"
     # - "a-speedway"
-    - "michigan"
+    # - "michigan"
     # - "e-track-2"
     # - "ruudskogen"
 
@@ -64,14 +75,14 @@ training:
 
   # manual throttle control
   throttle : True
-  target_speed : 50
+  target_speed : 70
   # manual not yet properly supported - leave it False
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 4000
+  max_steps : 30000
   # total number of episodes
-  episodes : 40
+  episodes : 20
   # number of passes on data
   epochs : 10
   # number of steps before each training

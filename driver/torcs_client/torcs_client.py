@@ -22,9 +22,8 @@ class Client():
     race car simulator which has been patched with the server
     extentions used in the Simulated Car Racing competitions.
     """
-    def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None,
-                max_steps = 10000, container_id = "0", vision=False, verbose = False,
-                img_height= 640, img_width = 480, max_packets = 2):
+    def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None, container_id = "0",
+            vision=False, verbose = False, img_height= 640, img_width = 480, max_packets = 2):
 
         self.data_size = 2**17
         # bufsize of the incoming packets (bytes)
@@ -45,7 +44,6 @@ class Client():
         self.port = port
         self.sid = sid
         self.trackname = trackname
-        self.max_steps = max_steps  # should be 50steps/second if it had real time performance
 
         self.reset()
 

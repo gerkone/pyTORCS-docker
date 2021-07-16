@@ -3,37 +3,6 @@
 [ -z "$1" ] && exit 1
 [ ! -d "$1" ] && exit 1
 
-mkdir -p $1/drivers/human 2>/dev/null
-if [ ! -e  $1/drivers/human/car.xml ] || [ drivers/human/car.xml -nt $1/drivers/human/car.xml ]
-then
-    if [ -e $1/drivers/human/car.xml ]
-    then
-        echo "Saving $1/drivers/human/car.xml to $1/drivers/human/car.xml.old"
-        cp -f $1/drivers/human/car.xml $1/drivers/human/car.xml.old
-    fi
-    cp -f drivers/human/car.xml $1/drivers/human/car.xml
-    chmod 640 $1/drivers/human/car.xml
-fi
-if [ ! -e  $1/drivers/human/human.xml ] || [ drivers/human/human.xml -nt $1/drivers/human/human.xml ]
-then
-    if [ -e $1/drivers/human/human.xml ]
-    then
-        echo "Saving $1/drivers/human/human.xml to $1/drivers/human/human.xml.old"
-        cp -f $1/drivers/human/human.xml $1/drivers/human/human.xml.old
-    fi
-    cp -f drivers/human/human.xml $1/drivers/human/human.xml
-    chmod 640 $1/drivers/human/human.xml
-fi
-if [ ! -e  $1/drivers/human/preferences.xml ] || [ drivers/human/preferences.xml -nt $1/drivers/human/preferences.xml ]
-then
-    if [ -e $1/drivers/human/preferences.xml ]
-    then
-        echo "Saving $1/drivers/human/preferences.xml to $1/drivers/human/preferences.xml.old"
-        cp -f $1/drivers/human/preferences.xml $1/drivers/human/preferences.xml.old
-    fi
-    cp -f drivers/human/preferences.xml $1/drivers/human/preferences.xml
-    chmod 640 $1/drivers/human/preferences.xml
-fi
 mkdir -p $1/config 2>/dev/null
 if [ ! -e  $1/config/raceengine.xml ] || [ config/raceengine.xml -nt $1/config/raceengine.xml ]
 then

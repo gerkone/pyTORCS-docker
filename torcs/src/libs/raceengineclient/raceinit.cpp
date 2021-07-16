@@ -554,7 +554,6 @@ ReInitCars(void)
 		const char* cardllname = GfParmGetStr(ReInfo->params, path, RM_ATTR_MODULE, "");
 		robotIdx = (int)GfParmGetNum(ReInfo->params, path, RM_ATTR_IDX, NULL, 0);
 		snprintf(path, BUFSIZE, "%sdrivers/%s/%s.%s", GetLibDir (), cardllname, cardllname, DLLEXT);
-
 		/* load the robot shared library */
 		if (GfModLoad(CAR_IDENT, path, ReInfo->modList)) {
 			GfTrace("Pb with loading %s driver\n", path);

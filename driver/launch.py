@@ -43,6 +43,11 @@ class Launch:
                 self.training = conf["training"]
 
                 try:
+                    self.driver = conf["driver"]
+                except Exception:
+                    self.driver = None
+
+                try:
                     self.stack_depth = conf["stack_depth"]
                     self.img_width = conf["img_width"]
                     self.img_height = conf["img_height"]
@@ -55,7 +60,7 @@ class Launch:
                 print(exc)
 
     def run(self):
-        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors,
+        self.entrypoint(verbose = self.verbose, hyperparams = self.hyperparams, sensors = self.sensors, driver = self.driver,
                 training = self.training, algo_name = self.algo_name, algo_path = self.algo_path, image_name = self.image_name,
                 stack_depth = self.stack_depth, img_width = self.img_width, img_height = self.img_height)
 

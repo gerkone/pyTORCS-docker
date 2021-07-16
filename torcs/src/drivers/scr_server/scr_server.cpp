@@ -24,6 +24,7 @@
 #include <math.h>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 #include <ctime>
 
 #include <tgf.h>
@@ -109,6 +110,10 @@ static int listenSocket[NBBOTS];
 socklen_t clientAddressLength[NBBOTS];
 tSockAddrIn clientAddress[NBBOTS], serverAddress[NBBOTS];
 /************************************************/
+
+// running time
+static std::chrono::_V2::system_clock::time_point curTime;
+static tdble totalTime;
 
 static tdble oldAccel[NBBOTS];
 static tdble oldBrake[NBBOTS];
@@ -319,6 +324,9 @@ newrace(int index, tCarElt* car, tSituation *s)
     oppSens[index] = new ObstacleSensors(36, curTrack, car, s, (int) __SENSORS_RANGE__);
 
     prevDist[index]=-1;
+
+    // initial time counter
+    curTime = std::chrono::system_clock::now();
 }
 
 /* Drive during race. */
@@ -470,9 +478,16 @@ drive(int index, tCarElt* car, tSituation *s)
 
     distRaced[index] += curDistRaced;
 
+    std::chrono::duration<float> elapsedSeconds = std::chrono::system_clock::now() - curTime;
+
+    curTime = std::chrono::system_clock::now();
+
+    totalTime += elapsedSeconds.count();
+
     /**********************************************************************
      ****************** Building state string *****************************
      **********************************************************************/
+
 
     string stateString;
 
@@ -483,7 +498,11 @@ drive(int index, tCarElt* car, tSituation *s)
     else
 	    stateString += SimpleParser::stringify("damage", car->_fakeDammage);
     stateString += SimpleParser::stringify("distFromStart", car->race.distFromStartLine);
+
+    // used to compare to telemetry
     stateString += SimpleParser::stringify("distRaced", distRaced[index]);
+    stateString += SimpleParser::stringify("totalTime", totalTime);
+
     stateString += SimpleParser::stringify("fuel", car->_fuel);
     stateString += SimpleParser::stringify("gear", car->_gear);
     stateString += SimpleParser::stringify("lastLapTime", float(car->_lastLapTime));
@@ -519,7 +538,7 @@ if (RESTARTING[index]==0)
 #endif
 
 #ifdef __STEP_LIMIT__
-    
+
     if (total_tics[index]>__STEP_LIMIT__)
     {
 	RESTARTING[index] = 1;
@@ -537,7 +556,7 @@ if (RESTARTING[index]==0)
 	return;
     }
 #endif
-	
+
 
     // Sending the car state to the client
     if (sendto(listenSocket[index], line, strlen(line) + 1, 0,
@@ -688,7 +707,7 @@ if (curPosition==max_pos)
 	fprintf(f,"\n\n\n");
 	fclose(f);
 }
-//std::cout << "car,pos,points,time,bestLap,damages"<< std::endl;  
+//std::cout << "car,pos,points,time,bestLap,damages"<< std::endl;
 //std::cout << "champ" << (index+1) <<"," << position <<"," << points[position-1] <<"," << totalTime[index] <<"," << bestLap[index] <<"\t" << damages[index]<< std::endl;
 #endif
 
@@ -747,4 +766,3 @@ double normRand(double avg,double std)
 	    y2 = x2 * w;
 	    return y1*std + avg;
 }
-

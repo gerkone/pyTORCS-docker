@@ -133,6 +133,26 @@ def change_car(race_type, car):
         doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         doc.write(etree.tostring(config, pretty_print = True))
 
+def change_driver(race_type, driver_id, driver_module):
+    from lxml import etree
+    filename = race_type + ".xml"
+    torcs_race_xml = os.path.join(os.getcwd(), "torcs/configs/config/raceman", filename)
+    config = etree.parse(torcs_race_xml)
+    for section in config.iter("section"):
+        if section.get("name") == "Drivers":
+            for subsection in section.iter("section"):
+                if subsection.get("name") != "Drivers":
+                    for attr in subsection.iter("attnum"):
+                        if attr.get("name") == "idx":
+                            attr.set("val", driver_id)
+                    for attr in subsection.iter("attstr"):
+                        if attr.get("name") == "module":
+                            attr.set("val", driver_module)
+
+    with open(torcs_race_xml, "wb") as doc:
+        doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        doc.write(etree.tostring(config, pretty_print = True))
+
 def destringify(s):
     if not s: return s
     if type(s) is str:

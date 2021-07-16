@@ -1,50 +1,30 @@
 # docker image name
-image_name : "gerkone/torcs"
+image_name : "0"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
 run_path : "driver/run_torcs.py"
 
-# run module and path. change here to your agent algorithm
-algo_name: "DDPG"
-algo_path: "driver/agents/ddpg_vision/ddpg.py"
+# # run module and path. change here to your agent algorithm
+algo_name: "Simple"
+algo_path: "driver/agents/berniw_agent/collect.py"
+
 
 # agent hyperparameters
 hyperparams:
-  actor_lr : 0.00005
-  critic_lr : 0.0003
-  batch_size : 32
-  gamma : 0.99
-  guided_steps : 2
-  buf_size : 25000
-  tau : 0.001
-  fcl1_size : 200
-  fcl2_size : 600
-  actor_update_delay : 2
-
-  img_width : 128
-  img_height : 96
-  stack_depth: 3
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
-  track : 200.0
-  angle: 3.1415
-  speedX : 300.0
-  speedY : 300.0
-  speedZ : 300.0
-  # wheelSpinVel : 1.0
-  # rpm : 10000
-  trackPos: 1.0
-  # VISION SENSOR. set to turn vision on
-  img: 255.0
+  distraced : 1.0
+  curtime : 1.0
+  tracklen : 1.0
 
 # DO NOT CHANGE THIS
 # unless you know what you are doing
 driver :
-  module : "scr_server"
-  index : "0"
-  sid : "SCR"
+  module : "berniw"
+  index : "1"
+  sid : "TEL"
   port : 3001
 
 # environment and training related settings
@@ -56,9 +36,9 @@ training:
   #
   # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
   #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #        e-track-5 eroad e-track-4 g-track-1
   #
-  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
     - "g-track-1"
 
@@ -81,16 +61,16 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 1500
+  max_steps : -1
   # total number of episodes
-  episodes : 10000
+  episodes : 1
   # number of passes on data
-  epochs : 10
+  epochs : 0
   # number of steps before each training
-  train_req : 1000
+  train_req : 1
 
 # resized image dimensions
-img_width : 128
-img_height : 96
+img_width : 160
+img_height : 120
 # frame stack size. set to 1 to disable frame stacking
-stack_depth: 3
+stack_depth: 1

@@ -1,4 +1,4 @@
-FROM nvidia/cudagl:11.0-base
+FROM nvidia/cudagl:11.4.0-base
 
 USER root
 
@@ -20,9 +20,10 @@ COPY . torcs/
 WORKDIR torcs
 
 RUN sh configure
-ENV CFLAGS="-fPIC"
+ENV CFLAGS="-fPIC -ansi"
 ENV CPPFLAGS=$CFLAGS
 ENV CXXFLAGS=$CFLAGS
+RUN make clean
 RUN make
 RUN make install && make datainstall
 

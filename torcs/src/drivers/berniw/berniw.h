@@ -23,6 +23,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
+#include <iostream>
+#include <chrono>
+#include <ctime> 
+#include <string.h>
+#include <sstream>
+
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #include <tgf.h>
 #include <track.h>
@@ -92,5 +102,15 @@ inline double radius(double x1, double y1, double x2, double y2, double x3, doub
 	}
 }
 
-#endif // _BERNIW_H_
+// defines for UDP - gerk
+#define UDP_LISTEN_PORT 3001
+#define UDP_ID "TEL"
+#define UDP_DEFAULT_TIMEOUT 10000
+#define UDP_MSGLEN 1000
 
+typedef int SOCKET;
+typedef struct sockaddr_in tSockAddrIn;
+#define CLOSE(x) close(x)
+#define INVALID(x) x < 0
+
+#endif // _BERNIW_H_
