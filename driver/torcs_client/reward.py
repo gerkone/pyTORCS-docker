@@ -164,7 +164,7 @@ class TimeReward(BaseReward):
         if terminal and self.curr_sector == 0:
             reward = -1000
         # punish for spins
-        if obs["angle"] < 0:
+        if np.cos(obs["angle"]) < 0:
             reward = -100
         return reward
 
