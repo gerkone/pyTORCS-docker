@@ -55,7 +55,7 @@ class TorcsEnv:
         self.tracks_categories["oval"] = ["a-speedway", "b-speedway", "e-speedway", "g-speedway", "michigan", "c-speedway", "d-speedway", "f-speedway"]
 
         # restart request ( relaunches torcs on environment reset )
-        self.restart_needed = True
+        self.restart_needed = False
 
         if state_filter != None:
             self.state_filter = dict(sorted(state_filter.items()))
@@ -159,8 +159,9 @@ class TorcsEnv:
             self.action_prev = copy.deepcopy(action)
 
         ################### Termination ###################
+        episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
         try:
-            episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
+            pass
         except Exception:
             episode_terminate = False
 
@@ -193,14 +194,15 @@ class TorcsEnv:
         vision = "img" in self.state_filter
         first_run = not hasattr(self, "client")
 
-        if self.restart_needed:
+        if self.restart_needed == True:
             self.restart_needed = False
             # launch torcs for the first time
             reset_torcs(self.container_id, vision, True)
-        if first_run:
+        if first_run == True:
+            reset_torcs(self.container_id, vision, False)
             # create new torcs client - after first torcs launch
-            self.client = Client(port = self.port, verbose = self.verbose, sid = self.sid,
-                container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
+            self.client = Client(port = self.port, verbose = self.verbose, sid = self.sid, container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
+
         else:
             # restart torcs without closing - tell scr_server to restart race
             self.client.R.d["meta"] = True
@@ -227,8 +229,9 @@ class TorcsEnv:
         if track is None:
             track = "g-track-1"
         change_track(self.race_type, track, self.tracks_categories)
-        # torcs needs to be restarted for the config to be loaded
-        self.restart_needed = True
+        first_run = not hasattr(self, "client")
+        # torcs needs to be restarted for the config to be loaded - if already run
+        self.restart_needed = not first_run
         self.track = track
 
     def automatic_throttle_control(self, target_speed, curr_state, accel, steer):

@@ -25,7 +25,7 @@
 #include <cstring>
 #include <iostream>
 #include <chrono>
-#include <ctime> 
+#include <ctime>
 #include <string.h>
 #include <sstream>
 
@@ -45,6 +45,10 @@
 #include "trackdesc.h"
 #include "mycar.h"
 #include "pathfinder.h"
+
+// gerk
+#include "sensors.h"
+#include "SimpleParser.h"
 
 #define TRACKFILENAME		"/home/berni/track.dat"
 #define TRACKDESCFILENAME   "/home/berni/track.txt"

@@ -3,7 +3,7 @@ FROM nvidia/cudagl:11.4.0-base
 USER root
 
 # build stuff
-RUN apt-get update -y && apt-get install -y --no-install-recommends make g++
+RUN apt-get update -y && apt-get install -y --no-install-recommends make g++ gdb
 
 # torcs dependencies
 RUN apt-get install -y --no-install-recommends libglib2.0-dev libgl1-mesa-dev libglu1-mesa-dev \

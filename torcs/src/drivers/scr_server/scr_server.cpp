@@ -747,7 +747,7 @@ if (curPosition==max_pos)
     {
         delete oppSens[index];
         oppSens[index] = NULL;
-    }
+      }
     CLOSE(listenSocket[index]);
 }
 

@@ -4,7 +4,7 @@ MODULE = ${ROBOT}.so
 
 MODULEDIR = drivers/${ROBOT}
 
-SOURCES   = ${ROBOT}.cpp spline.cpp trackdesc.cpp pathfinder.cpp mycar.cpp
+SOURCES   = ${ROBOT}.cpp spline.cpp trackdesc.cpp pathfinder.cpp mycar.cpp SimpleParser.cpp sensors.cpp
 
 SHIPDIR   = drivers/${ROBOT}
 

@@ -15,9 +15,21 @@ hyperparams:
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
-  distraced : 1.0
-  curtime : 1.0
-  tracklen : 1.0
+  distRaced : 1.0
+  totalTime : 1.0
+  trackLen : 1.0
+
+  speedZ : 1.0
+  speedY : 1.0
+  wheelSpinVel : 1.0
+  track : 200.0
+  speedX : 1.0
+  angle: 3.1415
+  trackPos: 1.0
+  damage : 1.0
+
+  steer : 1.0
+  throttle : 1.0
 
 # DO NOT CHANGE THIS
 # unless you know what you are doing
@@ -40,7 +52,39 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "g-track-1"
+    # - g-track-1
+    # - a-speedway
+    # - corkscrew
+    # - wheel-1
+    # - alpine-1
+    # - e-track-3
+    # - g-track-2
+    # - ole-road-1
+    # - street-1
+    # - alpine-2
+    # - e-track-6
+    # - g-track-3
+    - ruudskogen
+    - brondehach
+    - e-track-2
+    - forza
+    - spring
+    - wheel-2
+    - aalborg
+    - e-track-1
+    - e-track-5
+    - e-track-1
+    - e-track-5
+    - eroad
+    - e-track-4
+    - a-speedway
+    - b-speedway
+    - e-speedway
+    - g-speedway
+    - michigan
+    - c-speedway
+    - d-speedway
+    - f-speedway
 
   # choosen car
   # can be choosen between

@@ -6,15 +6,15 @@ import numpy as np
 import cv2
 
 class SimpleLogger:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
     @staticmethod
     def info(str):
@@ -36,7 +36,7 @@ class SimpleLogger:
 
 def start_container(image_name, verbose, port):
     # check if the container is already up
-    container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
+    container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode("utf-8")
     if len(container_id) == 0:
         # not yet started
         # get display from environment
@@ -60,7 +60,7 @@ def start_container(image_name, verbose, port):
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)
-            container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode('utf-8')
+            container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode("utf-8")
         container_id = re.sub("[^a-zA-Z0-9 -]", "", container_id)
         if verbose: SimpleLogger.info("Container started with id {}".format(container_id))
     else:
@@ -71,17 +71,20 @@ def start_container(image_name, verbose, port):
 
 def reset_torcs(container_id, vision, kill = False):
     command = []
-
-    if kill:
+    if kill == True:
         kill_torcs(container_id)
 
     if container_id != "0":
         command.extend(["docker", "exec", container_id])
+    else:
+        subprocess.Popen(["rm", "-rf", "/usr/local/share/games/torcs/config"])
+        subprocess.Popen(["cp", "-R", os.path.join(os.getcwd(), "torcs/configs/config"), "/usr/local/share/games/torcs"])
+        subprocess.Popen(["cp", os.path.join(os.getcwd(), "torcs/configs/drivers"), "/usr/local/share/games/torcs/"])
 
     command.extend(["torcs", "-nofuel", "-nodamage", "-nolaptime"])
 
     if vision is True:
-        command.extend(["-vision"])
+        command.append("-vision")
 
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
