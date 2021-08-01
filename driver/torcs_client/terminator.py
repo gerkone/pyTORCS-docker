@@ -1,7 +1,7 @@
 import numpy as np
 
-terminal_judge_start = 150
-boring_speed = 0.5 # km/h, episode terminates if car is running slower than this limit
+terminal_judge_start = 1000
+boring_speed = 0 # km/h, episode terminates if car is running slower than this limit
 max_damage = 300
 out_max = 0
 

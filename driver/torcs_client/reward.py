@@ -33,7 +33,7 @@ class LocalReward(BaseReward):
     damage_w = 0.1
     dist_w = 1.0
     range_w = 0.0
-    angle_w = 0.5
+    angle_w = 0.1
     steer_w = 0.0
 
     wobble_w = 0.0
@@ -44,7 +44,7 @@ class LocalReward(BaseReward):
     rangefinder_angles = [-45, -19, -12, -7, -4, -2.5, -1.7, -1, -.5, 0, .5, 1, 1.7, 2.5, 4, 7, 12, 19, 45]
 
     def __dist_reward(self, d, d_old):
-        return np.clip(d - d_old, 0, 5)
+        return np.clip(d - d_old, -1, 5)
 
     def __speed_reward(self, speed):
         return 10 ** (speed / 300)
@@ -79,57 +79,56 @@ class LocalReward(BaseReward):
 
     def __breaking_reward(self, speed, brake):
         if speed <= self.boring_speed and brake > 0:
-            return -1
+            return -0.1
         return 0
 
     def __local_reward(self, obs, obs_prev, action, action_prev, cur_step, terminal):
         # punish for standing still
+        try:
+            # basic reward
+            reward = self._on_track_reward(obs["trackPos"]) * self.base_w
+        except Exception:
+            reward = 0
+        try:
+            # speed reward
+            reward += self.__speed_reward(obs["speedX"]) * self.speed_w
+        except Exception:
+            pass
+        try:
+            reward += self.__dist_reward(obs["distRaced"], obs_prev["distRaced"]) * self.dist_w
+            # travel distance reward
+        except Exception:
+            pass
+        try:
+            # punishment for damage
+            reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
+        except Exception:
+            pass
+        try:
+            # direction dependent rewards
+            reward += self.__direction_rangefinder_reward(obs["track"]) * self.range_w
+        except Exception:
+            pass
+        try:
+            reward += self.__direction_angle_reward(obs["angle"]) * self.angle_w
+        except Exception:
+            pass
+        try:
+            # reward going straight, punish wobbling
+            reward += self.__straight_line_reward(action["steer"], obs["speedX"]) * self.steer_w
+        except Exception:
+            pass
+        try:
+            reward += self.__wobbly_reward(action["steer"], action_prev["steer"]) * self.wobble_w
+        except Exception:
+            pass
         if obs["speedX"] > self.boring_speed:
-            try:
-                # basic reward
-                reward = self._on_track_reward(obs["trackPos"]) * self.base_w
-            except Exception:
-                reward = 0
-            try:
-                # speed reward
-                reward += self.__speed_reward(obs["speedX"]) * self.speed_w
-            except Exception:
-                pass
-            try:
-                reward += self.__dist_reward(obs["distRaced"], obs_prev["distRaced"]) * self.dist_w
-                # travel distance reward
-            except Exception:
-                pass
-            try:
-                # punishment for damage
-                reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
-            except Exception:
-                pass
-            try:
-                # direction dependent rewards
-                reward += self.__direction_rangefinder_reward(obs["track"]) * self.range_w
-            except Exception:
-                pass
-            try:
-                reward += self.__direction_angle_reward(obs["angle"]) * self.angle_w
-            except Exception:
-                pass
-            try:
-                # reward going straight, punish wobbling
-                reward += self.__straight_line_reward(action["steer"], obs["speedX"]) * self.steer_w
-            except Exception:
-                pass
-            try:
-                reward += self.__wobbly_reward(action["steer"], action_prev["steer"]) * self.wobble_w
-            except Exception:
-                pass
-        else:
-            reward = -1
-            try:
-                # punish breaking when going slow
-                reward += self.__breaking_reward(action["brake"], obs["speedX"])
-            except Exception:
-                pass
+            reward -= 1
+        try:
+            # punish breaking when going slow
+            reward += self.__breaking_reward(action["brake"], obs["speedX"])
+        except Exception:
+            pass
         return reward
 
     # overridden

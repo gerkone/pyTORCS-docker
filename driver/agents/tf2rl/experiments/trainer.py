@@ -90,6 +90,7 @@ class Trainer:
             self.logger.info("Restored {}".format(self._latest_path_ckpt))
 
     def __call__(self):
+
         if self._evaluate:
             self.evaluate_policy_continuously()
 

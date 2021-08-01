@@ -13,9 +13,8 @@ algo_path: "driver/agents/ppo/ppo_wrapper.py"
 hyperparams:
   actor_lr : 0.00005
   critic_lr : 0.0005
-  batch_size : 32
-  gamma : 0.99
-  buf_size : 100000
+  batch_size : 64
+  buf_size : 15000
   epochs : 10
   horizon : 2048
 
@@ -26,6 +25,8 @@ hyperparams:
   c_1 : 0.5
   c_2 : 0.001
 
+  n_warmup : 7500
+  update_interval : 2
 
   fcl1_size : 200
   fcl2_size : 300

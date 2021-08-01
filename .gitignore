@@ -10,3 +10,4 @@ dataset/*
 !dataset/clean.py
 model
 model_*
+results

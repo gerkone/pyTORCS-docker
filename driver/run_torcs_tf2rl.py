@@ -59,42 +59,43 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     args["test_interval"] = 20480
     args["save_summary_interval"] = 20480
-    args["max_steps"] = int(2e6)
-    args["max_steps"] = int(2e6)
+    args["max_steps"] = int(5000)
 
     # TODO parametric algorithm
     # agent_class = agent_from_module(algo_name, algo_path)
 
-    agent = PPO(
-        state_shape = env.observation_space.shape,
-        action_dim = get_act_dim(env.action_space),
-        is_discrete = False,
-        max_action = action_boundaries[1],
-        batch_size = hyperparams["batch_size"],
-        actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-        critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-        n_epoch = hyperparams["epochs"],
-        lr_actor = hyperparams["actor_lr"],
-        lr_critic = hyperparams["critic_lr"],
-        hidden_activation_actor = "tanh",
-        hidden_activation_critic = "tanh",
-        discount = hyperparams["gamma"],
-        lam = hyperparams["lam"],
-        entropy_coef = hyperparams["c_2"],
-        horizon = hyperparams["horizon"]
-    )
-
-    # agent = DDPG(
+    # agent = PPO(
     #     state_shape = env.observation_space.shape,
-    #     action_dim = env.action_space.high.size,
-    #     memory_capacity = hyperparams["buf_size"],
-    #     max_action = env.action_space.high[0],
+    #     action_dim = get_act_dim(env.action_space),
+    #     is_discrete = False,
+    #     max_action = action_boundaries[1],
     #     batch_size = hyperparams["batch_size"],
     #     actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
     #     critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+    #     n_epoch = hyperparams["epochs"],
     #     lr_actor = hyperparams["actor_lr"],
-    #     tau = hyperparams["tau"],
-    #     lr_critic = hyperparams["critic_lr"])
+    #     lr_critic = hyperparams["critic_lr"],
+    #     hidden_activation_actor = "tanh",
+    #     hidden_activation_critic = "tanh",
+    #     discount = hyperparams["gamma"],
+    #     lam = hyperparams["lam"],
+    #     entropy_coef = hyperparams["c_2"],
+    #     horizon = hyperparams["horizon"]
+    # )
+
+    agent = DDPG(
+        state_shape = env.observation_space.shape,
+        action_dim = env.action_space.high.size,
+        memory_capacity = hyperparams["buf_size"],
+        max_action = env.action_space.high[0],
+        batch_size = hyperparams["batch_size"],
+        actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+        critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+        lr_actor = hyperparams["actor_lr"],
+        tau = hyperparams["tau"],
+        lr_critic = hyperparams["critic_lr"],
+        n_warmup = hyperparams["n_warmup"],
+        update_interval = hyperparams["update_interval"])
 
     trainer = Trainer(agent, env, args, test_env=test_env)
 
