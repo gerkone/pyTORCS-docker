@@ -8,21 +8,21 @@ The **_driver_** is made up of two components:
 The action space is variable in size, depending on how the environment is configured.
 
 - If _throttle == False_
- The action space is a 1-dimensional array, ranging from [-1,1]. The single value represents the steering request (-1 complete left, 1 complete right).
- ```
- action[0] := steering
- ```
+  The action space is a 1-dimensional array, ranging from [-1,1]. The single value represents the steering request (-1 complete left, 1 complete right).
+  ```
+  action[0] := steering
+  ```
 
 - If _throttle == True_
- The action space is a 2-dimensional array. The first value remains the steering.
+  The action space is a 2-dimensional array. The first value remains the steering.
 
- The second value is combined brake/throttle request:
- + [-1,0] for the brake
- + [0,1] for the throttle.
- ```
- action[0] := steering
- action[1] := breaking/throttle
- ```
+  The second value is combined brake/throttle request:
+  + [-1,0] for the brake
+  + [0,1] for the throttle.
+  ```
+  action[0] := steering
+  action[1] := breaking/throttle
+  ```
 
 ## Sensor description
 - **_track_** - Vector of 19 range finder sensors: each sensors returns the distance between the track edge and the car within a range of 200 meters.

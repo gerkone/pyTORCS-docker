@@ -195,7 +195,7 @@ The default car for scr_server is _car1-trb1_.
 
 ## Example
 
-`python
+```python
 from torcs_client.torcs_comp import TorcsEnv
 def run(verbose, hyperparams, sensors, image_name, img_width, img_height):
   env = TorcsEnv(throttle = False, verbose = verbose, state_filter = sensors)
