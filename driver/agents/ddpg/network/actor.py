@@ -59,9 +59,10 @@ class Actor(object):
         fcl2 = Dense(self.fcl2_size, activation = "relu")(fcl1)
         fcl2 = BatchNormalization()(fcl2)
         fcl2 = Activation("relu")(fcl2)
-        # -- third fully connected layer --
-        fcl3 = Dense(self.fcl1_size, activation = "relu")(fcl2)
+
+        fcl3 = Dense(self.fcl1_size)(fcl2)
         fcl3 = BatchNormalization()(fcl3)
+        # activation applied after batchnorm
         fcl3 = Activation("relu")(fcl3)
         # -- output layer --
         f3 = 0.003

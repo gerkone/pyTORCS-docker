@@ -1,0 +1,94 @@
+# docker image name
+image_name : "gerkone/torcs"
+
+# run module and path. change to your test script location and function
+mod_name : "main"
+run_path : "driver/run_torcs.py"
+
+# run module and path. change here to your agent algorithm
+algo_name: "GAIL"
+algo_path: "driver/agents/berniw_IL/gail/gail.py"
+
+# agent hyperparameters
+hyperparams:
+  lr : 0.00003
+  batch_size : 32
+  gamma : 0.99
+  labmda : 0.95
+  buf_size : 2000
+  action_map :
+    - [0, 0]
+    - [1, 0]
+    - [-1, 0]
+    - [0, 1]
+    - [1, 1]
+    - [-1, 1]
+    - [1, -1]
+    - [0, -1]
+    - [-1, -1]
+
+# dict with key: observation name, val: normalization scale (sensor max value)
+sensors:
+  speedX : 1.0
+  speedZ : 1.0
+  speedY : 1.0
+  wheelSpinVel : 1.0
+  track : 200.0
+  angle: 3.1415
+  trackPos: 1.0
+
+# DO NOT CHANGE THIS
+# unless you know what you are doing
+driver :
+  module : "scr_server"
+  index : "0"
+  sid : "SCR"
+  port : 3001
+
+# environment and training related settings
+training:
+  # choosen track
+  # can be choosen betwen
+
+  # DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
+  #
+  # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
+  #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
+  #        e-track-5 a-speedway eroad e-track-4 g-track-1
+  #
+  # OVAL : b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  track:
+    - "g-track-1"
+
+  # choosen car
+  # can be choosen between
+  # 155-DTM       car1-trb3  p406        kc-conrero        kc-grifo   pw-corollawrc
+  # acura-nsx-sz  car2-trb1  kc-2000gt   kc-corvette-ttop  kc-gt40    pw-evoviwrc
+  # baja-bug      car3-trb1  kc-5300gt   kc-daytona        kc-gto     pw-focuswrc
+  # buggy         car4-trb1  kc-a110     kc-db4z           kc-p4      pw-imprezawrc
+  # car1-ow1      car5-trb1  kc-alfatz2  kc-dbs            pw-306wrc
+  # car1-stock1   car6-trb1  kc-bigh     kc-dino           p406
+  # car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
+  # car1-trb1     car8-trb1  kc-coda     kc-giulietta
+  car: "car1-trb1"
+
+  # manual throttle control
+  throttle : True
+  target_speed : 50
+  # manual not yet properly supported - leave it False
+  gear_change : False
+  # set number of steps before restarting the episode
+  # max 50 steps per second
+  max_steps : 1500
+  # total number of episodes
+  episodes : 10000
+  # number of passes on data
+  epochs : 6
+  # number of steps before each training
+  train_req : 0
+
+# resized image dimensions
+img_width : 160
+img_height : 120
+# frame stack size. set to 1 to disable frame stacking
+stack_depth: 1

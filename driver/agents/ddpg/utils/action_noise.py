@@ -4,7 +4,7 @@ class OUActionNoise(object):
     """
     Python implementation of Ornstein-Uhlenbeck process for random noise generation
     """
-    def __init__(self, mu, sigma = 0.15, theta = 0.1, dt = 2e-2, x_0 = None):
+    def __init__(self, mu, sigma = 0.07, theta = 0.05, dt = 2e-2, x_0 = None):
         self.theta = theta
         self.mu = mu
         self.sigma = np.ones(1) * sigma

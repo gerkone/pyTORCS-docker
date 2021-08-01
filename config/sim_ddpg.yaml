@@ -12,15 +12,21 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 # agent hyperparameters
 hyperparams:
   actor_lr : 0.00005
-  critic_lr : 0.0003
+  critic_lr : 0.0005
   batch_size : 32
   gamma : 0.99
-  guided_episode : 0
-  buf_size : 10000
+  guided_episode : 2
+  buf_size : 3000
   tau : 0.001
   fcl1_size : 200
-  fcl2_size : 400
+  fcl2_size : 300
   actor_update_delay : 2
+
+  save_dir : "driver/agents/ddpg/model"
+
+  pretrain : True
+  epochs : 6
+  dataset_dir : "driver/agents/berniw_IL/dataset"
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -53,7 +59,7 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "g-track-1"
+    - "street-1"
 
   # choosen car
   # can be choosen between
@@ -76,8 +82,8 @@ training:
   # max 50 steps per second
   max_steps : 1500
   # total number of episodes
-  episodes : 700
+  episodes : 3000
   # number of passes on data
-  epochs : 6
+  epochs : 4
   # number of steps before each training
-  train_req : 1000
+  train_req : 1500

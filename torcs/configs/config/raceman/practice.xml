@@ -23,7 +23,7 @@
   <section name="Tracks">
     <attnum name="maximum number" val="1"/>
     <section name="1">
-      <attstr name="name" val="ruudskogen"/>
+      <attstr name="name" val="street-1"/>
       <attstr name="category" val="road"/>
     </section>
 
@@ -60,8 +60,8 @@
     <attstr name="focused module" val="human"/>
     <attnum name="focused idx" val="1"/>
     <section name="1">
-      <attnum name="idx" val="1"/>
-      <attstr name="module" val="berniw"/>
+      <attnum name="idx" val="0"/>
+      <attstr name="module" val="scr_server"/>
     </section>
   </section>
 

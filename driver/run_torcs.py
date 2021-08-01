@@ -1,25 +1,24 @@
 import numpy as np
-import importlib.util
 import collections
 import time
 import os
 
 from torcs_client.torcs_comp import TorcsEnv
-from torcs_client.utils import SimpleLogger as log, resize_frame
-
-def agent_from_module(mod_name, run_path):
-    spec = importlib.util.spec_from_file_location(mod_name, run_path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return getattr(mod, mod_name)
+from torcs_client.utils import SimpleLogger as log, resize_frame, agent_from_module
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", driver = None,
         training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
-    max_steps = training["max_steps"]
-    n_epochs = training["epochs"]
-    episodes = training["episodes"]
-    train_req = training["train_req"]
+    max_steps = 1000
+    n_epochs = 5
+    episodes = 1000
+    train_req = 1000
+
+    if "max_steps" in training.keys(): max_steps = training["max_steps"]
+    if "epochs" in training.keys(): n_epochs = training["epochs"]
+    if "episodes" in training.keys(): episodes = training["episodes"]
+    if "train_req" in training.keys(): train_req = training["train_req"]
+
     track_list = [None]
     car = None
 
@@ -132,13 +131,12 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             if packet_loss > 350:
                 if verbose: log.alert("High packet loss: {:.2f}%. Running {:.2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
 
-
             # accumulate some training data before training
             if collected_steps >= train_req and not infinite:
                 has_remember = hasattr(agent, "remember") and callable(agent.remember)
                 if has_remember:
                     i = 0
-                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps - 1]:
+                    for (state, state_new, action, reward, terminal) in episode_buffer[0:collected_steps]:
                         i += 1
                         # store the transaction in the memory
                         agent.remember(state, state_new, action, reward, terminal)
@@ -151,7 +149,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
                     for e in range(n_epochs):
                         # adjust the weights according to the new transaction
                         loss = agent.learn(i)
-                        avg_loss.append(loss)
+                        if loss != None:
+                            avg_loss.append(loss)
                         if verbose: log.training("Epoch {}. ".format(e + 1), loss)
                     time_end = time.time()
                     log.info("Completed {:d} epochs. Duration {:.2f} ms. Average loss {:.3f}".format(

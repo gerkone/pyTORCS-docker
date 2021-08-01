@@ -34,26 +34,34 @@ class Simple(object):
                     self.dataset_time.append(time)
                     self.dataset_dist.append(dist)
 
-                    self.dataset_sensors.append(state["speedX"])
-                    self.dataset_sensors.append(state["speedY"])
-                    self.dataset_sensors.append(state["speedZ"])
-                    self.dataset_sensors.append(state["angle"])
-                    self.dataset_sensors.append(state["trackPos"])
-                    self.dataset_sensors.extend(state["wheelSpinVel"])
-                    self.dataset_sensors.extend(state["track"])
+                    state_array = np.zeros(28)
 
-                    self.dataset_action.append(state["steer"])
-                    self.dataset_action.append(state["throttle"])
+                    state_array[0] = state["speedX"]
+                    state_array[1] = state["speedY"]
+                    state_array[2] = state["speedZ"]
+                    state_array[3] = state["angle"]
+                    state_array[4] = state["trackPos"]
+                    state_array[5:9] = state["wheelSpinVel"]
+                    state_array[9:28] = state["track"]
+
+                    self.dataset_sensors.append(state_array)
+
+                    action = np.ones(2)
+
+                    action[0] = state["steer"]
+                    action[1] = state["throttle"]
+
+                    self.dataset_action.append(action)
 
             if state["distRaced"] > state["trackLen"] * self.laps:
                 dataset_file = h5py.File("dataset/berniw_clone_{}.h5".format(track.replace("-", "")), "a")
                 # telemetry
-                dataset_file.create_dataset("dist", data=self.dataset_dist)
-                dataset_file.create_dataset("time", data=self.dataset_time)
+                dataset_file.create_dataset("dist", data = self.dataset_dist)
+                dataset_file.create_dataset("time", data = self.dataset_time)
                 # state
-                dataset_file.create_dataset("sensors", data=self.dataset_sensors)
+                dataset_file.create_dataset("sensors", data = self.dataset_sensors)
                 # action
-                dataset_file.create_dataset("action", data=self.dataset_action)
+                dataset_file.create_dataset("action", data = self.dataset_action)
 
                 self.done = True
                 self.max_dist = 0

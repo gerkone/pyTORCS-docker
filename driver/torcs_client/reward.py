@@ -10,9 +10,9 @@ class BaseReward():
         self.base_reward = 1
 
     def _damage_reward(self, d, d_old):
-        return np.clip(d - d_old, 0, 100)
+        return -np.clip(d - d_old, 0, 100)
 
-    def _on_track_reward(track_pos):
+    def _on_track_reward(self, track_pos):
         on_track = np.abs(track_pos) < 1
         if on_track is True:
             return self.base_reward
@@ -22,32 +22,32 @@ class BaseReward():
     def get_reward(self, obs, obs_prev, action, action_prev, cur_step, terminal, track):
         return self.base_reward
 
-    def reset():
+    def reset(self):
         pass
 
 ######## Local reward ########
 class LocalReward(BaseReward):
     steering_threshold = 0.1
-    speed_w = 0.2
+    base_w = 0.0
+    speed_w = 0.0
     damage_w = 0.1
-    dist_w = 0.5
+    dist_w = 1.0
     range_w = 0.0
     angle_w = 0.5
     steer_w = 0.0
 
-    boring_speed = 3
+    wobble_w = 0.0
+
+    boring_speed = 0.5
 
     # TODO parametric
     rangefinder_angles = [-45, -19, -12, -7, -4, -2.5, -1.7, -1, -.5, 0, .5, 1, 1.7, 2.5, 4, 7, 12, 19, 45]
 
-    def __dist_reward(d, d_old):
-        if d > d_old:
-            return 1
-        return 0
+    def __dist_reward(self, d, d_old):
+        return np.clip(d - d_old, 0, 5)
 
     def __speed_reward(self, speed):
         return 10 ** (speed / 300)
-
 
     def __direction_rangefinder_reward(self, rangefinder):
         # get all max indices ( in case of long straight there will be multiple 200 m )
@@ -65,44 +65,71 @@ class LocalReward(BaseReward):
         a = np.cos(angle)
         if a <= 0:
             return -50
-        return np.clip(2 ** (1 / a), 0, 1)
+        return np.clip(a, 0, 1)
 
     def __straight_line_reward(self, steering, speed):
-        if np.abs(steering) < steering_threshold and speed > boring_speed:
+        if np.abs(steering) < self.steering_threshold and speed > self.boring_speed:
             return 1
         return 0
 
     def __wobbly_reward(self, steering, steering_old):
-        if np.abs(np.abs(steering) - np.abs(steering_old)) > steering_threshold:
+        if np.abs(np.abs(steering) - np.abs(steering_old)) > self.steering_threshold:
             return -0.1
         return 0
 
     def __breaking_reward(self, speed, brake):
         if speed <= self.boring_speed and brake > 0:
-            return -0.1
+            return -1
         return 0
 
     def __local_reward(self, obs, obs_prev, action, action_prev, cur_step, terminal):
         # punish for standing still
         if obs["speedX"] > self.boring_speed:
-            # basic reward
-            reward = self._on_track_reward(obs["trackPos"])
-            # speed reward
-            reward += self.__speed_reward(obs["speedX"]) * self.speed_w
-            # travel distance reward
-            reward += self.__dist_reward(obs["distRaced"], obs_prev["distRaced"]) * self.dist_w
-            # punishment for damage
-            reward -= self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
-            # direction dependent rewards
-            reward += self.__direction_rangefinder_reward(obs["track"]) * self.range_w
-            reward += self.__direction_angle_reward(obs["angle"]) * self.angle_w
-            # reward going straight, punish wobbling
-            reward += self.__straight_line_reward(action["steer"], obs["speedX"]) * self.steer_w
-            reward += self.__wobbly_reward(action["steer"], action_prev["steer"])
-            # punish breaking when going slow
-            reward += self.__breaking_reward(action["brake"], obs["speedX"])
+            try:
+                # basic reward
+                reward = self._on_track_reward(obs["trackPos"]) * self.base_w
+            except Exception:
+                reward = 0
+            try:
+                # speed reward
+                reward += self.__speed_reward(obs["speedX"]) * self.speed_w
+            except Exception:
+                pass
+            try:
+                reward += self.__dist_reward(obs["distRaced"], obs_prev["distRaced"]) * self.dist_w
+                # travel distance reward
+            except Exception:
+                pass
+            try:
+                # punishment for damage
+                reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
+            except Exception:
+                pass
+            try:
+                # direction dependent rewards
+                reward += self.__direction_rangefinder_reward(obs["track"]) * self.range_w
+            except Exception:
+                pass
+            try:
+                reward += self.__direction_angle_reward(obs["angle"]) * self.angle_w
+            except Exception:
+                pass
+            try:
+                # reward going straight, punish wobbling
+                reward += self.__straight_line_reward(action["steer"], obs["speedX"]) * self.steer_w
+            except Exception:
+                pass
+            try:
+                reward += self.__wobbly_reward(action["steer"], action_prev["steer"]) * self.wobble_w
+            except Exception:
+                pass
         else:
             reward = -1
+            try:
+                # punish breaking when going slow
+                reward += self.__breaking_reward(action["brake"], obs["speedX"])
+            except Exception:
+                pass
         return reward
 
     # overridden
@@ -158,7 +185,7 @@ class TimeReward(BaseReward):
             # if still in sector nothing
             reward = 0
 
-        reward -= self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
+        reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
 
         # punish for not moving forward
         if terminal and self.curr_sector == 0:

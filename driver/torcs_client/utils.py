@@ -4,6 +4,7 @@ import os
 import re
 import numpy as np
 import cv2
+import importlib.util
 
 class SimpleLogger:
     HEADER = "\033[95m"
@@ -18,21 +19,36 @@ class SimpleLogger:
 
     @staticmethod
     def info(str):
+        if str == None:
+            str = ""
         print(SimpleLogger.OKBLUE + "[INFO]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def alert(str):
+        if str == None:
+            str = ""
         print(SimpleLogger.WARNING + "[WARN]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def error(str):
+        if str == None:
+            str = ""
         print(SimpleLogger.FAIL + "[ERR]: " + str + SimpleLogger.ENDC)
     @staticmethod
     def training(str, loss):
+        if str == None or loss == None:
+            str = ""
+            loss = 0.0
         print("--> " + str + SimpleLogger.OKGREEN + "Loss {:.3f}".format(loss) + SimpleLogger.ENDC)
     @staticmethod
     def separator(columns):
         print()
         print("-" * int(columns))
         print()
+
+def agent_from_module(mod_name, run_path):
+    spec = importlib.util.spec_from_file_location(mod_name, run_path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return getattr(mod, mod_name)
 
 def start_container(image_name, verbose, port):
     # check if the container is already up
@@ -121,6 +137,20 @@ def change_track(race_type, track, tracks_categories):
     with open(torcs_race_xml, "wb") as doc:
         doc.write(b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         doc.write(etree.tostring(config, pretty_print = True))
+
+def get_track(race_type):
+    from lxml import etree
+    track = ""
+    filename = race_type + ".xml"
+    torcs_race_xml = os.path.join(os.getcwd(), "torcs/configs/config/raceman", filename)
+    config = etree.parse(torcs_race_xml)
+    for section in config.iter("section"):
+        if section.get("name") == "Tracks":
+            for attr in section.iter("attstr"):
+                if attr.get("name") == "name":
+                    track = attr.get("val")
+
+    return track
 
 def change_car(race_type, car):
     from lxml import etree

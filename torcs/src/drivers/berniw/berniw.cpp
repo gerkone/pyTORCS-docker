@@ -208,7 +208,6 @@ static void initTrack(int index, tTrack* track, void *carHandle, void **carParmH
 			// Loop until the client identifies correctly
 			bool identified=false;
 			while (!identified)	{
-				//std::cout << "!identified" << "\n";
 				clientAddressLength[index] = sizeof(clientAddress[index]);
 				// Set line to all zeroes
 				memset(line, 0x0, UDP_MSGLEN);
@@ -221,6 +220,12 @@ static void initTrack(int index, tTrack* track, void *carHandle, void **carParmH
 				if (strncmp(line, UDP_ID, 3)==0)
 				{
 					std::string initStr(line);
+          if (SimpleParser::parse(initStr,std::string("init"),trackSensAngle[index],19)==false)
+          {
+            for (int i = 0; i < 19; ++i) {
+              trackSensAngle[index][i] = -90 + 10.0*i;
+            }
+          }
 					sprintf(line,"***identified***");
 					if (sendto(listenSocket[index], line, strlen(line) + 1, 0, (struct sockaddr *) &clientAddress[index], sizeof(clientAddress[index])) < 0) {
 						std::cerr << "Error: cannot send identification message";

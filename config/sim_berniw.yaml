@@ -52,7 +52,7 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    # - g-track-1
+    - g-track-1
     # - a-speedway
     # - corkscrew
     # - wheel-1
@@ -64,27 +64,23 @@ training:
     # - alpine-2
     # - e-track-6
     # - g-track-3
-    - ruudskogen
-    - brondehach
-    - e-track-2
-    - forza
-    - spring
-    - wheel-2
-    - aalborg
-    - e-track-1
-    - e-track-5
-    - e-track-1
-    - e-track-5
-    - eroad
-    - e-track-4
-    - a-speedway
-    - b-speedway
-    - e-speedway
-    - g-speedway
-    - michigan
-    - c-speedway
-    - d-speedway
-    - f-speedway
+    # - ruudskogen
+    # - brondehach
+    # - e-track-2
+    # - forza
+    # - spring
+    # - wheel-2
+    # - aalborg
+    # - e-track-1
+    # - eroad
+    # - e-track-4
+    # - a-speedway
+    # - b-speedway
+    # - e-speedway
+    # - g-speedway
+    # - michigan
+    # - c-speedway
+    # - f-speedway
 
   # choosen car
   # can be choosen between

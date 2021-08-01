@@ -9,7 +9,7 @@ import sys, signal
 from torcs_client.torcs_client import Client
 from torcs_client.reward import TimeReward, LocalReward
 from torcs_client.terminator import custom_terminal
-from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track, change_car, change_driver
+from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track, change_car, change_driver, get_track
 
 class TorcsEnv:
     def __init__(self, throttle = False, gear_change = False, car = "car1-trb1",  state_filter = None, target_speed = 50, sid = "SCR", port = 3001,
@@ -41,9 +41,8 @@ class TorcsEnv:
 
         # reward class
         # TODO parmametric change
-        # locrw = LocalReward()
-        # reward = LocalReward.local_reward(obs, obs_prev, action, action_prev, cur_step, terminal)
-        self.rewarder = TimeReward()
+        self.rewarder = LocalReward()
+        # self.rewarder = TimeReward()
 
         # TODO support other races
         self.race_type = "practice"
@@ -106,6 +105,8 @@ class TorcsEnv:
 
         self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
 
+        self.track = get_track(self.race_type)
+
         change_car(self.race_type, car)
         if self.verbose: log.info("Car: {}".format(car))
 
@@ -159,9 +160,8 @@ class TorcsEnv:
             self.action_prev = copy.deepcopy(action)
 
         ################### Termination ###################
-        episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
         try:
-            pass
+            episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
         except Exception:
             episode_terminate = False
 

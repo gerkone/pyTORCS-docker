@@ -1,9 +1,9 @@
 import numpy as np
 
 terminal_judge_start = 150
-boring_speed = 3 # km/h, episode terminates if car is running slower than this limit
-max_damage = 3000
-out_max = 200
+boring_speed = 0.5 # km/h, episode terminates if car is running slower than this limit
+max_damage = 300
+out_max = 0
 
 def custom_terminal(obs, curr_step):
 
@@ -36,7 +36,10 @@ def custom_terminal(obs, curr_step):
         # Episode is terminated if the agent runs backward
         terminal = True
 
-    if obs["distRaced"] > obs["trackLen"] * 2 + 10:
-        terminal = True
+    try:
+        if obs["distRaced"] > obs["trackLen"] * 2 + 10:
+            terminal = True
+    except Exception:
+        pass
 
     return terminal
