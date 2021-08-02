@@ -90,14 +90,9 @@ For more details on how the action and state space work check [this](https://git
 
 For more details on the parameters and on how to use your test code and custom algorithm check [this](https://github.com/gerkone/pyTORCS-docker/blob/master/driver/torcs_client/README.md).
 
-If you don't want to install konsole you can run it with your shell of choice with
+You can run pytorcs in a detached shell with your emulator of choice with
 ```
-python pytorcs.py --console <terminator|xterm|gnome-terminal...>
-```
-
-Or you can choose not to detach the process with
-```
-python pytorcs.py --noconsole
+python pytorcs.py --console <konsole|terminator|xterm|gnome-terminal...>
 ```
 
 If you want to run the TORCS container manually you can use
