@@ -46,8 +46,9 @@ class LocalReward(BaseReward):
     def __dist_reward(self, d, d_old):
         return np.clip(d - d_old, -1, 5)
 
-    def __speed_reward(self, speed):
-        return speed / 300
+    def __speed_reward(self, speed, angle):
+        norm_speed = speed / 300
+        return norm_speed * np.cos(angle)
 
     def __direction_rangefinder_reward(self, rangefinder):
         # get all max indices ( in case of long straight there will be multiple 200 m )

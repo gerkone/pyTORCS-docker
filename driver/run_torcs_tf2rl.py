@@ -59,6 +59,7 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     args["test_interval"] = 20480
     args["save_summary_interval"] = 20480
+    args["save_model_interval"] = 20480
     args["max_steps"] = int(1e7)
 
     # TODO parametric algorithm

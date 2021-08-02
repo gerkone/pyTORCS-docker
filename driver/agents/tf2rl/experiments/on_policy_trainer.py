@@ -95,15 +95,15 @@ class OnPolicyTrainer(Trainer):
                     episode_return = 0
                     episode_start_time = time.time()
 
-                if total_steps % self._test_interval == 0:
-                    avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
-                    self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
-                        total_steps, avg_test_return, self._test_episodes))
-                    tf.summary.scalar(
-                        name="Common/average_test_return", data=avg_test_return)
-                    tf.summary.scalar(
-                        name="Common/average_test_episode_length", data=avg_test_steps)
-                    self.writer.flush()
+                # if total_steps % self._test_interval == 0:
+                #     avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
+                #     self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
+                #         total_steps, avg_test_return, self._test_episodes))
+                #     tf.summary.scalar(
+                #         name="Common/average_test_return", data=avg_test_return)
+                #     tf.summary.scalar(
+                #         name="Common/average_test_episode_length", data=avg_test_steps)
+                #     self.writer.flush()
 
                 if total_steps % self._save_model_interval == 0:
                     self.checkpoint_manager.save()
