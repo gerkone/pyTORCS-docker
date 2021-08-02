@@ -7,7 +7,7 @@ from torcs_client.torcs_comp import TorcsEnv
 from torcs_client.utils import SimpleLogger as log, resize_frame, agent_from_module
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", driver = None,
-        training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
+        privileged = False, training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
     max_steps = 1000
     n_epochs = 5
@@ -30,20 +30,20 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     if driver != None:
         sid = driver["sid"]
-        port = driver["port"]
+        ports = driver["ports"]
         driver_id = driver["index"]
         driver_module = driver["module"]
     else:
-        sid = None
-        port = None
-        driver_id = None
-        driver_module = None
+        sid = "SCR"
+        port = [3001]
+        driver_id = "0"
+        driver_module = "scr_server"
 
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], car = car,
             verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], sid = sid,
-            port = port, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
-            img_width = img_width, img_height = img_height)
+            ports = ports, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
+            privileged = privileged, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input

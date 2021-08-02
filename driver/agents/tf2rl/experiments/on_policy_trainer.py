@@ -123,7 +123,7 @@ class OnPolicyTrainer(Trainer):
 
             actor_loss = 0
             critic_loss = 0
-            
+
             with tf.summary.record_if(total_steps % self._save_summary_interval == 0):
                 for _ in range(self._policy.n_epoch):
                     samples = self.replay_buffer._encode_sample(

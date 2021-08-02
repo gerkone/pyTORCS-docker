@@ -37,7 +37,8 @@ driver :
   module : "berniw"
   index : "1"
   sid : "TEL"
-  port : 3001
+  ports :
+    - 3001
 
 # environment and training related settings
 training:

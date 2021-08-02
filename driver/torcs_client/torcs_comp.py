@@ -12,8 +12,8 @@ from torcs_client.terminator import custom_terminal
 from torcs_client.utils import SimpleLogger as log, start_container, reset_torcs, kill_torcs, kill_container, change_track, change_car, change_driver, get_track
 
 class TorcsEnv:
-    def __init__(self, throttle = False, gear_change = False, car = "car1-trb1",  state_filter = None, target_speed = 50, sid = "SCR", port = 3001,
-                driver_id = "0", driver_module = "scr_server", img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
+    def __init__(self, throttle = False, gear_change = False, car = "car1-trb1",  state_filter = None, target_speed = 50, sid = "SCR", ports = [3001],
+                privileged = False, driver_id = "0", driver_module = "scr_server", img_width = 640, img_height = 480, verbose = False, image_name = "gerkone/torcs"):
 
         self.throttle = throttle
         self.gear_change = gear_change
@@ -25,11 +25,11 @@ class TorcsEnv:
 
         self.sid = sid
 
-        self.port = port
+        self.ports = ports
 
         if self.image_name != "0":
             # start torcs container
-            self.container_id = start_container(self.image_name, self.verbose, self.port)
+            self.container_id = start_container(self.image_name, self.verbose, self.ports, privileged)
         else:
             self.container_id = "0"
 
@@ -69,41 +69,8 @@ class TorcsEnv:
             self.state_filter["wheelSpinVel"] = 1.0
             self.state_filter["rpm"] = 10000
 
-        if throttle is False:
-            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
-        else:
-            self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
 
-        high = np.array([])
-        low = np.array([])
-        if "angle" in self.state_filter:
-            high = np.append(high, 1.0)
-            low = np.append(low, -1.0)
-        if "rpm" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, 0.0)
-        if "speedX" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, -np.inf)
-        if "speedY" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, -np.inf)
-        if "speedZ" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, -np.inf)
-        if "track" in self.state_filter:
-            # the track rangefinder is made of 19 separate values
-            high = np.append(high, np.ones(19))
-            low = np.append(low, np.zeros(19))
-        if "trackPos" in self.state_filter:
-            high = np.append(high, np.inf)
-            low = np.append(low, -np.inf)
-        if "wheelSpinVel" in self.state_filter:
-            # one value each wheel
-            high = np.append(high, np.array([np.inf, np.inf, np.inf, np.inf]))
-            low = np.append(low, np.zeros(4))
-
-        self.observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
+        self.observation_space, self.action_space = self.build_spaces(self.state_filter, throttle)
 
         self.track = get_track(self.race_type)
 
@@ -119,6 +86,48 @@ class TorcsEnv:
             sys.exit(0)
 
         signal.signal(signal.SIGINT, kill_torcs_and_close)
+
+    def build_spaces(self, state_filter, throttle):
+        # state space
+        high = np.array([])
+        low = np.array([])
+        if "angle" in state_filter:
+            high = np.append(high, 1.0)
+            low = np.append(low, -1.0)
+        if "rpm" in state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, 0.0)
+        if "speedX" in state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, -np.inf)
+        if "speedY" in state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, -np.inf)
+        if "speedZ" in state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, -np.inf)
+        if "track" in state_filter:
+            # the track rangefinder is made of 19 separate values
+            high = np.append(high, np.ones(19))
+            low = np.append(low, np.zeros(19))
+        if "trackPos" in state_filter:
+            high = np.append(high, np.inf)
+            low = np.append(low, -np.inf)
+        if "wheelSpinVel" in state_filter:
+            # one value each wheel
+            high = np.append(high, np.array([np.inf, np.inf, np.inf, np.inf]))
+            low = np.append(low, np.zeros(4))
+
+        observation_space = spaces.Box(low = np.float32(low), high = np.float32(high), dtype = np.float32)
+
+        # action space
+
+        if throttle is False:
+            action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
+        else:
+            action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
+
+        return observation_space, action_space
 
     def step(self, u):
         # get the state from torcs - simulation step
@@ -201,7 +210,8 @@ class TorcsEnv:
         if first_run == True:
             reset_torcs(self.container_id, vision, False)
             # create new torcs client - after first torcs launch
-            self.client = Client(port = self.port, verbose = self.verbose, sid = self.sid, container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
+            # TODO multiple port support
+            self.client = Client(port = self.ports[0], verbose = self.verbose, sid = self.sid, container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
 
         else:
             # restart torcs without closing - tell scr_server to restart race

@@ -8,7 +8,7 @@ from torcs_client.torcs_comp import TorcsEnv
 from torcs_client.utils import agent_from_module
 
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", driver = None,
-        training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
+        privileged = False, training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
     max_steps = 1000
     n_epochs = 5
@@ -31,25 +31,25 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     if driver != None:
         sid = driver["sid"]
-        port = driver["port"]
+        ports = driver["ports"]
         driver_id = driver["index"]
         driver_module = driver["module"]
     else:
-        sid = None
-        port = None
-        driver_id = None
-        driver_module = None
+        sid = "SCR"
+        ports = [3001]
+        driver_id = "0"
+        driver_module = "scr_server"
 
     # Instantiate the environment
     env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], car = car,
             verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], sid = sid,
-            port = port, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
-            img_width = img_width, img_height = img_height)
+            ports = ports, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
+            privileged = privileged, img_width = img_width, img_height = img_height)
 
     test_env = TorcsEnv(throttle = training["throttle"], gear_change = training["gear_change"], car = car,
             verbose = verbose, state_filter = sensors, target_speed = training["target_speed"], sid = sid,
-            port = port, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
-            img_width = img_width, img_height = img_height)
+            ports = ports, driver_id = driver_id, driver_module = driver_module, image_name = image_name,
+            privileged = privileged, img_width = img_width, img_height = img_height)
 
     action_dims = [env.action_space.shape[0]]
     state_dims = [env.observation_space.shape[0]]  # sensors input
@@ -59,44 +59,47 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     args["test_interval"] = 20480
     args["save_summary_interval"] = 20480
-    args["max_steps"] = int(5000)
+    args["max_steps"] = int(1e7)
 
     # TODO parametric algorithm
     # agent_class = agent_from_module(algo_name, algo_path)
-
-    # agent = PPO(
-    #     state_shape = env.observation_space.shape,
-    #     action_dim = get_act_dim(env.action_space),
-    #     is_discrete = False,
-    #     max_action = action_boundaries[1],
-    #     batch_size = hyperparams["batch_size"],
-    #     actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-    #     critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-    #     n_epoch = hyperparams["epochs"],
-    #     lr_actor = hyperparams["actor_lr"],
-    #     lr_critic = hyperparams["critic_lr"],
-    #     hidden_activation_actor = "tanh",
-    #     hidden_activation_critic = "tanh",
-    #     discount = hyperparams["gamma"],
-    #     lam = hyperparams["lam"],
-    #     entropy_coef = hyperparams["c_2"],
-    #     horizon = hyperparams["horizon"]
-    # )
-
-    agent = DDPG(
+    agent = PPO(
         state_shape = env.observation_space.shape,
         action_dim = env.action_space.high.size,
-        memory_capacity = hyperparams["buf_size"],
+        is_discrete = False,
         max_action = env.action_space.high[0],
         batch_size = hyperparams["batch_size"],
         actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
         critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+        n_epoch = n_epochs,
         lr_actor = hyperparams["actor_lr"],
-        tau = hyperparams["tau"],
         lr_critic = hyperparams["critic_lr"],
-        n_warmup = hyperparams["n_warmup"],
-        update_interval = hyperparams["update_interval"])
+        hidden_activation_actor = "tanh",
+        hidden_activation_critic = "tanh",
+        discount = hyperparams["gamma"],
+        lam = hyperparams["lam"],
+        vfunc_coef = hyperparams["c_1"],
+        entropy_coef = hyperparams["c_2"],
+        horizon = hyperparams["horizon"]
+    )
 
-    trainer = Trainer(agent, env, args, test_env=test_env)
+    # agent = DDPG(
+    #     state_shape = env.observation_space.shape,
+    #     action_dim = env.action_space.high.size,
+    #     memory_capacity = hyperparams["buf_size"],
+    #     max_action = env.action_space.high[0],
+    #     batch_size = hyperparams["batch_size"],
+    #     actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+    #     critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+    #     lr_actor = hyperparams["actor_lr"],
+    #     tau = hyperparams["tau"],
+    #     lr_critic = hyperparams["critic_lr"],
+    #     n_warmup = hyperparams["n_warmup"],
+    #     update_interval = hyperparams["update_interval"])
+
+    # trainer = Trainer(agent, env, args, test_env=test_env)
+    trainer = OnPolicyTrainer(agent, env, args, test_env=test_env)
 
     trainer()
+
+    input("All done")

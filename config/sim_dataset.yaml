@@ -37,7 +37,8 @@ driver :
   module : "scr_server"
   index : "0"
   sid : "SCR"
-  port : 3001
+  ports :
+    - 3001
 
 # environment and training related settings
 training:

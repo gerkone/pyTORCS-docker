@@ -29,11 +29,11 @@ class BaseReward():
 class LocalReward(BaseReward):
     steering_threshold = 0.1
     base_w = 0.0
-    speed_w = 0.0
-    damage_w = 0.1
-    dist_w = 1.0
+    speed_w = 1.0
+    damage_w = 0.0
+    dist_w = 0.0
     range_w = 0.0
-    angle_w = 0.1
+    angle_w = 0.0
     steer_w = 0.0
 
     wobble_w = 0.0
@@ -47,7 +47,7 @@ class LocalReward(BaseReward):
         return np.clip(d - d_old, -1, 5)
 
     def __speed_reward(self, speed):
-        return 10 ** (speed / 300)
+        return speed / 300
 
     def __direction_rangefinder_reward(self, rangefinder):
         # get all max indices ( in case of long straight there will be multiple 200 m )
@@ -122,7 +122,7 @@ class LocalReward(BaseReward):
             reward += self.__wobbly_reward(action["steer"], action_prev["steer"]) * self.wobble_w
         except Exception:
             pass
-        if obs["speedX"] > self.boring_speed:
+        if obs["speedX"] < self.boring_speed:
             reward -= 1
         try:
             # punish breaking when going slow

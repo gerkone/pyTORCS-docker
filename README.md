@@ -6,7 +6,7 @@
   * [Envoronment](#environment)
   * [Troubleshooting and known issues](#troubleshooting-and-known-issues)
   * [References](#references)
- 
+
 ## Features
 * OpenAI gym style api
 * supports RGB vision and standard _scr_server_ [sensors](https://github.com/gerkone/pyTORCS-docker/tree/master/driver#sensor-description)
@@ -108,10 +108,19 @@ nvidia-docker run --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=unix
 More info on the environment and its usages can be found on [here](https://github.com/gerkone/pyTORCS-docker/tree/master/driver/torcs_client).
 
 ## Troubleshooting and known issues
-If you get the error "_freeglut (/usr/local/lib/torcs/torcs-bin): failed to open display ':0'_" OR the torcs window does not pop up after running you might need to allow access to your X display server by using
-```
-xhost local:root
-```
+  - __The TORCS window does not pop up__ (OR error "_freeglut (/usr/local/lib/torcs/torcs-bin): failed to open display ':0'_").
+
+  Allow access to your X display server by using
+  ```
+  xhost local:root
+  ```
+
+- __Failed to initialize NVML: Unknown Error__
+
+  Docker can't access the GPU, usually due to permissions. Run pytorcs with ```--privileged```.
+
+  Common when using the _nvidia-docker_ AUR package. For more info check [this](https://bbs.archlinux.org/viewtopic.php?id=266915) discussion.
+
 
 ## References
 This torcs is a modified version of 1.3.7 taken from [here](https://github.com/fmirus/torcs-1.3.7).

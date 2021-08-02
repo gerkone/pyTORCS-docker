@@ -50,7 +50,7 @@ def agent_from_module(mod_name, run_path):
     spec.loader.exec_module(mod)
     return getattr(mod, mod_name)
 
-def start_container(image_name, verbose, port):
+def start_container(image_name, verbose, ports, privileged):
     # check if the container is already up
     container_id = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=" + image_name]).decode("utf-8")
     if len(container_id) == 0:
@@ -61,18 +61,20 @@ def start_container(image_name, verbose, port):
         scr_config_dir = os.path.join(os.getcwd(), "torcs/configs/drivers/scr_server/scr_server.xml")
         scr_car_dir = os.path.join(os.getcwd(), "torcs/configs/drivers/scr_server/0")
         if verbose: SimpleLogger.info("Starting TORCS container...")
-        subprocess.Popen(["nvidia-docker", "run", "--ipc=host",
+        docker_command = []
+        docker_command.extend(["nvidia-docker", "run", "--ipc=host",
             "-v", "/tmp/.X11-unix:/tmp/.X11-unix:ro",
             "-v", "{}:/usr/local/share/games/torcs/config:ro".format(torcs_config_dir),
             "-v", "{}:/usr/local/share/games/torcs/drivers/scr_server/scr_server.xml:ro".format(scr_config_dir),
             "-v", "{}:/usr/local/share/games/torcs/drivers/scr_server/0:ro".format(scr_car_dir),
-            # "-v", "{}:/root/.torcs/config:ro".format(torcs_config_dir),
-            # "-v", "{}:/root/.torcs/drivers/scr_server/scr_server.xml:ro".format(scr_config_dir),
-            # "-v", "{}:/root/.torcs/drivers/scr_server/0:ro".format(scr_car_dir),
-            "-e", "DISPLAY=" + display,
-            "-p", "{p}:{p}/udp".format(p = port),
-            "--rm", "-t",
-            "-d", image_name], stdout=subprocess.DEVNULL)
+            "-e", "DISPLAY=" + display])
+        for port in ports:
+            docker_command.extend(["-p", "{p}:{p}/udp".format(p = port)])
+        if privileged:
+            docker_command.append("--privileged")
+        docker_command.extend(["--rm", "-t", "-d", image_name])
+
+        subprocess.Popen(docker_command, stdout=subprocess.DEVNULL)
         time.sleep(0.5)
         while len(container_id) == 0:
             time.sleep(0.5)

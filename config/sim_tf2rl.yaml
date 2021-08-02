@@ -11,26 +11,23 @@ algo_path: "driver/agents/ppo/ppo_wrapper.py"
 
 # agent hyperparameters
 hyperparams:
+  epochs : 20
+  lam : 0.95
+  c_1 : 0.5
+  c_2 : 0.001
+  horizon : 2048
+
   actor_lr : 0.00005
   critic_lr : 0.0005
   batch_size : 64
-  buf_size : 15000
-  epochs : 10
-  horizon : 2048
-
-  lam : 0.95
-  tau : 0.005
+  fcl1_size : 300
+  fcl2_size : 400
   gamma : 0.99
 
-  c_1 : 0.5
-  c_2 : 0.001
-
-  n_warmup : 7500
+  tau : 0.005
+  buf_size : 15000
+  n_warmup : 2000
   update_interval : 2
-
-  fcl1_size : 200
-  fcl2_size : 300
-  actor_update_delay : 2
 
   save_dir : "driver/agents/ppo/model"
 
@@ -51,7 +48,8 @@ driver :
   module : "scr_server"
   index : "0"
   sid : "SCR"
-  port : 3001
+  ports :
+    - 3001
 # environment and training related settings
 training:
   # choosen track

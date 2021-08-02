@@ -13,6 +13,8 @@ from agents.tf2rl.misc.prepare_output_dir import prepare_output_dir
 from agents.tf2rl.misc.initialize_logger import initialize_logger
 from agents.tf2rl.envs.normalizer import EmpiricalNormalizer
 
+from torcs_client.reward import LocalReward
+
 
 if tf.config.experimental.list_physical_devices('GPU'):
     for cur_device in tf.config.experimental.list_physical_devices("GPU"):

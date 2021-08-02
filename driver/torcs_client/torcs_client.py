@@ -242,7 +242,7 @@ class DriverAction():
 
     def __repr__(self):
         self.clip_to_limits()
-        out= str()
+        out = str()
         for k in self.d:
             out+= "("+k+" "
             v= self.d[k]
