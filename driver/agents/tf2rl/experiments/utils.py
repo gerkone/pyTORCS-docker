@@ -1,19 +1,52 @@
 import os
-
+import h5py
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
 
+def load_expert_traj(dataset_dir, max_steps = 2500):
+    dataset_files = []
+
+    for file in os.listdir(dataset_dir):
+        if ".h5" in file:
+            dataset_files.append(os.path.join(dataset_dir, file))
+
+    curr_ep = 0
+
+    expert_traj = {}
+    expert_traj["state"] = []
+    expert_traj["state_new"] = []
+    expert_traj["action"] = []
+
+    while curr_ep < len(dataset_files):
+        ep_file = dataset_files[curr_ep]
+
+        print("Loading expert trjectory: {} - {}/{}".format(ep_file, curr_ep + 1, len(dataset_files)))
+
+        dataset = h5py.File(ep_file, "r")
+
+        action = np.array(dataset.get("action"))
+        state = np.array(dataset.get("sensors"))
+
+        for el in range(min(max_steps, len(action) - 1)):
+            next = el + 1
+
+            expert_traj["state"].append(state[el])
+            expert_traj["action"].append(action[el])
+            expert_traj["state_new"].append(state[next])
+
+        curr_ep += 1
+
+    expert_traj["state"] = np.array(expert_traj["state"])
+    expert_traj["state_new"] = np.array(expert_traj["state_new"])
+    expert_traj["action"] = np.array(expert_traj["action"])
+
+    return expert_traj
+
 def save_path(samples, filename):
     joblib.dump(samples, filename, compress=3)
-
-
-def restore_latest_n_traj(dirname, n_path=10, max_steps=None):
-    assert os.path.isdir(dirname)
-    filenames = get_filenames(dirname, n_path)
-    return load_trajectories(filenames, None)
 
 
 def get_filenames(dirname, n_path=None):

@@ -2,6 +2,8 @@ FROM nvidia/cudagl:11.4.0-base
 
 USER root
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # build stuff
 RUN apt-get update -y && apt-get install -y --no-install-recommends make g++ gdb
 

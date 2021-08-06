@@ -1,5 +1,5 @@
 # docker image name
-image_name : "gerkone/torcs"
+image_name : "0"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
@@ -20,8 +20,8 @@ hyperparams:
   actor_lr : 0.00005
   critic_lr : 0.0005
   batch_size : 64
-  fcl1_size : 300
-  fcl2_size : 400
+  fcl1_size : 600
+  fcl2_size : 600
   gamma : 0.99
 
   tau : 0.005
@@ -29,7 +29,7 @@ hyperparams:
   n_warmup : 2000
   update_interval : 2
 
-  save_dir : "driver/agents/ppo/model"
+  dataset_dir : "dataset/"
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
