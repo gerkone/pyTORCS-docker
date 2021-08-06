@@ -123,13 +123,15 @@ class LocalReward(BaseReward):
             reward += self.__wobbly_reward(action["steer"], action_prev["steer"]) * self.wobble_w
         except Exception:
             pass
-        if obs["speedX"] < self.boring_speed:
-            reward -= 1
         try:
             # punish breaking when going slow
             reward += self.__breaking_reward(action["brake"], obs["speedX"])
         except Exception:
             pass
+
+        if obs["speedX"] < self.boring_speed:
+            reward -= 1
+
         return reward
 
     # overridden

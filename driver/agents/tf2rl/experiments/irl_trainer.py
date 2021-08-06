@@ -6,6 +6,21 @@ import tensorflow as tf
 from agents.tf2rl.misc.get_replay_buffer import get_replay_buffer
 from agents.tf2rl.experiments.trainer import Trainer
 
+def unpack_state(state):
+    """
+    state dict to state array if fixed order
+    """
+    state_array = np.zeros(28)
+
+    state_array[0] = state["speedX"]
+    state_array[1] = state["speedY"]
+    state_array[2] = state["speedZ"]
+    state_array[3] = state["angle"]
+    state_array[4] = state["trackPos"]
+    state_array[5:9] = state["wheelSpinVel"]
+    state_array[9:28] = state["track"]
+
+    return state_array
 
 class IRLTrainer(Trainer):
     def __init__(
@@ -19,7 +34,6 @@ class IRLTrainer(Trainer):
             expert_act,
             test_env=None):
         self._irl = irl
-        args.dir_suffix = self._irl.policy_name + args.dir_suffix
         super().__init__(policy, env, args, test_env)
         # TODO: Add assertion to check dimention of expert demos and current policy, env is the same
         self._expert_obs = expert_obs
@@ -41,14 +55,15 @@ class IRLTrainer(Trainer):
             self._use_nstep_rb, self._n_step)
 
         obs = self._env.reset()
-
+        obs = unpack_state(obs)
         while total_steps < self._max_steps:
             if total_steps < self._policy.n_warmup:
                 action = self._env.action_space.sample()
             else:
                 action = self._policy.get_action(obs)
 
-            next_obs, reward, done, _ = self._env.step(action)
+            next_obs, reward, done = self._env.step(action)
+            next_obs = unpack_state(next_obs)
             if self._show_progress:
                 self._env.render()
             episode_steps += 1
@@ -67,7 +82,7 @@ class IRLTrainer(Trainer):
             if done or episode_steps == self._episode_max_steps:
                 replay_buffer.on_episode_end()
                 obs = self._env.reset()
-
+                obs = unpack_state(obs)
                 n_episode += 1
                 fps = episode_steps / (time.perf_counter() - episode_start_time)
                 self.logger.info("Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} FPS: {4:5.2f}".format(
