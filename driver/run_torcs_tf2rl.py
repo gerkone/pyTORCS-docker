@@ -1,6 +1,7 @@
 from agents.tf2rl.algos.ppo import PPO
 from agents.tf2rl.algos.ddpg import DDPG
 from agents.tf2rl.algos.gail import GAIL
+from agents.tf2rl.experiments.on_policy_irl_trainer import OnPolicyIRLTrainer
 from agents.tf2rl.experiments.on_policy_trainer import OnPolicyTrainer
 from agents.tf2rl.experiments.trainer import Trainer
 from agents.tf2rl.experiments.irl_trainer import IRLTrainer
@@ -70,52 +71,54 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     # TODO parametric algorithm
     # agent_class = agent_from_module(algo_name, algo_path)
     #
-    # agent = PPO(
-    #     state_shape = env.observation_space.shape,
-    #     action_dim = env.action_space.high.size,
-    #     is_discrete = False,
-    #     max_action = env.action_space.high[0],
-    #     batch_size = hyperparams["batch_size"],
-    #     actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-    #     critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
-    #     n_epoch = n_epochs,
-    #     lr_actor = hyperparams["actor_lr"],
-    #     lr_critic = hyperparams["critic_lr"],
-    #     hidden_activation_actor = "tanh",
-    #     hidden_activation_critic = "tanh",
-    #     discount = hyperparams["gamma"],
-    #     lam = hyperparams["lam"],
-    #     vfunc_coef = hyperparams["c_1"],
-    #     entropy_coef = hyperparams["c_2"],
-    #     horizon = hyperparams["horizon"]
-    # )
-
-    agent = DDPG(
+    agent = PPO(
         state_shape = env.observation_space.shape,
         action_dim = env.action_space.high.size,
-        memory_capacity = hyperparams["buf_size"],
+        is_discrete = False,
         max_action = env.action_space.high[0],
         batch_size = hyperparams["batch_size"],
         actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
         critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+        n_epoch = n_epochs,
         lr_actor = hyperparams["actor_lr"],
-        tau = hyperparams["tau"],
         lr_critic = hyperparams["critic_lr"],
-        n_warmup = hyperparams["n_warmup"],
-        update_interval = hyperparams["update_interval"])
+        hidden_activation_actor = "tanh",
+        hidden_activation_critic = "tanh",
+        discount = hyperparams["gamma"],
+        lam = hyperparams["lam"],
+        vfunc_coef = hyperparams["c_1"],
+        entropy_coef = hyperparams["c_2"],
+        horizon = hyperparams["horizon"]
+    )
+
+    # agent = DDPG(
+    #     state_shape = env.observation_space.shape,
+    #     action_dim = env.action_space.high.size,
+    #     memory_capacity = hyperparams["buf_size"],
+    #     max_action = env.action_space.high[0],
+    #     batch_size = hyperparams["batch_size"],
+    #     actor_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+    #     critic_units = (hyperparams["fcl1_size"], hyperparams["fcl2_size"]),
+    #     lr_actor = hyperparams["actor_lr"],
+    #     tau = hyperparams["tau"],
+    #     lr_critic = hyperparams["critic_lr"],
+    #     n_warmup = hyperparams["n_warmup"],
+    #     update_interval = hyperparams["update_interval"])
 
     discriminator = GAIL(
         state_shape = env.observation_space.shape,
         action_dim = env.action_space.high.size,
-        units = [400, 300],
+        units = [100, 100],
         batch_size = hyperparams["batch_size"]
-        )
+    )
 
     expert_trajs = load_expert_traj(hyperparams["dataset_dir"])
 
     # trainer = Trainer(agent, env, args, test_env=test_env)
     # trainer = OnPolicyTrainer(agent, env, args, test_env=test_env)
-    trainer = IRLTrainer(agent, env, args, discriminator, expert_trajs["state"], expert_trajs["state_new"], expert_trajs["action"], test_env)
+    # trainer = IRLTrainer(agent, env, args, discriminator, expert_trajs["state"], expert_trajs["state_new"], expert_trajs["action"], test_env)
+
+    trainer = OnPolicyIRLTrainer(agent, env, args, discriminator, expert_trajs["state"], expert_trajs["state_new"], expert_trajs["action"], test_env)
 
     trainer()
 

@@ -13,6 +13,7 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
         if ".h5" in file:
             dataset_files.append(os.path.join(dataset_dir, file))
 
+
     curr_ep = 0
 
     expert_traj = {}

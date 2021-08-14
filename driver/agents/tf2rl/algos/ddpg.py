@@ -23,7 +23,7 @@ class Actor(tf.keras.Model):
         features = tf.nn.relu(self.l1(inputs))
         features = tf.nn.relu(self.l2(features))
         features = self.l3(features)
-        action = self.max_action * tf.nn.tanh(features)
+        action = tf.nn.tanh(features)
         return action
 
 
@@ -107,8 +107,7 @@ class DDPG(OffPolicyAgent):
         with tf.device(self.device):
             action = self.actor(state)
             if sigma > 0.:
-                action += tf.random.normal(shape=action.shape,
-                                           mean=0., stddev=sigma, dtype=tf.float32)
+                action += tf.random.normal(shape=action.shape, mean=0., stddev=sigma, dtype=tf.float32)
             return tf.clip_by_value(action, -max_action, max_action)
 
     def train(self, states, actions, next_states, rewards, done, weights=None):
@@ -122,7 +121,6 @@ class DDPG(OffPolicyAgent):
                               data=actor_loss)
         tf.summary.scalar(name=self.policy_name + "/critic_loss",
                           data=critic_loss)
-
         return td_errors
 
     @tf.function

@@ -12,7 +12,7 @@ import sysv_ipc as ipc
 from torcs_client.utils import SimpleLogger as log, reset_torcs, destringify, raw_to_rgb
 
 # max message length
-UDP_MSGLEN = 800
+UDP_MSGLEN = 1000
 
 SHMKEY = 1234
 
@@ -23,9 +23,8 @@ class Client():
     extentions used in the Simulated Car Racing competitions.
     """
     def __init__(self, host = "localhost", port = 3001, sid="SCR", trackname = None, container_id = "0",
-            vision=False, verbose = False, img_height= 640, img_width = 480, max_packets = 2):
+            vision=False, verbose = False, img_height= 640, img_width = 480, max_packets = 1):
 
-        self.data_size = 2**17
         # bufsize of the incoming packets (bytes)
         self.max_packets = max_packets
         self.bufsize = self.max_packets * UDP_MSGLEN
@@ -74,13 +73,13 @@ class Client():
         self.reset()
 
     def setup_connection(self):
-        # == Set Up UDP Socket ==
+        # Initialize Connection To Server
         try:
-            self.so= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.so = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         except socket.error as emsg:
             if self.verbose: log.error("Could not create socket.")
             sys.exit(-1)
-        # Initialize Connection To Server
+
         self.so.settimeout(1)
         # set socket receive buffer to about 4 packets (maximum observation delay of around 200 ms)
         # this is done to evoid bufferbloat and packet accumulation
@@ -99,7 +98,7 @@ class Client():
                 sys.exit(-1)
             sockdata= str()
             try:
-                sockdata,addr= self.so.recvfrom(self.data_size)
+                sockdata = self.so.recv(2**13)
                 sockdata = sockdata.decode("utf-8")
             except socket.error as emsg:
                 if n_fail < 0:
@@ -108,9 +107,9 @@ class Client():
                     n_fail = 4
                 n_fail -= 1
 
-            identify = "***identified***"
-            if identify in sockdata:
+            if "***identified***" in sockdata:
                 if self.verbose: log.info("Client connected on port {}".format(self.port))
+                # self.so.setblocking(True)
                 break
 
     def setup_shm_vision(self):
@@ -147,13 +146,15 @@ class Client():
         returns true if an error occurred more than 5 times
         """
         if not self.so: return
-        sockdata= str()
+        sockdata = str()
         self.errors = 0
         while True:
             try:
+
                 # Receive server data
-                sockdata, addr= self.so.recvfrom(self.data_size)
+                sockdata = self.so.recv(2**13)
                 sockdata = sockdata.decode("utf-8")
+
             except socket.error as emsg:
                 self.errors += 1
                 log.error("Socket error raised: {}".format(emsg))
@@ -171,11 +172,11 @@ class Client():
             elif "***restart***" in sockdata:
                 if self.verbose: log.info("Server has restarted the race on port {}.".format(self.port))
                 continue
-            elif not sockdata: # Empty?
-                continue       # Try again.
+            elif not sockdata:
+                continue
             else:
                 self.S.parse_server_str(sockdata, self.get_vision())
-                break # Can now return from this function.
+                break
         return False
 
     def respond_to_server(self):
@@ -192,18 +193,18 @@ class ServerState():
     What the server is reporting right now.
     """
     def __init__(self):
-        self.servstr= str()
-        self.d= dict()
+        self.servstr = str()
+        self.d = dict()
 
     def parse_server_str(self, server_string, image):
         """
         Parse the server string.
         """
-        self.servstr= server_string.strip()[:-1]
-        sslisted= self.servstr.strip().lstrip("(").rstrip(")").split(")(")
+        self.servstr = server_string.strip()[:-1]
+        sslisted = self.servstr.strip().lstrip("(").rstrip(")").split(")(")
         for i in sslisted:
-            w= i.split(" ")
-            self.d[w[0]]= destringify(w[1:])
+            w = i.split(" ")
+            self.d[w[0]] = destringify(w[1:])
 
         if(image is not None):
             # add image to the state dictionary
@@ -217,9 +218,9 @@ class DriverAction():
     (accel 1)(brake 0)(gear 1)(steer 0)(clutch 0)(focus -90 -45 0 45 90)(meta 0)
     """
     def __init__(self):
-       self.actionstr= str()
+       self.actionstr = str()
        # "d" is for data dictionary.
-       self.d= { "accel":0.2,
+       self.d = { "accel":0.2,
                    "brake":0,
                   "clutch":0,
                     "gear":1,

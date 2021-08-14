@@ -33,7 +33,7 @@ def get_default_rb_dict(size, env):
 
 
 def get_replay_buffer(policy, env, use_prioritized_rb=False,
-                      use_nstep_rb=False, n_step=1, size=None):
+                      use_nstep_rb=False, n_step=1, size=None, irl = False):
     if policy is None or env is None:
         return None
 
@@ -44,10 +44,12 @@ def get_replay_buffer(policy, env, use_prioritized_rb=False,
         kwargs["size"] = size
 
     # on-policy policy
-    if not issubclass(type(policy), OffPolicyAgent):
+    if not issubclass(type(policy), OffPolicyAgent) and irl == False:
         kwargs["size"] = policy.horizon
         kwargs["env_dict"].pop("next_obs")
         kwargs["env_dict"].pop("rew")
+
+    if not issubclass(type(policy), OffPolicyAgent):
         # TODO: Remove done. Currently cannot remove because of cpprb implementation
         # kwargs["env_dict"].pop("done")
         kwargs["env_dict"]["logp"] = {}

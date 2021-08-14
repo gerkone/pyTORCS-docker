@@ -1,8 +1,8 @@
 /***************************************************************************
- 
+
     file                 : SimpleParser.cpp
     copyright            : (C) 2007 Daniele Loiacono
- 
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,7 +21,7 @@ SimpleParser::parse(string sensors, string tag, float &value)
 	size_t open,close;
 	open = sensors.find_first_of('(');
 	while (open!=string::npos)
-	{		
+	{
 		close = sensors.find_first_of(')',open);
 		if (close != string::npos)
 		{
@@ -48,7 +48,7 @@ SimpleParser::parse(string sensors, string tag, int &value)
 	size_t open,close;
 	open = sensors.find_first_of('(');;
 	while (open!=string::npos)
-	{		
+	{
 		close = sensors.find_first_of(')',open);
 		if (close != string::npos)
 		{
@@ -74,7 +74,7 @@ SimpleParser::parse(string sensors, string tag, float *value, int size)
 	size_t open,close;
 	open = sensors.find_first_of('(');
 	while (open!=string::npos)
-	{		
+	{
 		close = sensors.find_first_of(')',open);
 		if (close != string::npos)
 		{
@@ -82,8 +82,8 @@ SimpleParser::parse(string sensors, string tag, float *value, int size)
 			string currTag;
 			IN >> currTag;
 			if (currTag.compare(tag)==0)
-			{				
-				for (int i = 0; i < size; ++i) 
+			{
+				for (int i = 0; i < size; ++i)
 				{
 					if (! (IN >> value[i]) )
 						return false;
@@ -98,31 +98,31 @@ SimpleParser::parse(string sensors, string tag, float *value, int size)
 	return false;
 }
 
-string 
+string
 SimpleParser::stringify(string tag, float value)
 {
-	ostringstream STR;
-	STR << "(" << tag << " " << value << ")";
-	return STR.str();
+	ostringstream stream;
+	stream << "(" << tag << " " << value << ")";
+	return stream.str();
 }
 
-string 
+string
 SimpleParser::stringify(string tag, int value)
 {
-	ostringstream STR;
-	STR << "(" << tag << " " << value << ")";
-	return STR.str();
+	ostringstream stream;
+	stream << "(" << tag << " " << value << ")";
+	return stream.str();
 }
 
-string 
+string
 SimpleParser::stringify(string tag, float *value, int size)
 {
-	ostringstream STR;
-	STR << "(" << tag;
-	for (int i = 0; i < size; ++i) 
+	ostringstream stream;
+	stream << "(" << tag;
+	for (int i = 0; i < size; ++i)
 	{
-		STR << " " << value[i];
+		stream << " " << value[i];
 	}
-	STR << ")";
-	return STR.str();
+	stream << ")";
+	return stream.str();
 }

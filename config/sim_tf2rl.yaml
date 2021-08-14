@@ -20,13 +20,13 @@ hyperparams:
   actor_lr : 0.00005
   critic_lr : 0.0005
   batch_size : 64
-  fcl1_size : 600
-  fcl2_size : 600
+  fcl1_size : 200
+  fcl2_size : 200
   gamma : 0.99
 
   tau : 0.005
   buf_size : 15000
-  n_warmup : 2000
+  n_warmup : 0
   update_interval : 2
 
   dataset_dir : "dataset/"

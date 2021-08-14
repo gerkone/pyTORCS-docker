@@ -22,8 +22,8 @@ class DDPG(object):
     """
     def __init__(self, state_dims, action_dims, action_boundaries, hyperparams):
 
-        physical_devices = tf.config.list_physical_devices('GPU')
-        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+        # physical_devices = tf.config.list_physical_devices('GPU')
+        # tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
         actor_lr = hyperparams["actor_lr"]
         critic_lr = hyperparams["critic_lr"]

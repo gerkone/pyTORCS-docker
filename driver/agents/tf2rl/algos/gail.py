@@ -30,7 +30,9 @@ class Discriminator(tf.keras.Model):
         return self.l3(features)
 
     def compute_reward(self, inputs):
-        return tf.math.log(self(inputs) + 1e-8)
+        rewards = tf.math.log(self(inputs))
+        value_not_nan = tf.dtypes.cast(tf.math.logical_not(tf.math.is_nan(rewards)), dtype=tf.float32)
+        return tf.math.multiply_no_nan(rewards, value_not_nan)
 
 
 class GAIL(IRLPolicy):

@@ -130,20 +130,21 @@ class TorcsEnv:
         return observation_space, action_space
 
     def step(self, u):
-        # get the state from torcs - simulation step
+        # get current observation
         error_restart = self.client.get_servers_input()
+        obs_curr = copy.deepcopy(self.client.S.d)
 
-        # convert u to the actual torcs actionstr
+        if error_restart:
+            # TODO restart torcs if multiple errors
+            log.error("Could not receive from torcs")
+
         action = self.agent_to_torcs(u)
-
-        # current observation
-        curr_state = self.client.S.d
 
         self.client.R.d["steer"] = action["steer"]
 
         if self.throttle is False:
             try:
-                self.client.R.d["accel"] = self.automatic_throttle_control(self.target_speed, curr_state, self.client.R.d["accel"], self.client.R.d["steer"])
+                self.client.R.d["accel"] = self.automatic_throttle_control(self.target_speed, obs_curr, self.client.R.d["accel"], self.client.R.d["steer"])
             except Exception:
                 self.client.R.d["accel"] = 0
         else:
@@ -154,29 +155,36 @@ class TorcsEnv:
             if self.gear_change is False:
                 # debounce used to avoid shifting 2 or more gears at once ( engine did not have the time to slow down )
                 self.shift_debounce -=  1
-                self.client.R.d["gear"] = self.automatic_gearbox(curr_state["rpm"], self.client.R.d["gear"])
+                self.client.R.d["gear"] = self.automatic_gearbox(obs_curr["rpm"], self.client.R.d["gear"])
             else:
                 self.client.R.d["gear"] = action["gear"]
         except Exception:
             self.client.R.d["gear"] = 0
 
-        # Apply the agent"s action into torcs
+        # Apply the agent action into torcs
         self.client.respond_to_server()
 
-        # initialize previous observation (for reward and termination)
+        # get next observation, should be after applying the action
+        error_restart = self.client.get_servers_input()
+        obs_new = copy.deepcopy(self.client.S.d)
+
+        if(obs_new["curLapTime"] == obs_curr["curLapTime"]):
+            # TODO handle sanity check
+            pass
+
         if self.curr_step == 0:
-            self.obs_prev = copy.deepcopy(curr_state)
-            self.action_prev = copy.deepcopy(action)
+            # initial action
+            self.action_prev = action
 
         ################### Termination ###################
         try:
-            episode_terminate = custom_terminal(curr_state, curr_step = self.curr_step)
+            episode_terminate = custom_terminal(obs_new, curr_step = self.curr_step)
         except Exception:
             episode_terminate = False
 
         ################### Reward ###################
         try:
-            reward = self.rewarder.get_reward(curr_state, self.obs_prev, action, self.action_prev, self.curr_step, terminal = episode_terminate, track = self.track)
+            reward = self.rewarder.get_reward(obs_new, obs_curr, action, self.action_prev, self.curr_step, terminal = episode_terminate, track = self.track)
         except Exception:
             reward = 0
 
@@ -189,9 +197,9 @@ class TorcsEnv:
 
         self.curr_step += 1
 
-        self.obs_prev = copy.deepcopy(curr_state)
+        self.action_prev = action
 
-        return self.make_observaton(curr_state), reward, episode_terminate
+        return self.make_observaton(obs_new), reward, episode_terminate
 
     def reset(self):
         """
@@ -211,7 +219,8 @@ class TorcsEnv:
             reset_torcs(self.container_id, vision, False)
             # create new torcs client - after first torcs launch
             # TODO multiple port support
-            self.client = Client(port = self.ports[0], verbose = self.verbose, sid = self.sid, container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
+            self.client = Client(port = self.ports[0], verbose = self.verbose, sid = self.sid,
+                        container_id = self.container_id, vision = vision, img_width = 640, img_height = 480)
 
         else:
             # restart torcs without closing - tell scr_server to restart race
@@ -223,7 +232,7 @@ class TorcsEnv:
         self.curr_step = 0
 
         # Get the initial full-observation from torcs
-        obs = self.client.S.d
+        obs = copy.deepcopy(self.client.S.d)
 
         # reset reward params
         self.rewarder.reset()
