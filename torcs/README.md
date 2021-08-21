@@ -51,13 +51,13 @@ sudo apt-get install libglib2.0-dev  libgl1-mesa-dev libglu1-mesa-dev  freeglut3
 ### Build torcs
 
 ```
-$ export CFLAGS="-fPIC"
-$ export CPPFLAGS=$CFLAGS
-$ export CXXFLAGS=$CFLAGS
-$ ./configure --prefix=$(pwd)/BUILD  # local install dir
-$ make
-$ make install
-$ make datainstall
+export CFLAGS="-fPIC"
+export CPPFLAGS=$CFLAGS
+export CXXFLAGS=$CFLAGS
+./configure --prefix=$(pwd)/BUILD  # local install dir
+make
+make install
+make datainstall
 ```
 
 ### Run torcs
