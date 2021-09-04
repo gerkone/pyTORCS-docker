@@ -1,5 +1,5 @@
 # docker image name
-image_name : "0"
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
@@ -13,18 +13,18 @@ algo_path: "driver/agents/ddpg/ddpg.py"
 hyperparams:
   actor_lr : 0.00005
   critic_lr : 0.0005
-  batch_size : 32
+  batch_size : 64
   gamma : 0.99
   guided_episode : 2
-  buf_size : 3000
+  buf_size : 500000
   tau : 0.001
   fcl1_size : 200
   fcl2_size : 300
-  actor_update_delay : 2
+  noise_phi : 0.5
 
   save_dir : "driver/agents/ddpg/model"
 
-  pretrain : True
+  pretrain : False
   epochs : 6
   dataset_dir : "driver/agents/berniw_IL/dataset"
 
@@ -37,7 +37,6 @@ sensors:
   speedX : 1.0
   angle: 3.1415
   trackPos: 1.0
-
 
 # DO NOT CHANGE THIS
 # unless you know what you are doing
@@ -60,7 +59,7 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "street-1"
+    - "g-track-1"
 
   # choosen car
   # can be choosen between

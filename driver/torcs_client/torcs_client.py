@@ -81,7 +81,7 @@ class Client():
             sys.exit(-1)
 
         self.so.settimeout(1)
-        # set socket receive buffer to about 4 packets (maximum observation delay of around 200 ms)
+        # set socket receive buffer to 1 packet
         # this is done to evoid bufferbloat and packet accumulation
         self.so.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.bufsize)
         n_fail = 4

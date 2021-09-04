@@ -37,7 +37,8 @@ def custom_terminal(obs, curr_step):
         terminal = True
 
     try:
-        if obs["distRaced"] > obs["trackLen"] * 2 + 10:
+        if obs["distRaced"] > obs["trackLen"] + 10:
+            # completed one lap
             terminal = True
     except Exception:
         pass

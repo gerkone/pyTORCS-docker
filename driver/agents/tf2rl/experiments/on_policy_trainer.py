@@ -31,8 +31,9 @@ def unpack_state(state):
 
 
 class OnPolicyTrainer(Trainer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, policy, env, args, test_env = None, expert_trajs = None):
+        super().__init__(policy, env, args, test_env)
+        self.expert_trajs = expert_trajs
 
     def __call__(self):
         # Prepare buffer
@@ -44,69 +45,95 @@ class OnPolicyTrainer(Trainer):
         kwargs_local_buf["env_dict"]["val"] = {}
 
         self.local_buffer = ReplayBuffer(**kwargs_local_buf)
+        if self.expert_trajs != None:
+            expert_trajs_size = self.expert_trajs["action"].shape[0]
+            exp_i = 0
 
         episode_steps = 0
         episode_return = 0
         episode_start_time = time.time()
-        total_steps = np.array(0, dtype=np.int32)
+        total_steps = np.array(0, dtype = np.int32)
         n_epoisode = 0
-        obs = self._env.reset()
-        obs = unpack_state(obs)
 
         tf.summary.experimental.set_step(total_steps)
         while total_steps < self._max_steps:
-            # Collect samples
-            for _ in range(self._policy.horizon):
-                if self._normalize_obs:
-                    obs = self._obs_normalizer(obs, update=False)
-                act, logp, val = self._policy.get_action_and_val(obs)
-                env_act = np.clip(act, self._env.action_space.low, self._env.action_space.high)
-                next_obs, reward, done = self._env.step(env_act)
-                next_obs = unpack_state(next_obs)
-
-                episode_steps += 1
+            if self.expert_trajs != None and total_steps % 100 == 0:
+                self.logger.info("Training on expert data")
+                for i in range(self._policy.horizon):
+                    # use expert data. try to vary agent behaviour
+                    act = self.expert_trajs["action"][(exp_i + i) % expert_trajs_size]
+                    obs = self.expert_trajs["state"][(exp_i + i) % expert_trajs_size]
+                    next_obs = self.expert_trajs["state_new"][(exp_i + i) % expert_trajs_size]
+                    reward = self.expert_trajs["reward"][(exp_i + i) % expert_trajs_size]
+                    # certain action
+                    logp = np.log(1)
+                    _, _, val = self._policy.get_action_and_val(obs)
+                    # sum of rewards for a whole episode
+                    val = discount_cumsum(self.expert_trajs["reward"][(exp_i + i + 1) % expert_trajs_size:
+                                    (exp_i + i + self._policy.horizon) % expert_trajs_size], self._policy.discount)[:-1]
+                    val = val[0]
+                    self.local_buffer.add(
+                        obs = obs, act = act, next_obs = next_obs,
+                        rew = reward, done = False, logp = logp, val = val)
+                exp_i += self._policy.horizon
                 total_steps += 1
-                episode_return += reward
-
-                done_flag = done
-                if (hasattr(self._env, "_max_episode_steps") and
-                    episode_steps == self._env._max_episode_steps):
-                    done_flag = False
-                self.local_buffer.add(
-                    obs=obs, act=act, next_obs=next_obs,
-                    rew=reward, done=done_flag, logp=logp, val=val)
-                obs = next_obs
-
-                if done or episode_steps == self._episode_max_steps:
-                    tf.summary.experimental.set_step(total_steps)
-                    self.finish_horizon()
+            else:
+                if total_steps <= 1:
                     obs = self._env.reset()
                     obs = unpack_state(obs)
+                # collect samples
+                for _ in range(self._policy.horizon):
+                    if self._normalize_obs:
+                        obs = self._obs_normalizer(obs, update=False)
+                    # individual_noise to sample actions differently
+                    act, logp, val = self._policy.get_action_and_val(obs, individual_noise = False)
+                    env_act = np.clip(act, self._env.action_space.low, self._env.action_space.high)
+                    next_obs, reward, done = self._env.step(env_act)
+                    next_obs = unpack_state(next_obs)
 
-                    n_epoisode += 1
-                    fps = episode_steps / (time.time() - episode_start_time)
-                    self.logger.info(
-                        "Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} FPS: {4:5.2f}".format(
-                            n_epoisode, int(total_steps), episode_steps, episode_return, fps))
-                    tf.summary.scalar(name="Common/training_return", data=episode_return)
-                    tf.summary.scalar(name="Common/training_episode_length", data=episode_steps)
-                    tf.summary.scalar(name="Common/fps", data=fps)
-                    episode_steps = 0
-                    episode_return = 0
-                    episode_start_time = time.time()
+                    episode_steps += 1
+                    total_steps += 1
+                    episode_return += reward
 
-                # if total_steps % self._test_interval == 0:
-                #     avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
-                #     self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
-                #         total_steps, avg_test_return, self._test_episodes))
-                #     tf.summary.scalar(
-                #         name="Common/average_test_return", data=avg_test_return)
-                #     tf.summary.scalar(
-                #         name="Common/average_test_episode_length", data=avg_test_steps)
-                #     self.writer.flush()
+                    done_flag = done
+                    if (hasattr(self._env, "_max_episode_steps") and
+                        episode_steps == self._env._max_episode_steps):
+                        done_flag = False
+                    self.local_buffer.add(
+                        obs=obs, act=act, next_obs=next_obs,
+                        rew=reward, done=done_flag, logp=logp, val=val)
+                    obs = next_obs
 
-                if total_steps % self._save_model_interval == 0:
-                    self.checkpoint_manager.save()
+                    if done or episode_steps == self._episode_max_steps:
+                        tf.summary.experimental.set_step(total_steps)
+                        self.finish_horizon()
+                        obs = self._env.reset()
+                        obs = unpack_state(obs)
+
+                        n_epoisode += 1
+                        fps = episode_steps / (time.time() - episode_start_time)
+                        self.logger.info(
+                            "Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} FPS: {4:5.2f}".format(
+                                n_epoisode, int(total_steps), episode_steps, episode_return, fps))
+                        tf.summary.scalar(name="Common/training_return", data=episode_return)
+                        tf.summary.scalar(name="Common/training_episode_length", data=episode_steps)
+                        tf.summary.scalar(name="Common/fps", data=fps)
+                        episode_steps = 0
+                        episode_return = 0
+                        episode_start_time = time.time()
+
+                    # if total_steps % self._test_interval == 0:
+                    #     avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
+                    #     self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
+                    #         total_steps, avg_test_return, self._test_episodes))
+                    #     tf.summary.scalar(
+                    #         name="Common/average_test_return", data=avg_test_return)
+                    #     tf.summary.scalar(
+                    #         name="Common/average_test_episode_length", data=avg_test_steps)
+                    #     self.writer.flush()
+                    #
+                    if total_steps % self._save_model_interval == 0:
+                        self.checkpoint_manager.save()
 
             self.finish_horizon(last_val=val)
 

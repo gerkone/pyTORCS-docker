@@ -1,5 +1,5 @@
 # docker image name
-image_name : "0"
+image_name : "gerkone/torcs"
 
 # run module and path. change to your test script location and function
 mod_name : "main"
@@ -13,23 +13,26 @@ algo_path: "driver/agents/ppo/ppo_wrapper.py"
 hyperparams:
   epochs : 20
   lam : 0.95
-  c_1 : 0.5
-  c_2 : 0.001
-  horizon : 2048
+  c_1 : 0.8
+  c_2 : 0.0007
+  horizon : 2000
 
   actor_lr : 0.00005
   critic_lr : 0.0005
-  batch_size : 64
-  fcl1_size : 200
-  fcl2_size : 200
+  batch_size : 50
+  fcl1_size : 512
+  fcl2_size : 128
   gamma : 0.99
 
   tau : 0.005
-  buf_size : 15000
-  n_warmup : 0
+  buf_size : 100000
+  n_warmup : 500
   update_interval : 2
 
-  dataset_dir : "dataset/"
+  test_interval : 50
+
+  # dataset_dir : "dataset/"
+  model_dir : "results/PPO_OK"
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -91,3 +94,5 @@ training:
   epochs : 12
   # number of steps before each training
   train_req : 1000
+  # rl algorithm
+  algo : "PPO"

@@ -17,9 +17,10 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
     curr_ep = 0
 
     expert_traj = {}
+    expert_traj["action"] = []
     expert_traj["state"] = []
     expert_traj["state_new"] = []
-    expert_traj["action"] = []
+    expert_traj["reward"] = []
 
     while curr_ep < len(dataset_files):
         ep_file = dataset_files[curr_ep]
@@ -30,19 +31,22 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
 
         action = np.array(dataset.get("action"))
         state = np.array(dataset.get("sensors"))
+        state_new = np.array(dataset.get("sensors_new"))
+        reward = np.array(dataset.get("reward"))
 
         for el in range(min(max_steps, len(action) - 1)):
-            next = el + 1
 
             expert_traj["state"].append(state[el])
             expert_traj["action"].append(action[el])
-            expert_traj["state_new"].append(state[next])
+            expert_traj["state_new"].append(state_new[el])
+            expert_traj["reward"].append(reward[el])
 
         curr_ep += 1
 
+    expert_traj["action"] = np.array(expert_traj["action"])
     expert_traj["state"] = np.array(expert_traj["state"])
     expert_traj["state_new"] = np.array(expert_traj["state_new"])
-    expert_traj["action"] = np.array(expert_traj["action"])
+    expert_traj["reward"] = np.array(expert_traj["reward"])
 
     return expert_traj
 

@@ -53,7 +53,7 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - g-track-1
+    # - g-track-1
     # - a-speedway
     # - corkscrew
     # - wheel-1
@@ -73,15 +73,15 @@ training:
     # - wheel-2
     # - aalborg
     # - e-track-1
-    # - eroad
-    # - e-track-4
-    # - a-speedway
-    # - b-speedway
-    # - e-speedway
-    # - g-speedway
-    # - michigan
-    # - c-speedway
-    # - f-speedway
+    - eroad
+    - e-track-4
+    - a-speedway
+    - b-speedway
+    - e-speedway
+    - g-speedway
+    - michigan
+    - c-speedway
+    - f-speedway
 
   # choosen car
   # can be choosen between

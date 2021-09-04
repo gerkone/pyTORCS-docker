@@ -6,6 +6,8 @@ import os
 from torcs_client.torcs_comp import TorcsEnv
 from torcs_client.utils import SimpleLogger as log, resize_frame, agent_from_module
 
+MAX_STEPS = 20000
+
 def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerkone/torcs", driver = None,
         privileged = False, training = None, algo_name = None, algo_path = None, stack_depth = 1, img_width = 640, img_height = 480):
 
@@ -22,8 +24,10 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     track_list = [None]
     car = None
 
-    # never stop due to steps
-    infinite = max_steps == -1
+
+    if max_steps == -1:
+        # not actually infinite, but do a lot of steps
+        max_steps = MAX_STEPS
 
     if "track" in training.keys(): track_list = training["track"]
     if "car" in training.keys(): car = training["car"]
@@ -71,9 +75,8 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
     collected_steps = 0
 
-    if not infinite:
-        # buffer episodes in between training steps
-        episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
+    # buffer episodes in between training steps
+    episode_buffer = np.empty(max(max_steps, train_req) * 2, dtype = object)
 
     for track in track_list:
         log.info("Starting {} episodes on track {}".format(episodes, track))
@@ -96,25 +99,24 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
 
             log.info("Episode {}/{} started".format(i + 1, episodes))
 
-            while not terminal and (curr_step < max_steps or infinite):
+            while not terminal and (curr_step < max_steps):
                 # time_1 = time.time()
-                if not infinite:
-                    if curr_step >= max_steps:
-                        if self.verbose: log.info("Episode terminated by steps: {} steps done.".format(max_steps))
+                if curr_step >= max_steps:
+                    if self.verbose: log.info("Episode terminated by steps: {} steps done.".format(max_steps))
                 # predict new action
                 action = agent.get_action(state, i, track)
                 # perform the transition according to the choosen action
                 state_new, reward, terminal = env.step(action)
+
                 if vision:
                     state_new["img"] = resize_frame(state_new["img"], img_width, img_height)
                 if use_stacked_frames:
                     frame_stack.append(state_new["img"])
                     state_new["img"] = frame_stack
 
-                if not infinite:
-                    # save step in buffer
-                    episode_buffer[collected_steps] = (state, state_new, action, reward, terminal)
-                    collected_steps += 1
+                # save step in buffer
+                episode_buffer[collected_steps] = (state, state_new, action, reward, terminal)
+                collected_steps += 1
 
                 #iterate to the next
                 state = state_new
@@ -129,10 +131,10 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
             log.info("Iteration {:d} --> Duration {:.2f} ms. Score {:.2f}. Running average {:.2f}".format(
                 i, duration, score, np.mean(scores)))
             if packet_loss > 350:
-                if verbose: log.alert("High packet loss: {:.2f}%. Running {:.2f} ms behind torcs.".format(packet_loss, (avg_iteration - 1000/50) * env.get_max_packets()))
+                if verbose: log.alert("High packet loss. Running behind torcs.")
 
             # accumulate some training data before training
-            if collected_steps >= train_req and not infinite:
+            if collected_steps >= train_req:
                 has_remember = hasattr(agent, "remember") and callable(agent.remember)
                 if has_remember:
                     i = 0

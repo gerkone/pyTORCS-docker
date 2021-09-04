@@ -82,7 +82,7 @@ class VPG(OnPolicyAgent):
         # This is used to check if input state to `get_action` is multiple (batch) or single
         self._state_ndim = np.array(state_shape).shape[0]
 
-    def get_action(self, state, test=False):
+    def get_action(self, state, test = False):
         if isinstance(state, LazyFrames):
             state = np.array(state)
         msg = "Input instance should be np.ndarray, not {}".format(type(state))
@@ -98,14 +98,14 @@ class VPG(OnPolicyAgent):
         else:
             return action.numpy(), logp.numpy()
 
-    def get_action_and_val(self, state, test=False):
+    def get_action_and_val(self, state, individual_noise = False, test = False):
         if isinstance(state, LazyFrames):
             state = np.array(state)
         is_single_input = state.ndim == self._state_ndim
         if is_single_input:
             state = np.expand_dims(state, axis=0).astype(np.float32)
 
-        action, logp, v = self._get_action_logp_v_body(state, test)
+        action, logp, v = self._get_action_logp_v_body(state, individual_noise, test)
 
         if is_single_input:
             v = v[0]
@@ -114,11 +114,11 @@ class VPG(OnPolicyAgent):
         return action.numpy(), logp.numpy(), v.numpy()
 
     @tf.function
-    def _get_action_logp_v_body(self, state, test):
+    def _get_action_logp_v_body(self, state, individual_noise = False, test = False):
         if self.actor_critic:
-            return self.actor_critic(state, test)
+            return self.actor_critic(state, individual_noise, test)
         else:
-            action, logp = self.actor(state, test)
+            action, logp = self.actor(state, individual_noise, test)
             v = self.critic(state)
             return action, logp, v
 

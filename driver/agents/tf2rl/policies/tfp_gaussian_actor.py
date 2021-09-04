@@ -64,15 +64,25 @@ class GaussianActor(tf.keras.Model):
 
         return tfp.distributions.MultivariateNormalDiag(loc=mean, scale_diag=tf.exp(log_std))
 
-    def call(self, states, test=False):
+    def call(self, states, individual_noise = False, test = False):
         """
         Compute actions and log probabilities of the selected action
         """
         dist = self._compute_dist(states)
-        if test:
+        if test == True:
             raw_actions = dist.mean()
         else:
-            raw_actions = dist.sample()
+            if individual_noise == True:
+                # steer
+                steer = tf.gather(tf.squeeze(dist.mean()), 0)
+                # throttle
+                throttle = tf.gather(tf.squeeze(dist.sample()), 1)
+
+                raw_actions = tf.expand_dims(tf.stack([steer, throttle]), axis = 0)
+
+            else:
+                raw_actions = dist.sample()
+
         log_pis = dist.log_prob(raw_actions)
 
         if self._squash:

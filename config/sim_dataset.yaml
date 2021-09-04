@@ -16,7 +16,7 @@ hyperparams:
   max_speed : 300
   noise_scale : 0.7
   save_each : 4
-  sway : True
+  sway : False
   prefix : ""
 
 # dict with key: observation name, val: normalization scale (sensor max value)
@@ -90,7 +90,7 @@ training:
   train_req : 1
 
 # resized image dimensions
-img_width : 160
-img_height : 120
+img_width : 640
+img_height : 480
 # frame stack size. set to 1 to disable frame stacking
 stack_depth: 1

@@ -79,7 +79,7 @@ class Simple(object):
 
         noise = np.random.uniform(low = -1, high = 1)
         noise_scaled = noise * self.noise_scale
-        steer += noise_scaled
+        # steer += noise_scaled
 
         action[0] = steer
         action[1] = accel

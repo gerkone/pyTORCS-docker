@@ -168,13 +168,12 @@ class TorcsEnv:
         error_restart = self.client.get_servers_input()
         obs_new = copy.deepcopy(self.client.S.d)
 
-        if(obs_new["curLapTime"] == obs_curr["curLapTime"]):
-            # TODO handle sanity check
-            pass
+        # TODO handle sanity check
 
         if self.curr_step == 0:
             # initial action
             self.action_prev = action
+            self.obs_prev = obs_new
 
         ################### Termination ###################
         try:
@@ -184,8 +183,12 @@ class TorcsEnv:
 
         ################### Reward ###################
         try:
-            reward = self.rewarder.get_reward(obs_new, obs_curr, action, self.action_prev, self.curr_step, terminal = episode_terminate, track = self.track)
+            reward = self.rewarder.get_reward(obs_new, self.obs_prev, action, self.action_prev, self.curr_step, terminal = episode_terminate, track = self.track)
         except Exception:
+            import traceback
+            traceback.print_exc()
+            log.error("Something is wrong in the reward function")
+            input()
             reward = 0
 
         if episode_terminate:
@@ -198,6 +201,7 @@ class TorcsEnv:
         self.curr_step += 1
 
         self.action_prev = action
+        self.obs_prev = obs_new
 
         return self.make_observaton(obs_new), reward, episode_terminate
 

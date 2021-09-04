@@ -36,6 +36,8 @@ class DDPG(object):
         guided_episode = hyperparams["guided_episode"] - 1
         save_dir = hyperparams["save_dir"]
 
+        noise_phi = hyperparams["noise_phi"]
+
         # action size
         self.n_states = state_dims[0]
         # state size
@@ -48,6 +50,8 @@ class DDPG(object):
         # environmental action boundaries
         self.lower_bound = action_boundaries[0]
         self.upper_bound = action_boundaries[1]
+
+        self.noise_phi = noise_phi
 
         # experience replay buffer
         self._memory = ReplayBuffer(self.buf_size, input_shape = state_dims, output_shape = action_dims)
@@ -128,7 +132,15 @@ class DDPG(object):
             action = self.simple_controller(state)
 
         noise = self._noise()
+
+        if np.random.random() > self.noise_phi:
+            # set noise on steer to 0 for some steps
+            # this helps throttle exploration
+            noise[1] = noise[0] + noise[1]
+            noise[0] = 0
+
         action_p = action + noise
+
         #clip the resulting action with the bounds
         action_p = np.clip(action_p, self.lower_bound, self.upper_bound)
         return action_p
