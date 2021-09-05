@@ -50,12 +50,15 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
     args["test_interval"] = 20480
     args["save_summary_interval"] = 20480
     args["save_model_interval"] = 20480
-    args["max_steps"] = int(1e7)
+    args["max_steps"] = training["max_steps"]
     args["episode_max_steps"] = int(1e7)
     args["dir_suffix"] = ""
-    args["model_dir"] = hyperparams["model_dir"]
+    if "model_dir" in hyperparams.keys():
+        args["model_dir"] = hyperparams["model_dir"]
     args["test_interval"] = hyperparams["test_interval"]
     args["test_episodes"] = 1000
+
+    if "track" in training.keys(): track_list = training["track"]
 
     if training["algo"] == "PPO":
         from agents.tf2rl.algos.ppo import PPO
@@ -139,6 +142,6 @@ def main(verbose = False, hyperparams = None, sensors = None, image_name = "gerk
         expert_trajs = load_expert_traj(hyperparams["dataset_dir"])
         trainer = IRLTrainer(agent, env, args, discriminator, expert_trajs["state"], expert_trajs["state_new"], expert_trajs["action"], test_env)
 
-    trainer()
+    trainer(track_list)
 
     input("All done")

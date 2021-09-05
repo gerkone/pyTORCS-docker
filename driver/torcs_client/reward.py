@@ -31,10 +31,10 @@ class LocalReward(BaseReward):
     base_w = 0.0
     terminal_w = 1.0
 
-    speed_w = 0.0
-    speed_w_2 = 0.0
+    speed_w = 1.0
+    speed_w_2 = 0.5
     damage_w = 0.0
-    dist_w = 6.0
+    dist_w = 0.0
     range_w = 0.0
     angle_w = 0.0
 

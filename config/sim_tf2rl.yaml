@@ -13,8 +13,8 @@ algo_path: "driver/agents/ppo/ppo_wrapper.py"
 hyperparams:
   epochs : 20
   lam : 0.95
-  c_1 : 0.8
-  c_2 : 0.0007
+  c_1 : 0.7
+  c_2 : 0.007
   horizon : 2000
 
   actor_lr : 0.00005
@@ -26,13 +26,14 @@ hyperparams:
 
   tau : 0.005
   buf_size : 100000
-  n_warmup : 500
+  n_warmup : 1000
   update_interval : 2
+  noise_phi : 0.5
 
   test_interval : 50
 
-  # dataset_dir : "dataset/"
-  model_dir : "results/PPO_OK"
+  dataset_dir : "dataset/"
+  model_dir : "results/PPO_G"
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -66,7 +67,8 @@ training:
   #
   # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
   track:
-    - "street-1"
+    - "aalborg"
+    - "g-track-2"
 
   # choosen car
   # can be choosen between
@@ -87,9 +89,7 @@ training:
   gear_change : False
   # set number of steps before restarting the episode
   # max 50 steps per second
-  max_steps : 2000
-  # total number of episodes
-  episodes : 3000
+  max_steps : 200000
   # number of passes on data
   epochs : 12
   # number of steps before each training
