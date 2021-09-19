@@ -44,7 +44,7 @@ class PPO(VPG):
                           data=tf.reduce_mean(ratio))
         tf.summary.scalar(name=self.policy_name+"/critic_loss",
                           data=critic_loss)
-        return actor_loss, critic_loss
+        return actor_loss, critic_loss, ent
 
     @tf.function
     def _train_actor_critic_body(self, states, actions, advantages, logp_olds, returns):

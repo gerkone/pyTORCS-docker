@@ -38,12 +38,8 @@ def unpack_state(state):
     return state_array
 
 class Trainer:
-    def __init__(
-            self,
-            policy,
-            env,
-            args,
-            test_env=None):
+    def __init__(self, policy, env, args, test_env=None):
+        self.prev_accel = 0
         if isinstance(args, dict):
             _args = args
             args = policy.__class__.get_argument(Trainer.get_argument())
@@ -91,32 +87,73 @@ class Trainer:
             self._checkpoint.restore(self._latest_path_ckpt)
             self.logger.info("Restored {}".format(self._latest_path_ckpt))
 
+    def simple_controller(self, state):
+        action = np.zeros(2)
+
+        speedX = state[0]
+        # steer to corner
+        steer = state[3] * 19
+        # # steer to center
+        steer -= state[4] * .4
+
+
+        if state[18] < 0.2 and speedX > 55:
+            # front is getting close (80 mt)
+            accel = -0.4
+        else:
+            accel = self.prev_accel
+
+        if speedX < 120 - (steer * 50):
+            accel += .03
+        else:
+            accel -= .03
+
+        if accel > 0.5:
+            accel = 0.5
+
+        if speedX < 10:
+            accel += 1 / (speedX + .1)
+
+        if accel >= 0:
+            self.prev_accel = accel
+
+        action[0] = steer
+        action[1] = accel
+
+        return action
+
     def __call__(self, track_list):
 
-        if self._evaluate:
-            self.evaluate_policy_continuously()
-
-        total_steps = 0
-        tf.summary.experimental.set_step(total_steps)
-        episode_steps = 0
-        episode_return = 0
-        episode_start_time = time.perf_counter()
-        n_episode = 0
-
-        replay_buffer = get_replay_buffer(
-            self._policy, self._env, self._use_prioritized_rb,
-            self._use_nstep_rb, self._n_step)
-
-        obs = self._env.reset()
-        obs = unpack_state(obs)
+        returns = []
+        steps = []
 
         for track in track_list:
+            if self._evaluate:
+                self.evaluate_policy_continuously()
+
+            total_steps = 0
+            tf.summary.experimental.set_step(total_steps)
+            episode_steps = 0
+            episode_return = 0
+            episode_start_time = time.perf_counter()
+            n_episode = 0
+
+            replay_buffer = get_replay_buffer(
+            self._policy, self._env, self._use_prioritized_rb,
+            self._use_nstep_rb, self._n_step)
             self._env.set_track(track)
+
+            obs = self._env.reset()
+            obs = unpack_state(obs)
+
             while total_steps < self._max_steps:
                 if total_steps < self._policy.n_warmup:
                     action = self._env.action_space.sample()
                 else:
                     action = self._policy.get_action(obs)
+
+                if n_episode % 60 == 0 and episode_steps < 1000 and n_episode < 500:
+                    action = self.simple_controller(obs)
 
                 next_obs, reward, done = self._env.step(action)
                 next_obs = unpack_state(next_obs)
@@ -139,13 +176,19 @@ class Trainer:
                     replay_buffer.on_episode_end()
                     obs = self._env.reset()
                     obs = unpack_state(obs)
-
-                    n_episode += 1
-                    fps = episode_steps / (time.perf_counter() - episode_start_time)
-                    self.logger.info("Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} FPS: {4:5.2f}".format(
-                        n_episode, total_steps, episode_steps, episode_return, fps))
+                    duration = time.perf_counter() - episode_start_time
+                    fps = episode_steps / (duration)
+                    self.logger.info(
+                        "Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} TIME(s): {4:6.2f} FPS: {5:5.2f}".format(
+                            n_episode + 1, int(total_steps), episode_steps, episode_return, duration, fps))
                     tf.summary.scalar(name="Common/training_return", data=episode_return)
                     tf.summary.scalar(name="Common/training_episode_length", data=episode_steps)
+
+                    if n_episode % 60 != 0 or n_episode > 500:
+                        returns.append(episode_return)
+                        steps.append(episode_steps)
+
+                    n_episode += 1
 
                     episode_steps = 0
                     episode_return = 0
@@ -179,9 +222,16 @@ class Trainer:
                     tf.summary.scalar(name="Common/fps", data=fps)
 
                 if total_steps % self._save_model_interval == 0:
+                    self.logger.info("Saving checkpoint")
                     self.checkpoint_manager.save()
+            if n_episode % 60 != 0 or n_episode > 500:
+                returns.append(episode_return)
+                steps.append(episode_steps)
+
 
         tf.summary.flush()
+
+        return returns, steps, []
 
     def evaluate_policy_continuously(self):
         """

@@ -502,6 +502,7 @@ newrace(int index, tCarElt* car, tSituation *s)
         // used to compare to telemetry
         stateString += SimpleParser::stringify("distRaced", distRaced[index]);
         stateString += SimpleParser::stringify("totalTime", totalTime);
+        stateString += SimpleParser::stringify("trackLen", curTrack->length);
 
         stateString += SimpleParser::stringify("fuel", car->_fuel);
         stateString += SimpleParser::stringify("gear", car->_gear);

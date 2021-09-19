@@ -1,9 +1,12 @@
 import numpy as np
 
-terminal_judge_start = 1000
-boring_speed = 0.5 # km/h, episode terminates if car is running slower than this limit
-max_damage = 300
-out_max = 0
+# termination over speed starts after speed_term_start steps
+speed_term_start = 1000
+# km/h, episode terminates if car is running slower than this limit
+boring_speed = 0.5
+max_damage = 0
+# tolerance steps for out of track
+out_max = 4
 
 def custom_terminal(obs, curr_step):
 
@@ -21,13 +24,13 @@ def custom_terminal(obs, curr_step):
         if curr_step > custom_terminal.first_out + out_max:
             terminal = True
     else:
-        # reset if car is back to track - works for initialization and reset
+        # reset if car is back on track - works for initialization and reset
         custom_terminal.first_out = -1
 
     if damage > max_damage:
         terminal = True
 
-    if terminal_judge_start < curr_step:
+    if speed_term_start < curr_step:
         # Episode terminates if the agent is too slow
         if speed < boring_speed:
             terminal = True
@@ -42,5 +45,6 @@ def custom_terminal(obs, curr_step):
             terminal = True
     except Exception:
         pass
-
+    if terminal == True:
+        print(obs["distRaced"] / obs["trackLen"] * 100)
     return terminal

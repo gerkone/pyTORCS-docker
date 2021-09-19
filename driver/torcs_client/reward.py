@@ -10,7 +10,10 @@ class BaseReward():
         self.base_reward = 1
 
     def _damage_reward(self, d, d_old):
-        return -np.clip(d - d_old, 0, 100)
+        if d > d_old:
+            return -100
+        else:
+            return 0
 
     def _on_track_reward(self, track_pos):
         on_track = np.abs(track_pos) < 1
@@ -29,11 +32,10 @@ class BaseReward():
 class LocalReward(BaseReward):
     steering_threshold = 0.1
     base_w = 0.0
-    terminal_w = 1.0
+    terminal_w = 0.0
 
     speed_w = 1.0
     speed_w_2 = 0.5
-    damage_w = 0.0
     dist_w = 0.0
     range_w = 0.0
     angle_w = 0.0
@@ -111,6 +113,8 @@ class LocalReward(BaseReward):
         # behaviour terminal rewards
         reward += self._oot_reward(obs["trackPos"]) * self.terminal_w
         reward += self._spin_reward(obs["angle"]) * self.terminal_w
+        # punishment for damage
+        reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.terminal_w
 
         # speed rewards
 
@@ -121,8 +125,6 @@ class LocalReward(BaseReward):
         reward += self.__dist_reward(obs["distFromStart"], obs_prev["distFromStart"]) * self.dist_w
         # travel distance reward
 
-        # punishment for damage
-        reward += self._damage_reward(obs["damage"], obs_prev["damage"]) * self.damage_w
 
         # direction dependent rewards
 

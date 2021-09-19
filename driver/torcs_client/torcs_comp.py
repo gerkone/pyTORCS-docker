@@ -206,10 +206,6 @@ class TorcsEnv:
         return self.make_observaton(obs_new), reward, episode_terminate
 
     def reset(self):
-        """
-        episode either terminated or just started
-        """
-
         if self.verbose: log.info("Reset torcs")
 
         vision = "img" in self.state_filter

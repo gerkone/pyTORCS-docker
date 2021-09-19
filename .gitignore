@@ -11,3 +11,4 @@ dataset/*
 model
 model_*
 results
+plots

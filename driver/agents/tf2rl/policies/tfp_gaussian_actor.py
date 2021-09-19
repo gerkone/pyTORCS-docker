@@ -74,7 +74,7 @@ class GaussianActor(tf.keras.Model):
         else:
             if individual_noise == True:
                 # steer
-                steer = tf.gather(tf.squeeze(dist.mode()), 0)
+                steer = tf.gather(tf.squeeze(dist.mean()), 0)
                 # throttle
                 throttle = tf.gather(tf.squeeze(dist.sample()), 1)
 

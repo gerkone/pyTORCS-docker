@@ -16,6 +16,8 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
 
     curr_ep = 0
 
+    total = 0
+
     expert_traj = {}
     expert_traj["action"] = []
     expert_traj["state"] = []
@@ -34,6 +36,8 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
         state_new = np.array(dataset.get("sensors_new"))
         reward = np.array(dataset.get("reward"))
 
+        total += len(action) - 1
+
         for el in range(min(max_steps, len(action) - 1)):
 
             expert_traj["state"].append(state[el])
@@ -42,6 +46,8 @@ def load_expert_traj(dataset_dir, max_steps = 2500):
             expert_traj["reward"].append(reward[el])
 
         curr_ep += 1
+
+    print("Loaded {} steps from expert trajectories".format(total))
 
     expert_traj["action"] = np.array(expert_traj["action"])
     expert_traj["state"] = np.array(expert_traj["state"])

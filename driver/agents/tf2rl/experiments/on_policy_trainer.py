@@ -36,31 +36,37 @@ class OnPolicyTrainer(Trainer):
         self.expert_trajs = expert_trajs
 
     def __call__(self, track_list):
-        # Prepare buffer
-        self.replay_buffer = get_replay_buffer(
-            self._policy, self._env)
-        kwargs_local_buf = get_default_rb_dict(
-            size=self._policy.horizon, env=self._env)
-        kwargs_local_buf["env_dict"]["logp"] = {}
-        kwargs_local_buf["env_dict"]["val"] = {}
 
-        self.local_buffer = ReplayBuffer(**kwargs_local_buf)
-        if self.expert_trajs != None:
-            expert_trajs_size = self.expert_trajs["action"].shape[0]
-            exp_i = 0
-
-        episode_steps = 0
-        episode_return = 0
-        episode_start_time = time.time()
-        n_episode = 0
-
-
+        returns = []
+        entropies = []
+        steps = []
         for track in track_list:
+            # Prepare buffer
+            self.replay_buffer = get_replay_buffer(
+            self._policy, self._env)
+            kwargs_local_buf = get_default_rb_dict(
+            size=self._policy.horizon, env=self._env)
+            kwargs_local_buf["env_dict"]["logp"] = {}
+            kwargs_local_buf["env_dict"]["val"] = {}
+
+            self.local_buffer = ReplayBuffer(**kwargs_local_buf)
+            if self.expert_trajs != None:
+                expert_trajs_size = self.expert_trajs["action"].shape[0]
+                exp_i = 0
+
+            episode_steps = 0
+            episode_return = 0
+            entropy = 0
+            episode_start_time = time.time()
+            n_episode = 0
+            max_test_return = 0
+
             total_steps = np.array(0, dtype = np.int32)
             tf.summary.experimental.set_step(total_steps)
             self._env.set_track(track)
+
             while total_steps < self._max_steps:
-                if self.expert_trajs != None and n_episode % 100 == 0:
+                if self.expert_trajs != None and n_episode % 50 == 0:
                     self.logger.info("Training on expert data")
                     for i in range(self._policy.horizon):
                         # use expert data. try to vary agent behaviour
@@ -72,9 +78,9 @@ class OnPolicyTrainer(Trainer):
                         logp = np.log(1)
                         _, _, val = self._policy.get_action_and_val(obs)
                         # sum of rewards for a whole episode
-                        val = discount_cumsum(self.expert_trajs["reward"][(exp_i + i + 1) % expert_trajs_size:
-                                        (exp_i + i + self._policy.horizon) % expert_trajs_size], self._policy.discount)[:-1]
-                        val = val[0]
+                        # val = discount_cumsum(self.expert_trajs["reward"][(exp_i + i + 1) % expert_trajs_size:
+                        #                 (exp_i + i + self._policy.horizon) % expert_trajs_size], self._policy.discount)[:-1]
+                        # val = val[0]
                         self.local_buffer.add(
                             obs = obs, act = act, next_obs = next_obs,
                             rew = reward, done = False, logp = logp, val = val)
@@ -89,7 +95,12 @@ class OnPolicyTrainer(Trainer):
                         if self._normalize_obs:
                             obs = self._obs_normalizer(obs, update=False)
                         # individual_noise to sample actions differently
-                        act, logp, val = self._policy.get_action_and_val(obs, individual_noise = False)
+                        act, logp, val = self._policy.get_action_and_val(obs, individual_noise = False, test = False)
+
+                        # if n_episode % 60 == 0:
+                        #     act = self.simple_controller(obs)
+                        #     logp = np.log(1)
+
                         env_act = np.clip(act, self._env.action_space.low, self._env.action_space.high)
                         next_obs, reward, done = self._env.step(env_act)
                         next_obs = unpack_state(next_obs)
@@ -113,30 +124,41 @@ class OnPolicyTrainer(Trainer):
                             obs = self._env.reset()
                             obs = unpack_state(obs)
 
-                            n_episode += 1
-                            fps = episode_steps / (time.time() - episode_start_time)
+                            duration = time.time() - episode_start_time
+                            fps = episode_steps / (duration)
                             self.logger.info(
-                                "Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} FPS: {4:5.2f}".format(
-                                    n_episode, int(total_steps), episode_steps, episode_return, fps))
+                                "Total Epi: {0: 5} Steps: {1: 7} Episode Steps: {2: 5} Return: {3: 5.4f} TIME(s): {4:6.2f} FPS: {5:5.2f}".format(
+                                    n_episode + 1, int(total_steps), episode_steps, episode_return, duration, fps))
                             tf.summary.scalar(name="Common/training_return", data=episode_return)
                             tf.summary.scalar(name="Common/training_episode_length", data=episode_steps)
                             tf.summary.scalar(name="Common/fps", data=fps)
+
+                            if n_episode % 60 != 0:
+                                returns.append(episode_return)
+                                steps.append(episode_steps)
+
+                            n_episode += 1
+
                             episode_steps = 0
                             episode_return = 0
                             episode_start_time = time.time()
 
-                        # if total_steps % self._test_interval == 0:
-                        #     avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
-                        #     self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
-                        #         total_steps, avg_test_return, self._test_episodes))
-                        #     tf.summary.scalar(
-                        #         name="Common/average_test_return", data=avg_test_return)
-                        #     tf.summary.scalar(
-                        #         name="Common/average_test_episode_length", data=avg_test_steps)
-                        #     self.writer.flush()
-                        #
-                        if total_steps % self._save_model_interval == 0:
+                        if total_steps % self._test_interval == 0:
+                            avg_test_return, avg_test_steps = self.evaluate_policy(total_steps)
+                            self.logger.info("Evaluation Total Steps: {0: 7} Average Reward {1: 5.4f} over {2: 2} episodes".format(
+                                total_steps, avg_test_return, self._test_episodes))
+                            tf.summary.scalar(
+                                name="Common/average_test_return", data=avg_test_return)
+                            tf.summary.scalar(
+                                name="Common/average_test_episode_length", data=avg_test_steps)
+                            self.writer.flush()
+
+                        if total_steps % self._save_model_interval == 0 and avg_test_return > max_test_return:
+                            max_test_return = avg_test_return
+                            self.logger.info("Saving checkpoint")
                             self.checkpoint_manager.save()
+                    returns.append(episode_return)
+                    steps.append(episode_steps)
 
                 self.finish_horizon(last_val=val)
 
@@ -153,6 +175,7 @@ class OnPolicyTrainer(Trainer):
 
                 actor_loss = 0
                 critic_loss = 0
+                entropy = 0
 
                 with tf.summary.record_if(total_steps % self._save_summary_interval == 0):
                     for _ in range(self._policy.n_epoch):
@@ -167,7 +190,7 @@ class OnPolicyTrainer(Trainer):
                         for idx in range(int(self._policy.horizon / self._policy.batch_size)):
                             target = slice(idx * self._policy.batch_size,
                                            (idx + 1) * self._policy.batch_size)
-                            al, cl = self._policy.train(
+                            al, cl, ent = self._policy.train(
                                 states=samples["obs"][target],
                                 actions=samples["act"][target],
                                 advantages=adv[target],
@@ -175,12 +198,16 @@ class OnPolicyTrainer(Trainer):
                                 returns=samples["ret"][target])
                             actor_loss += al
                             critic_loss += cl
+                            entropy += ent
                     actor_loss = actor_loss / (int(self._policy.horizon / self._policy.batch_size) * self._policy.n_epoch)
                     critic_loss = critic_loss / (int(self._policy.horizon / self._policy.batch_size) * self._policy.n_epoch)
-                    self.logger.info("Done {} epochs. Average actor loss {}".format(
-                            self._policy.n_epoch, actor_loss, critic_loss))
+                    entropy = entropy / (int(self._policy.horizon / self._policy.batch_size) * self._policy.n_epoch)
+                    entropies.append(entropy)
+                    self.logger.info("Done {} epochs. Average actor loss {}".format(self._policy.n_epoch, actor_loss, critic_loss))
+
 
         tf.summary.flush()
+        return returns, steps, entropies
 
     def finish_horizon(self, last_val=0):
         self.local_buffer.on_episode_end()
