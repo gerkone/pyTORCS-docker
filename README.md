@@ -128,6 +128,7 @@ I made the following changes to the source:
 - The **main menu is completely skipped** and the race can be configured by using an _.xml_ file. This was done to allow a faster restart and most importantly to avoid using xautomation.
 - The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
 - The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
+- Deleted most of the cars and tracks to lighten the build.
 
 ### scr_server
 The torcs server used is _scr_server_ by Daniele Loiacono et al.

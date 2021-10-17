@@ -67,25 +67,19 @@ sensors:
 training:
   # choosen track
   # can be choosen betwen
-  # DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
+
+  # DIRT : dirt-1
   #
-  # ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
-  #        ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-  #        e-track-5 eroad e-track-4 g-track-1
+  # ROAD : alpine-1 corkscrew aalborg e-track-1 eroad g-track-1 ruudskogen street-1
   #
-  # OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+  # OVAL : michigan
   track: "g-track-1"
 
   # choosen car
   # can be choosen between
-  # 155-DTM       car1-trb3  p406        kc-conrero        kc-grifo   pw-corollawrc
-  # acura-nsx-sz  car2-trb1  kc-2000gt   kc-corvette-ttop  kc-gt40    pw-evoviwrc
-  # baja-bug      car3-trb1  kc-5300gt   kc-daytona        kc-gto     pw-focuswrc
-  # buggy         car4-trb1  kc-a110     kc-db4z           kc-p4      pw-imprezawrc
-  # car1-ow1      car5-trb1  kc-alfatz2  kc-dbs            pw-306wrc
-  # car1-stock1   car6-trb1  kc-bigh     kc-dino           p406
-  # car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
-  # car1-trb1     car8-trb1  kc-coda     kc-giulietta
+  # RALLY: pw-imprezawrc pw-306wrc
+  # GT: car1-trb1
+  # OPEN WHEEL: car1-ow1
   car: "car1-trb1"
 
   throttle : False
@@ -173,13 +167,9 @@ Racing on another track is as simple as changing the value of the parameter _tra
 
 The track can be choosen from:
 ```
-DIRT : dirt-1 dirt-2 dirt-3 dirt-4 dirt-5 dirt-6 mixed-1 mixed-2
-
-ROAD : alpine-1 corkscrew e-track-3 g-track-2 ole-road-1 street-1 alpine-2 e-track-6 g-track-3
-       ruudskogen wheel-1 brondehach e-track-2 forza spring wheel-2 aalborg e-track-1 e-track-5 e-track-1
-       e-track-5 eroad e-track-4 g-track-1
-
-OVAL : a-speedway b-speedway e-speedway g-speedway michigan c-speedway d-speedway f-speedway
+DIRT : dirt-1
+ROAD : alpine-1 corkscrew aalborg e-track-1 eroad g-track-1 ruudskogen street-1
+OVAL : michigan
 ```
 The environment takes in a list of tracks. The track will be changed after the choosen number of episodes are completed.
 
@@ -188,14 +178,9 @@ Choosing the racecar is also simple, by changing _training.car_.
 
 The track can be choosen from:
 ```
-155-DTM       car1-trb3  p406        kc-conrero        kc-grifo   pw-corollawrc
-acura-nsx-sz  car2-trb1  kc-2000gt   kc-corvette-ttop  kc-gt40    pw-evoviwrc
-baja-bug      car3-trb1  kc-5300gt   kc-daytona        kc-gto     pw-focuswrc
-buggy         car4-trb1  kc-a110     kc-db4z           kc-p4      pw-imprezawrc
-car1-ow1      car5-trb1  kc-alfatz2  kc-dbs            pw-306wrc
-car1-stock1   car6-trb1  kc-bigh     kc-dino           p406
-car1-stock2   car7-trb1  kc-cobra    kc-ghibli         pw-206wrc
-car1-trb1     car8-trb1  kc-coda     kc-giulietta
+RALLY: pw-imprezawrc pw-306wrc
+GT: car1-trb1
+OPEN WHEEL: car1-ow1
 ```
 
 The default car for scr_server is _car1-trb1_.

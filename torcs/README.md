@@ -38,6 +38,9 @@ GfScrGetSize fails and initview start drawing below the top left corner, so that
 ### Front camera Z position
 - modules/graphic/ssggraph/grcam.cpp - cGrCarCamInsideFixedCar class, increased "eye" z by 0.7.
 
+### Lighter build
+Deleted most of the tracks and cars to reduce the container size.
+
 ## Installation on Ubuntu 20.04
 
 For Ubuntu 20.04, please proceed as follow:
