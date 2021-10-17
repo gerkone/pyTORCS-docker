@@ -34,8 +34,8 @@ hyperparams:
   test_interval : 10000
 
   # dataset_dir : "dataset/"
-  model_dir : "results/PPO_SECA_2"
-  # model_dir : "results/DDPG_K"
+  model_dir : "results/PPO"
+  # model_dir : "results/DDPG"
 
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
@@ -99,5 +99,5 @@ training:
   epochs : 12
   # number of steps before each training
   train_req : 1000
-  # rl algorithm
+  # rl algorithm - change this to choose between DDPG and PPO
   algo : "PPO"

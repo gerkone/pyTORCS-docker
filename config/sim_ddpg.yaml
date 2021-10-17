@@ -24,10 +24,6 @@ hyperparams:
 
   save_dir : "driver/agents/ddpg/model"
 
-  pretrain : False
-  epochs : 6
-  dataset_dir : "driver/agents/berniw_IL/dataset"
-
 # dict with key: observation name, val: normalization scale (sensor max value)
 sensors:
   speedZ : 1.0

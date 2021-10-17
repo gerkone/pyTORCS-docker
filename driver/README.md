@@ -4,6 +4,8 @@ The **_driver_** is made up of two components:
 * **torcs_client** is the compatibility client that allows for TORCS abstraction.
 * **agents** is the folder designated to contain the autonomous agents
 
+![pytorcs structure](/media/pytorcs.jpg)
+
 ## Action space
 The action space is variable in size, depending on how the environment is configured.
 
@@ -60,21 +62,23 @@ z
 More info on the sensors can be found in the original [scr paper](https://arxiv.org/pdf/1304.1672.pdf).
 
 ## State space
+![pytorcs structure](/media/sensors.jpg)
+
 The state space is variable too. Its size and composition can be changed in the [simulation.yaml](config/simulation.yaml) configuration file.
 
 The returned observation at each step is a dictionary made up of numpy arrays of (normalized) sensor values, with the sensor name as key.
 
 For example an observation may look like this:
 ```
-|observation["track"]| = [19]
-|observation["angle"]| = [1]
-|observation["speedX"]| = [1]
-|observation["speedY"]| = [1]
-|observation["speedZ"]| = [1]
-|observation["wheelSpinVel"]| = [4]
-|observation["rpm"]| = [1]
-|observation["trackPos"]| = [1]
-|observation["img"]| = [640, 480, 3]
+observation["track"].shape = [19]
+observation["angle"].shape = [1]
+observation["speedX"].shape = [1]
+observation["speedY"].shape = [1]
+observation["speedZ"].shape = [1]
+observation["wheelSpinVel"].shape = [4]
+observation["rpm"].shape = [1]
+observation["trackPos"].shape = [1]
+observation["img"].shape = [640, 480, 3]
 ```
 
 ## Customization

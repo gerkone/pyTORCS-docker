@@ -45,6 +45,4 @@ def custom_terminal(obs, curr_step):
             terminal = True
     except Exception:
         pass
-    if terminal == True:
-        print(obs["distRaced"] / obs["trackLen"] * 100)
     return terminal

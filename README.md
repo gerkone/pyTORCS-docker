@@ -1,4 +1,7 @@
 # pyTORCS + Docker
+
+![PPO in lagunaseca](/media/ppo.gif)
+
   * [Features](#features)
   * [Installation](#installation)
   * [Host installation](#host-installation)
@@ -118,6 +121,7 @@ More info on the environment and its usages can be found on [here](https://githu
 
 
 ## References
+### TORCS
 This torcs is a modified version of 1.3.7 taken from [here](https://github.com/fmirus/torcs-1.3.7).
 
 I made the following changes to the source:
@@ -125,6 +129,10 @@ I made the following changes to the source:
 - The **countdown at the beginning of each race was removed**, to save 3 seconds each time.
 - The vision works with shared memory out-of-the-box, but I made some changes to keep it simple and readable with pure python.
 
+### scr_server
 The torcs server used is _scr_server_ by Daniele Loiacono et al.
 
 The Python-side client is an extended version of snakeoil3.
+
+### TF2RL
+An adapted version of the [tf2rl library](https://github.com/keiohta/tf2rl) by keiohta is included with the agents.

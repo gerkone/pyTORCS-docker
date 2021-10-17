@@ -1,0 +1,1 @@
+driver/launch.py --config config/sim_tf2rl.yaml --privileged

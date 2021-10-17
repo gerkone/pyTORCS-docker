@@ -3,6 +3,7 @@
 * [Usage](#usage)
     + [Config file](#config-file)
     + [Arguments](#arguments)
+    + [Base agents](#base-agents)
     + [Using a custom algorithm](#using-a-custom-algorithm)
     + [Using your run function](#using-your-run-function)
     + [Changing track](#changing-track)
@@ -112,6 +113,12 @@ The arguments are taken from the specified config file. A custom **_run/main_** 
 - **img_width**, **img_height** sets the size of the vision, if active.
 - **stack_depth** sets the number of frames to stack for each step.
 
+### Base agents
+There are 4 base agents included in pytorcs:
+- __berniw_agent__, collects action and observation from _berniw_, the default TORCS driver. Used by running pytorcs with _sim_breniw.yaml_ as config param.
+- __ddpg__, a custom TF2 implementation of the DDPG algorithm, taken from [here](https://github.com/gerkone/DDPG_TF2). Run by default or by using _sim_ddpg.yaml_ as config param.
+- __simple_agent_dataset__, a simple proportional controller that also collects frames and states. Run by using _sim_dataset.yaml_ as config param.
+- __tf2rl__, a collection of algorithms taken from [TF2RL](https://github.com/keiohta/tf2rl). Run by using _sim_tf2.yaml_ as config param.
 
 ### Using a custom algorithm
 It is possible to use a custom algorithm. This is easily done by changing

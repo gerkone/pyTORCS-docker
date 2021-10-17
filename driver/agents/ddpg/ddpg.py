@@ -81,12 +81,6 @@ class DDPG(object):
                 lr = critic_lr, batch_size = batch_size, tau = tau,
                 save_dir = self.save_dir, fcl1_size = fcl1_size, fcl2_size = fcl2_size)
 
-        # pretrain networks on expert data
-        if hyperparams["pretrain"] == True:
-            # initialize virtual reward
-            self.rewarder = LocalReward()
-            self.pretrain(hyperparams["epochs"], hyperparams["dataset_dir"])
-
     def repack_state(self, state_array):
         """
         state array to state dict
@@ -153,65 +147,6 @@ class DDPG(object):
         distances = np.array(dataset.get("dist"))
 
         return action, sensors, distances
-
-    def pretrain(self, epochs, dataset_dir):
-        dataset_files = []
-
-        for file in os.listdir(dataset_dir):
-            if ".h5" in file:
-                dataset_files.append(os.path.join(dataset_dir, file))
-
-        curr_ep = 0
-        # used tu resume the dataset if not completed
-        last_el = 0
-
-        while curr_ep < len(dataset_files):
-            ep_file = dataset_files[curr_ep]
-
-            log.info("Loading expert trjectory: {} - {}/{}".format(ep_file, curr_ep + 1, len(dataset_files)))
-
-            tot = 0
-            action, sensors, distances = self._prepare_data(ep_file)
-
-            for el in range(last_el, len(action) - 1):
-                if not self._memory.isFull():
-                    # fill replay buffer
-                    prev = el - 1 if el > 0 else 0
-                    # calculate what the reward would be
-                    repacked_state_curr = self.repack_state(sensors[el])
-                    repacked_state_prev = self.repack_state(sensors[prev])
-                    repacked_state_curr["distRaced"] = distances[el]
-                    repacked_state_prev["distRaced"] = distances[prev]
-                    repacked_state_curr["damage"] = 0
-                    repacked_state_prev["damage"] = 0
-                    repacked_action_curr = self.repack_action(action[el])
-                    repacked_action_prev = self.repack_action(action[prev])
-                    reward = self.rewarder.get_reward(repacked_state_curr, repacked_state_prev, repacked_action_curr, repacked_action_prev, el, terminal = False, track = self.track)
-                    tot += reward
-                    self.remember(sensors[el], sensors[el + 1], action[el], reward, 0)
-                else:
-                    last_el = el
-
-            if self._memory.isFull():
-                time_start = time.time()
-                for e in range(epochs):
-                    loss = self.learn(0)
-                    log.training("Epoch {}. ".format(e + 1), loss)
-                time_end = time.time()
-                log.info("Completed {:d} epochs. Duration {:.2f} ms".format(epochs, 1000.0 * (time_end - time_start)))
-                # empty the buffer
-                self._memory.reset()
-                last_el = 0
-
-            if last_el == 0:
-                # next file only if current was completed
-                curr_ep += 1
-
-            del action
-            del sensors
-
-        log.info("Pretraining complete. Saving models...")
-        self.save_models()
 
     def simple_controller(self, state):
         speedX = state["speedX"]

@@ -1,0 +1,538 @@
+13:49:11.415 [INFO] (trainer.py:88) Restored results/PPO_SECA/ckpt-185
+13:49:31.212 [INFO] (on_policy_trainer.py:127) Total Epi:     1 Steps:     386 Episode Steps:   386 Return:  132.5284 FPS: 19.50
+13:49:49.116 [INFO] (on_policy_trainer.py:127) Total Epi:     2 Steps:     790 Episode Steps:   404 Return:  137.0787 FPS: 22.57
+13:50:45.860 [INFO] (on_policy_trainer.py:127) Total Epi:     3 Steps:    2130 Episode Steps:  1340 Return:  441.5420 FPS: 23.62
+13:51:53.358 [INFO] (on_policy_trainer.py:127) Total Epi:     4 Steps:    3734 Episode Steps:  1604 Return:  552.1129 FPS: 23.76
+13:52:13.110 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0024482696317136288
+13:52:14.249 [INFO] (on_policy_trainer.py:127) Total Epi:     5 Steps:    4002 Episode Steps:   268 Return:  91.1687 FPS: 12.83
+13:52:32.097 [INFO] (on_policy_trainer.py:127) Total Epi:     6 Steps:    4405 Episode Steps:   403 Return:  137.3792 FPS: 22.58
+13:52:53.197 [INFO] (on_policy_trainer.py:127) Total Epi:     7 Steps:    4882 Episode Steps:   477 Return:  147.5634 FPS: 22.61
+13:53:11.439 [INFO] (on_policy_trainer.py:127) Total Epi:     8 Steps:    5294 Episode Steps:   412 Return:  147.2243 FPS: 22.59
+13:54:05.674 [INFO] (on_policy_trainer.py:127) Total Epi:     9 Steps:    6572 Episode Steps:  1278 Return:  447.2964 FPS: 23.56
+13:54:58.713 [INFO] (on_policy_trainer.py:127) Total Epi:    10 Steps:    7820 Episode Steps:  1248 Return:  442.1169 FPS: 23.53
+13:55:13.569 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0029694174882024527
+13:55:16.687 [INFO] (on_policy_trainer.py:127) Total Epi:    11 Steps:    8050 Episode Steps:   230 Return:  65.8979 FPS: 12.80
+13:56:12.727 [INFO] (on_policy_trainer.py:127) Total Epi:    12 Steps:    9373 Episode Steps:  1323 Return:  445.3562 FPS: 23.61
+13:57:38.550 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   10000 Average Reward  555.4122 over  1 episodes
+13:57:39.676 [INFO] (on_policy_trainer.py:127) Total Epi:    13 Steps:   10001 Episode Steps:   628 Return:  209.3512 FPS:  7.22
+13:57:57.488 [INFO] (on_policy_trainer.py:127) Total Epi:    14 Steps:   10403 Episode Steps:   402 Return:  136.4484 FPS: 22.57
+13:58:15.680 [INFO] (on_policy_trainer.py:127) Total Epi:    15 Steps:   10813 Episode Steps:   410 Return:  137.9365 FPS: 22.54
+13:59:12.123 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.005058904644101858
+13:59:13.285 [INFO] (on_policy_trainer.py:127) Total Epi:    16 Steps:   12002 Episode Steps:  1189 Return:  400.5039 FPS: 20.64
+14:00:16.941 [INFO] (on_policy_trainer.py:127) Total Epi:    17 Steps:   13515 Episode Steps:  1513 Return:  542.8575 FPS: 23.77
+14:00:35.414 [INFO] (on_policy_trainer.py:127) Total Epi:    18 Steps:   13932 Episode Steps:   417 Return:  139.3710 FPS: 22.58
+14:01:45.567 [INFO] (on_policy_trainer.py:127) Total Epi:    19 Steps:   15596 Episode Steps:  1664 Return:  548.3045 FPS: 23.72
+14:02:08.771 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0025375369004905224
+14:02:09.976 [INFO] (on_policy_trainer.py:127) Total Epi:    20 Steps:   16003 Episode Steps:   407 Return:  132.3019 FPS: 16.68
+14:03:06.130 [INFO] (on_policy_trainer.py:127) Total Epi:    21 Steps:   17329 Episode Steps:  1326 Return:  443.4664 FPS: 23.61
+14:03:22.704 [INFO] (on_policy_trainer.py:127) Total Epi:    22 Steps:   17702 Episode Steps:   373 Return:  127.7865 FPS: 22.51
+14:03:41.304 [INFO] (on_policy_trainer.py:127) Total Epi:    23 Steps:   18122 Episode Steps:   420 Return:  142.4237 FPS: 22.58
+14:03:59.016 [INFO] (on_policy_trainer.py:127) Total Epi:    24 Steps:   18522 Episode Steps:   400 Return:  141.1999 FPS: 22.59
+14:05:17.652 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   20000 Average Reward  141.8224 over  1 episodes
+14:05:27.495 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004204426892101765
+14:05:28.602 [INFO] (on_policy_trainer.py:127) Total Epi:    25 Steps:   20001 Episode Steps:  1479 Return:  515.8229 FPS: 16.51
+14:06:23.697 [INFO] (on_policy_trainer.py:127) Total Epi:    26 Steps:   21300 Episode Steps:  1299 Return:  444.5286 FPS: 23.58
+14:06:47.131 [INFO] (on_policy_trainer.py:127) Total Epi:    27 Steps:   21830 Episode Steps:   530 Return:  184.2737 FPS: 22.62
+14:07:41.271 [INFO] (on_policy_trainer.py:127) Total Epi:    28 Steps:   23105 Episode Steps:  1275 Return:  448.3617 FPS: 23.55
+14:08:25.801 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.002062278101220727
+14:08:26.971 [INFO] (on_policy_trainer.py:127) Total Epi:    29 Steps:   24002 Episode Steps:   897 Return:  288.6272 FPS: 19.63
+14:08:44.026 [INFO] (on_policy_trainer.py:127) Total Epi:    30 Steps:   24387 Episode Steps:   385 Return:  135.1661 FPS: 22.58
+14:09:02.054 [INFO] (on_policy_trainer.py:127) Total Epi:    31 Steps:   24794 Episode Steps:   407 Return:  136.1213 FPS: 22.58
+14:09:17.591 [INFO] (on_policy_trainer.py:127) Total Epi:    32 Steps:   25141 Episode Steps:   347 Return:  122.4308 FPS: 22.34
+14:09:35.128 [INFO] (on_policy_trainer.py:127) Total Epi:    33 Steps:   25537 Episode Steps:   396 Return:  132.7841 FPS: 22.58
+14:09:52.070 [INFO] (on_policy_trainer.py:127) Total Epi:    34 Steps:   25919 Episode Steps:   382 Return:  134.5304 FPS: 22.55
+14:10:54.492 [INFO] (on_policy_trainer.py:127) Total Epi:    35 Steps:   27401 Episode Steps:  1482 Return:  556.7610 FPS: 23.74
+14:11:26.759 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.006170975510030985
+14:11:27.946 [INFO] (on_policy_trainer.py:127) Total Epi:    36 Steps:   28003 Episode Steps:   602 Return:  203.8348 FPS: 18.00
+14:11:57.291 [INFO] (on_policy_trainer.py:127) Total Epi:    37 Steps:   28667 Episode Steps:   664 Return:  216.5750 FPS: 22.63
+14:12:15.942 [INFO] (on_policy_trainer.py:127) Total Epi:    38 Steps:   29088 Episode Steps:   421 Return:  143.4649 FPS: 22.57
+14:12:34.099 [INFO] (on_policy_trainer.py:127) Total Epi:    39 Steps:   29498 Episode Steps:   410 Return:  146.4509 FPS: 22.58
+14:12:51.553 [INFO] (on_policy_trainer.py:127) Total Epi:    40 Steps:   29892 Episode Steps:   394 Return:  130.0682 FPS: 22.57
+14:13:23.033 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   30000 Average Reward  211.9702 over  1 episodes
+14:13:24.182 [INFO] (on_policy_trainer.py:127) Total Epi:    41 Steps:   30001 Episode Steps:   109 Return:  17.4548 FPS:  3.34
+14:13:39.188 [INFO] (on_policy_trainer.py:127) Total Epi:    42 Steps:   30334 Episode Steps:   333 Return:  117.2371 FPS: 22.19
+14:14:08.966 [INFO] (on_policy_trainer.py:127) Total Epi:    43 Steps:   31008 Episode Steps:   674 Return:  214.5358 FPS: 22.64
+14:14:35.661 [INFO] (on_policy_trainer.py:127) Total Epi:    44 Steps:   31612 Episode Steps:   604 Return:  204.6385 FPS: 22.63
+14:14:50.742 [INFO] (on_policy_trainer.py:127) Total Epi:    45 Steps:   31947 Episode Steps:   335 Return:  118.4243 FPS: 22.22
+14:15:00.487 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.006830394733697176
+14:15:01.637 [INFO] (on_policy_trainer.py:127) Total Epi:    46 Steps:   32002 Episode Steps:    55 Return:  3.1393 FPS:  5.05
+14:15:58.176 [INFO] (on_policy_trainer.py:127) Total Epi:    47 Steps:   33337 Episode Steps:  1335 Return:  446.3324 FPS: 23.61
+14:16:26.652 [INFO] (on_policy_trainer.py:127) Total Epi:    48 Steps:   33981 Episode Steps:   644 Return:  211.6369 FPS: 22.62
+14:16:44.009 [INFO] (on_policy_trainer.py:127) Total Epi:    49 Steps:   34373 Episode Steps:   392 Return:  134.8771 FPS: 22.59
+14:17:02.665 [INFO] (on_policy_trainer.py:127) Total Epi:    50 Steps:   34794 Episode Steps:   421 Return:  147.0771 FPS: 22.57
+14:17:34.288 [INFO] (on_policy_trainer.py:127) Total Epi:    51 Steps:   35510 Episode Steps:   716 Return:  214.0909 FPS: 22.64
+14:18:02.124 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004924975801259279
+14:18:03.305 [INFO] (on_policy_trainer.py:127) Total Epi:    52 Steps:   36003 Episode Steps:   493 Return:  168.8120 FPS: 16.99
+14:18:25.516 [INFO] (on_policy_trainer.py:127) Total Epi:    53 Steps:   36505 Episode Steps:   502 Return:  148.8577 FPS: 22.60
+14:18:44.823 [INFO] (on_policy_trainer.py:127) Total Epi:    54 Steps:   36941 Episode Steps:   436 Return:  140.6139 FPS: 22.58
+14:19:47.663 [INFO] (on_policy_trainer.py:127) Total Epi:    55 Steps:   38433 Episode Steps:  1492 Return:  552.7558 FPS: 23.74
+14:20:51.071 [INFO] (on_policy_trainer.py:127) Total Epi:    56 Steps:   39940 Episode Steps:  1507 Return:  548.7985 FPS: 23.77
+14:21:10.089 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   40000 Average Reward  134.0632 over  1 episodes
+14:21:21.652 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0049546570517122746
+14:21:22.766 [INFO] (on_policy_trainer.py:127) Total Epi:    57 Steps:   40001 Episode Steps:    61 Return:  4.6181 FPS:  1.92
+14:21:43.866 [INFO] (on_policy_trainer.py:127) Total Epi:    58 Steps:   40472 Episode Steps:   471 Return:  150.6954 FPS: 22.32
+14:22:49.831 [INFO] (on_policy_trainer.py:127) Total Epi:    59 Steps:   42037 Episode Steps:  1565 Return:  554.0401 FPS: 23.73
+14:23:10.710 [INFO] (on_policy_trainer.py:127) Total Epi:    60 Steps:   42507 Episode Steps:   470 Return:  146.7285 FPS: 22.51
+14:23:29.961 [INFO] (on_policy_trainer.py:127) Total Epi:    61 Steps:   42941 Episode Steps:   434 Return:  134.8785 FPS: 22.55
+14:23:48.327 [INFO] (on_policy_trainer.py:127) Total Epi:    62 Steps:   43348 Episode Steps:   407 Return:  137.2508 FPS: 22.16
+14:24:24.493 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0032850406132638454
+14:24:25.636 [INFO] (on_policy_trainer.py:127) Total Epi:    63 Steps:   44002 Episode Steps:   654 Return:  200.0944 FPS: 17.53
+14:24:43.755 [INFO] (on_policy_trainer.py:127) Total Epi:    64 Steps:   44411 Episode Steps:   409 Return:  135.1445 FPS: 22.57
+14:25:02.424 [INFO] (on_policy_trainer.py:127) Total Epi:    65 Steps:   44831 Episode Steps:   420 Return:  135.6297 FPS: 22.50
+14:25:20.138 [INFO] (on_policy_trainer.py:127) Total Epi:    66 Steps:   45231 Episode Steps:   400 Return:  130.5051 FPS: 22.58
+14:26:28.215 [INFO] (on_policy_trainer.py:127) Total Epi:    67 Steps:   46848 Episode Steps:  1617 Return:  548.7090 FPS: 23.75
+14:27:23.370 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0034335474483668804
+14:27:24.553 [INFO] (on_policy_trainer.py:127) Total Epi:    68 Steps:   48003 Episode Steps:  1155 Return:  353.5290 FPS: 20.50
+14:27:53.163 [INFO] (on_policy_trainer.py:127) Total Epi:    69 Steps:   48648 Episode Steps:   645 Return:  210.4239 FPS: 22.55
+14:28:11.223 [INFO] (on_policy_trainer.py:127) Total Epi:    70 Steps:   49047 Episode Steps:   399 Return:  135.3835 FPS: 22.09
+14:29:09.861 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   50000 Average Reward  141.6252 over  1 episodes
+14:29:11.062 [INFO] (on_policy_trainer.py:127) Total Epi:    71 Steps:   50001 Episode Steps:   954 Return:  295.7069 FPS: 15.94
+14:30:07.369 [INFO] (on_policy_trainer.py:127) Total Epi:    72 Steps:   51315 Episode Steps:  1314 Return:  441.2053 FPS: 23.34
+14:30:25.097 [INFO] (on_policy_trainer.py:127) Total Epi:    73 Steps:   51715 Episode Steps:   400 Return:  140.2001 FPS: 22.56
+14:30:45.687 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0029000870417803526
+14:30:46.885 [INFO] (on_policy_trainer.py:127) Total Epi:    74 Steps:   52003 Episode Steps:   288 Return:  96.0454 FPS: 13.22
+14:31:05.226 [INFO] (on_policy_trainer.py:127) Total Epi:    75 Steps:   52417 Episode Steps:   414 Return:  136.3884 FPS: 22.57
+14:31:33.422 [INFO] (on_policy_trainer.py:127) Total Epi:    76 Steps:   53055 Episode Steps:   638 Return:  207.8632 FPS: 22.63
+14:32:44.589 [INFO] (on_policy_trainer.py:127) Total Epi:    77 Steps:   54742 Episode Steps:  1687 Return:  692.6341 FPS: 23.71
+14:33:44.558 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004337760619819164
+14:33:45.757 [INFO] (on_policy_trainer.py:127) Total Epi:    78 Steps:   56003 Episode Steps:  1261 Return:  424.7145 FPS: 20.62
+14:34:48.397 [INFO] (on_policy_trainer.py:127) Total Epi:    79 Steps:   57491 Episode Steps:  1488 Return:  552.6753 FPS: 23.76
+14:35:50.707 [INFO] (on_policy_trainer.py:127) Total Epi:    80 Steps:   58970 Episode Steps:  1479 Return:  552.6937 FPS: 23.74
+14:36:08.878 [INFO] (on_policy_trainer.py:127) Total Epi:    81 Steps:   59380 Episode Steps:   410 Return:  140.2735 FPS: 22.56
+14:36:52.140 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   60000 Average Reward  137.6817 over  1 episodes
+14:37:02.973 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.007582684978842735
+14:37:04.083 [INFO] (on_policy_trainer.py:127) Total Epi:    82 Steps:   60001 Episode Steps:   621 Return:  208.7370 FPS: 11.25
+14:37:21.907 [INFO] (on_policy_trainer.py:127) Total Epi:    83 Steps:   60403 Episode Steps:   402 Return:  134.6746 FPS: 22.56
+14:38:23.680 [INFO] (on_policy_trainer.py:127) Total Epi:    84 Steps:   61869 Episode Steps:  1466 Return:  556.1245 FPS: 23.73
+14:39:35.328 [INFO] (on_policy_trainer.py:127) Total Epi:    85 Steps:   63567 Episode Steps:  1698 Return:  668.2013 FPS: 23.70
+14:40:01.336 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0019032377749681473
+14:40:02.538 [INFO] (on_policy_trainer.py:127) Total Epi:    86 Steps:   64003 Episode Steps:   436 Return:  140.5266 FPS: 16.02
+14:40:19.443 [INFO] (on_policy_trainer.py:127) Total Epi:    87 Steps:   64384 Episode Steps:   381 Return:  134.9300 FPS: 22.54
+14:41:20.685 [INFO] (on_policy_trainer.py:127) Total Epi:    88 Steps:   65837 Episode Steps:  1453 Return:  549.4981 FPS: 23.73
+14:41:48.144 [INFO] (on_policy_trainer.py:127) Total Epi:    89 Steps:   66458 Episode Steps:   621 Return:  211.2245 FPS: 22.62
+14:42:04.668 [INFO] (on_policy_trainer.py:127) Total Epi:    90 Steps:   66829 Episode Steps:   371 Return:  132.9192 FPS: 22.45
+14:42:21.624 [INFO] (on_policy_trainer.py:127) Total Epi:    91 Steps:   67211 Episode Steps:   382 Return:  134.9015 FPS: 22.53
+14:42:40.147 [INFO] (on_policy_trainer.py:127) Total Epi:    92 Steps:   67629 Episode Steps:   418 Return:  143.3909 FPS: 22.57
+14:43:02.329 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003381993854418397
+14:43:03.541 [INFO] (on_policy_trainer.py:127) Total Epi:    93 Steps:   68003 Episode Steps:   374 Return:  128.7760 FPS: 15.99
+14:43:56.915 [INFO] (on_policy_trainer.py:127) Total Epi:    94 Steps:   69259 Episode Steps:  1256 Return:  423.1830 FPS: 23.53
+14:44:14.167 [INFO] (on_policy_trainer.py:127) Total Epi:    95 Steps:   69648 Episode Steps:   389 Return:  134.1531 FPS: 22.55
+14:44:29.708 [INFO] (on_policy_trainer.py:127) Total Epi:    96 Steps:   69995 Episode Steps:   347 Return:  117.5430 FPS: 22.33
+14:45:40.509 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   70000 Average Reward  691.0217 over  1 episodes
+14:45:40.510 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+14:45:41.687 [INFO] (on_policy_trainer.py:127) Total Epi:    97 Steps:   70001 Episode Steps:     6 Return:  0.0520 FPS:  0.08
+14:45:59.710 [INFO] (on_policy_trainer.py:127) Total Epi:    98 Steps:   70408 Episode Steps:   407 Return:  135.4979 FPS: 22.58
+14:46:16.416 [INFO] (on_policy_trainer.py:127) Total Epi:    99 Steps:   70784 Episode Steps:   376 Return:  131.6527 FPS: 22.51
+14:46:32.072 [INFO] (on_policy_trainer.py:127) Total Epi:   100 Steps:   71133 Episode Steps:   349 Return:  120.6371 FPS: 22.29
+14:46:47.178 [INFO] (on_policy_trainer.py:127) Total Epi:   101 Steps:   71469 Episode Steps:   336 Return:  118.6347 FPS: 22.24
+14:47:17.327 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003602053504437208
+14:47:18.480 [INFO] (on_policy_trainer.py:127) Total Epi:   102 Steps:   72002 Episode Steps:   533 Return:  180.4002 FPS: 17.03
+14:48:30.351 [INFO] (on_policy_trainer.py:127) Total Epi:   103 Steps:   73705 Episode Steps:  1703 Return:  679.8111 FPS: 23.70
+14:49:33.042 [INFO] (on_policy_trainer.py:127) Total Epi:   104 Steps:   75194 Episode Steps:  1489 Return:  557.3920 FPS: 23.75
+14:49:50.300 [INFO] (on_policy_trainer.py:127) Total Epi:   105 Steps:   75583 Episode Steps:   389 Return:  132.8205 FPS: 22.54
+14:50:14.779 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004158516880124807
+14:50:15.976 [INFO] (on_policy_trainer.py:127) Total Epi:   106 Steps:   76003 Episode Steps:   420 Return:  138.4167 FPS: 16.36
+14:51:30.187 [INFO] (on_policy_trainer.py:127) Total Epi:   107 Steps:   77759 Episode Steps:  1756 Return:  686.0155 FPS: 23.66
+14:51:47.859 [INFO] (on_policy_trainer.py:127) Total Epi:   108 Steps:   78158 Episode Steps:   399 Return:  136.9864 FPS: 22.58
+14:52:50.033 [INFO] (on_policy_trainer.py:127) Total Epi:   109 Steps:   79634 Episode Steps:  1476 Return:  550.4429 FPS: 23.74
+14:54:05.169 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   80000 Average Reward  562.1129 over  1 episodes
+14:54:16.735 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003970156889408827
+14:54:17.853 [INFO] (on_policy_trainer.py:127) Total Epi:   110 Steps:   80001 Episode Steps:   367 Return:  127.9000 FPS:  4.18
+14:54:36.892 [INFO] (on_policy_trainer.py:127) Total Epi:   111 Steps:   80431 Episode Steps:   430 Return:  146.1814 FPS: 22.59
+14:55:50.692 [INFO] (on_policy_trainer.py:127) Total Epi:   112 Steps:   82178 Episode Steps:  1747 Return:  685.3943 FPS: 23.67
+14:56:11.446 [INFO] (on_policy_trainer.py:127) Total Epi:   113 Steps:   82646 Episode Steps:   468 Return:  145.8885 FPS: 22.55
+14:56:58.816 [INFO] (on_policy_trainer.py:127) Total Epi:   114 Steps:   83752 Episode Steps:  1106 Return:  354.1234 FPS: 23.35
+14:57:17.807 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.005907469894737005
+14:57:18.991 [INFO] (on_policy_trainer.py:127) Total Epi:   115 Steps:   84003 Episode Steps:   251 Return:  76.7658 FPS: 12.44
+14:57:36.763 [INFO] (on_policy_trainer.py:127) Total Epi:   116 Steps:   84404 Episode Steps:   401 Return:  134.8606 FPS: 22.57
+14:58:39.902 [INFO] (on_policy_trainer.py:127) Total Epi:   117 Steps:   85904 Episode Steps:  1500 Return:  556.7086 FPS: 23.76
+14:59:52.514 [INFO] (on_policy_trainer.py:127) Total Epi:   118 Steps:   87624 Episode Steps:  1720 Return:  684.6143 FPS: 23.69
+15:00:15.265 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0018635313026607037
+15:00:16.478 [INFO] (on_policy_trainer.py:127) Total Epi:   119 Steps:   88003 Episode Steps:   379 Return:  130.5340 FPS: 15.82
+15:00:35.381 [INFO] (on_policy_trainer.py:127) Total Epi:   120 Steps:   88430 Episode Steps:   427 Return:  139.6678 FPS: 22.59
+15:02:51.005 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:   90000 Average Reward  693.5315 over  1 episodes
+15:02:51.007 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+15:02:52.152 [INFO] (on_policy_trainer.py:127) Total Epi:   121 Steps:   90001 Episode Steps:  1571 Return:  582.3785 FPS: 11.49
+15:03:10.442 [INFO] (on_policy_trainer.py:127) Total Epi:   122 Steps:   90414 Episode Steps:   413 Return:  137.4135 FPS: 22.58
+15:04:14.146 [INFO] (on_policy_trainer.py:127) Total Epi:   123 Steps:   91928 Episode Steps:  1514 Return:  553.1241 FPS: 23.77
+15:04:24.451 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003780948929488659
+15:04:25.637 [INFO] (on_policy_trainer.py:127) Total Epi:   124 Steps:   92003 Episode Steps:    75 Return:  8.1019 FPS:  6.53
+15:05:29.542 [INFO] (on_policy_trainer.py:127) Total Epi:   125 Steps:   93520 Episode Steps:  1517 Return:  555.6415 FPS: 23.74
+15:06:34.236 [INFO] (on_policy_trainer.py:127) Total Epi:   126 Steps:   95059 Episode Steps:  1539 Return:  551.2796 FPS: 23.79
+15:07:21.921 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004110793583095074
+15:07:23.071 [INFO] (on_policy_trainer.py:127) Total Epi:   127 Steps:   96002 Episode Steps:   943 Return:  287.7023 FPS: 19.31
+15:07:42.026 [INFO] (on_policy_trainer.py:127) Total Epi:   128 Steps:   96430 Episode Steps:   428 Return:  141.3228 FPS: 22.58
+15:07:59.750 [INFO] (on_policy_trainer.py:127) Total Epi:   129 Steps:   96830 Episode Steps:   400 Return:  125.9776 FPS: 22.57
+15:09:04.225 [INFO] (on_policy_trainer.py:127) Total Epi:   130 Steps:   98363 Episode Steps:  1533 Return:  556.8336 FPS: 23.78
+15:09:25.382 [INFO] (on_policy_trainer.py:127) Total Epi:   131 Steps:   98841 Episode Steps:   478 Return:  146.8307 FPS: 22.59
+15:09:43.756 [INFO] (on_policy_trainer.py:127) Total Epi:   132 Steps:   99256 Episode Steps:   415 Return:  130.9738 FPS: 22.59
+15:10:03.298 [INFO] (on_policy_trainer.py:127) Total Epi:   133 Steps:   99697 Episode Steps:   441 Return:  140.9940 FPS: 22.57
+15:10:34.105 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  100000 Average Reward  138.8702 over  1 episodes
+15:10:46.378 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004278159700334072
+15:10:47.499 [INFO] (on_policy_trainer.py:127) Total Epi:   134 Steps:  100001 Episode Steps:   304 Return:  98.6974 FPS:  6.88
+15:11:05.622 [INFO] (on_policy_trainer.py:127) Total Epi:   135 Steps:  100410 Episode Steps:   409 Return:  130.2609 FPS: 22.57
+15:11:23.877 [INFO] (on_policy_trainer.py:127) Total Epi:   136 Steps:  100822 Episode Steps:   412 Return:  130.5615 FPS: 22.57
+15:12:28.338 [INFO] (on_policy_trainer.py:127) Total Epi:   137 Steps:  102355 Episode Steps:  1533 Return:  550.1148 FPS: 23.78
+15:13:44.502 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004113042261451483
+15:13:45.724 [INFO] (on_policy_trainer.py:127) Total Epi:   138 Steps:  104003 Episode Steps:  1648 Return:  595.2240 FPS: 21.30
+15:14:49.257 [INFO] (on_policy_trainer.py:127) Total Epi:   139 Steps:  105513 Episode Steps:  1510 Return:  552.6393 FPS: 23.77
+15:15:53.748 [INFO] (on_policy_trainer.py:127) Total Epi:   140 Steps:  107047 Episode Steps:  1534 Return:  547.2816 FPS: 23.79
+15:16:11.871 [INFO] (on_policy_trainer.py:127) Total Epi:   141 Steps:  107456 Episode Steps:   409 Return:  140.6155 FPS: 22.57
+15:16:43.766 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.007626515347510576
+15:16:44.951 [INFO] (on_policy_trainer.py:127) Total Epi:   142 Steps:  108003 Episode Steps:   547 Return:  181.9929 FPS: 16.54
+15:17:09.011 [INFO] (on_policy_trainer.py:127) Total Epi:   143 Steps:  108547 Episode Steps:   544 Return:  179.7970 FPS: 22.61
+15:17:37.691 [INFO] (on_policy_trainer.py:127) Total Epi:   144 Steps:  109196 Episode Steps:   649 Return:  207.9686 FPS: 22.63
+15:17:55.195 [INFO] (on_policy_trainer.py:127) Total Epi:   145 Steps:  109591 Episode Steps:   395 Return:  128.3727 FPS: 22.57
+15:18:30.602 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  110000 Average Reward  138.7681 over  1 episodes
+15:18:31.762 [INFO] (on_policy_trainer.py:127) Total Epi:   146 Steps:  110001 Episode Steps:   410 Return:  140.6305 FPS: 11.21
+15:19:37.734 [INFO] (on_policy_trainer.py:127) Total Epi:   147 Steps:  111570 Episode Steps:  1569 Return:  557.1585 FPS: 23.78
+15:20:03.197 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0005488920724019408
+15:20:04.360 [INFO] (on_policy_trainer.py:127) Total Epi:   148 Steps:  112003 Episode Steps:   433 Return:  144.0904 FPS: 16.26
+15:20:22.617 [INFO] (on_policy_trainer.py:127) Total Epi:   149 Steps:  112415 Episode Steps:   412 Return:  127.5381 FPS: 22.57
+15:20:42.510 [INFO] (on_policy_trainer.py:127) Total Epi:   150 Steps:  112864 Episode Steps:   449 Return:  139.2992 FPS: 22.57
+15:21:01.000 [INFO] (on_policy_trainer.py:127) Total Epi:   151 Steps:  113281 Episode Steps:   417 Return:  128.2000 FPS: 22.55
+15:21:49.054 [INFO] (on_policy_trainer.py:127) Total Epi:   152 Steps:  114404 Episode Steps:  1123 Return:  338.1622 FPS: 23.37
+15:22:10.426 [INFO] (on_policy_trainer.py:127) Total Epi:   153 Steps:  114887 Episode Steps:   483 Return:  145.3957 FPS: 22.60
+15:23:04.916 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004678983706980944
+15:23:06.101 [INFO] (on_policy_trainer.py:127) Total Epi:   154 Steps:  116003 Episode Steps:  1116 Return:  348.1958 FPS: 20.05
+15:23:24.289 [INFO] (on_policy_trainer.py:127) Total Epi:   155 Steps:  116413 Episode Steps:   410 Return:  125.9703 FPS: 22.54
+15:23:43.796 [INFO] (on_policy_trainer.py:127) Total Epi:   156 Steps:  116853 Episode Steps:   440 Return:  134.2081 FPS: 22.56
+15:24:05.711 [INFO] (on_policy_trainer.py:127) Total Epi:   157 Steps:  117347 Episode Steps:   494 Return:  152.2936 FPS: 22.54
+15:24:26.249 [INFO] (on_policy_trainer.py:127) Total Epi:   158 Steps:  117811 Episode Steps:   464 Return:  140.5619 FPS: 22.59
+15:24:43.839 [INFO] (on_policy_trainer.py:127) Total Epi:   159 Steps:  118208 Episode Steps:   397 Return:  129.2816 FPS: 22.57
+15:26:17.997 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  120000 Average Reward  131.6575 over  1 episodes
+15:26:31.067 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0026663378812372684
+15:26:32.179 [INFO] (on_policy_trainer.py:127) Total Epi:   160 Steps:  120001 Episode Steps:  1793 Return:  653.1347 FPS: 16.55
+15:27:53.829 [INFO] (on_policy_trainer.py:127) Total Epi:   161 Steps:  121917 Episode Steps:  1916 Return:  680.3821 FPS: 23.47
+15:28:12.583 [INFO] (on_policy_trainer.py:127) Total Epi:   162 Steps:  122340 Episode Steps:   423 Return:  126.0714 FPS: 22.56
+15:28:34.626 [INFO] (on_policy_trainer.py:127) Total Epi:   163 Steps:  122838 Episode Steps:   498 Return:  145.8949 FPS: 22.59
+15:29:01.102 [INFO] (on_policy_trainer.py:127) Total Epi:   164 Steps:  123437 Episode Steps:   599 Return:  185.7366 FPS: 22.63
+15:29:33.542 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003235627431422472
+15:30:22.934 [INFO] (on_policy_trainer.py:127) Total Epi:   165 Steps:  125170 Episode Steps:  1733 Return:  640.0781 FPS: 21.18
+15:30:45.773 [INFO] (on_policy_trainer.py:127) Total Epi:   166 Steps:  125685 Episode Steps:   515 Return:  148.8173 FPS: 22.55
+15:31:11.876 [INFO] (on_policy_trainer.py:127) Total Epi:   167 Steps:  126275 Episode Steps:   590 Return:  181.4709 FPS: 22.60
+15:31:35.933 [INFO] (on_policy_trainer.py:127) Total Epi:   168 Steps:  126817 Episode Steps:   542 Return:  174.7324 FPS: 22.53
+15:32:32.234 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss -4.225406519253738e-05
+15:32:33.415 [INFO] (on_policy_trainer.py:127) Total Epi:   169 Steps:  128003 Episode Steps:  1186 Return:  369.0988 FPS: 20.63
+15:32:54.796 [INFO] (on_policy_trainer.py:127) Total Epi:   170 Steps:  128486 Episode Steps:   483 Return:  147.3049 FPS: 22.59
+15:35:10.132 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  130000 Average Reward  686.8214 over  1 episodes
+15:35:10.134 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+15:35:11.292 [INFO] (on_policy_trainer.py:127) Total Epi:   171 Steps:  130001 Episode Steps:  1515 Return:  524.3847 FPS: 11.10
+15:36:29.974 [INFO] (on_policy_trainer.py:127) Total Epi:   172 Steps:  131859 Episode Steps:  1858 Return:  680.5020 FPS: 23.61
+15:36:43.478 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0031432986725121737
+15:36:44.661 [INFO] (on_policy_trainer.py:127) Total Epi:   173 Steps:  132003 Episode Steps:   144 Return:  28.6305 FPS:  9.81
+15:38:00.608 [INFO] (on_policy_trainer.py:127) Total Epi:   174 Steps:  133796 Episode Steps:  1793 Return:  668.3799 FPS: 23.61
+15:38:21.249 [INFO] (on_policy_trainer.py:127) Total Epi:   175 Steps:  134262 Episode Steps:   466 Return:  140.5857 FPS: 22.58
+15:38:53.361 [INFO] (on_policy_trainer.py:127) Total Epi:   176 Steps:  134989 Episode Steps:   727 Return:  217.9266 FPS: 22.64
+15:39:43.972 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004661703947931528
+15:39:45.147 [INFO] (on_policy_trainer.py:127) Total Epi:   177 Steps:  136003 Episode Steps:  1014 Return:  314.8699 FPS: 19.58
+15:40:23.762 [INFO] (on_policy_trainer.py:127) Total Epi:   178 Steps:  136890 Episode Steps:   887 Return:  278.5658 FPS: 22.97
+15:40:42.272 [INFO] (on_policy_trainer.py:127) Total Epi:   179 Steps:  137307 Episode Steps:   417 Return:  141.4637 FPS: 22.53
+15:41:00.793 [INFO] (on_policy_trainer.py:127) Total Epi:   180 Steps:  137725 Episode Steps:   418 Return:  136.2298 FPS: 22.57
+15:41:19.533 [INFO] (on_policy_trainer.py:127) Total Epi:   181 Steps:  138148 Episode Steps:   423 Return:  143.2370 FPS: 22.57
+15:42:33.864 [INFO] (on_policy_trainer.py:127) Total Epi:   182 Steps:  139907 Episode Steps:  1759 Return:  664.3184 FPS: 23.67
+15:42:53.312 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  140000 Average Reward  120.0482 over  1 episodes
+15:43:05.342 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004857371561229229
+15:43:06.440 [INFO] (on_policy_trainer.py:127) Total Epi:   183 Steps:  140001 Episode Steps:    94 Return:  12.6182 FPS:  2.89
+15:44:18.228 [INFO] (on_policy_trainer.py:127) Total Epi:   184 Steps:  141702 Episode Steps:  1701 Return:  661.5564 FPS: 23.70
+15:45:20.754 [INFO] (on_policy_trainer.py:127) Total Epi:   185 Steps:  143186 Episode Steps:  1484 Return:  539.5253 FPS: 23.73
+15:46:06.337 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0018238915363326669
+15:46:07.483 [INFO] (on_policy_trainer.py:127) Total Epi:   186 Steps:  144002 Episode Steps:   816 Return:  263.0153 FPS: 17.46
+15:46:49.118 [INFO] (on_policy_trainer.py:127) Total Epi:   187 Steps:  144964 Episode Steps:   962 Return:  298.4539 FPS: 23.11
+15:47:07.826 [INFO] (on_policy_trainer.py:127) Total Epi:   188 Steps:  145386 Episode Steps:   422 Return:  135.2241 FPS: 22.56
+15:48:24.416 [INFO] (on_policy_trainer.py:127) Total Epi:   189 Steps:  147196 Episode Steps:  1810 Return:  684.3532 FPS: 23.63
+15:49:09.452 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003416916821151972
+15:49:10.594 [INFO] (on_policy_trainer.py:127) Total Epi:   190 Steps:  148002 Episode Steps:   806 Return:  250.3397 FPS: 17.45
+15:50:07.426 [INFO] (on_policy_trainer.py:127) Total Epi:   191 Steps:  149344 Episode Steps:  1342 Return:  426.2977 FPS: 23.61
+15:50:54.262 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  150000 Average Reward  143.1739 over  1 episodes
+15:50:55.430 [INFO] (on_policy_trainer.py:127) Total Epi:   192 Steps:  150001 Episode Steps:   657 Return:  205.7793 FPS: 13.69
+15:51:14.477 [INFO] (on_policy_trainer.py:127) Total Epi:   193 Steps:  150431 Episode Steps:   430 Return:  136.8405 FPS: 22.58
+15:51:54.184 [INFO] (on_policy_trainer.py:127) Total Epi:   194 Steps:  151345 Episode Steps:   914 Return:  274.8621 FPS: 23.02
+15:52:33.273 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0039060444105416536
+15:52:34.466 [INFO] (on_policy_trainer.py:127) Total Epi:   195 Steps:  152003 Episode Steps:   658 Return:  205.9827 FPS: 16.34
+15:52:58.726 [INFO] (on_policy_trainer.py:127) Total Epi:   196 Steps:  152551 Episode Steps:   548 Return:  179.2059 FPS: 22.59
+15:53:17.596 [INFO] (on_policy_trainer.py:127) Total Epi:   197 Steps:  152977 Episode Steps:   426 Return:  109.2307 FPS: 22.58
+15:53:36.285 [INFO] (on_policy_trainer.py:127) Total Epi:   198 Steps:  153399 Episode Steps:   422 Return:  141.4872 FPS: 22.58
+15:54:47.198 [INFO] (on_policy_trainer.py:127) Total Epi:   199 Steps:  155080 Episode Steps:  1681 Return:  628.4665 FPS: 23.71
+15:55:34.532 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.007845214568078518
+15:55:35.736 [INFO] (on_policy_trainer.py:127) Total Epi:   200 Steps:  156003 Episode Steps:   923 Return:  289.9728 FPS: 19.02
+15:56:51.881 [INFO] (on_policy_trainer.py:127) Total Epi:   201 Steps:  157802 Episode Steps:  1799 Return:  684.9634 FPS: 23.63
+15:58:09.692 [INFO] (on_policy_trainer.py:127) Total Epi:   202 Steps:  159640 Episode Steps:  1838 Return:  680.8590 FPS: 23.62
+15:59:18.223 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  160000 Average Reward  429.4391 over  1 episodes
+15:59:37.304 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004403192084282637
+15:59:38.430 [INFO] (on_policy_trainer.py:127) Total Epi:   203 Steps:  160001 Episode Steps:   361 Return:  119.3036 FPS:  4.07
+16:00:43.514 [INFO] (on_policy_trainer.py:127) Total Epi:   204 Steps:  161549 Episode Steps:  1548 Return:  543.6600 FPS: 23.79
+16:01:49.134 [INFO] (on_policy_trainer.py:127) Total Epi:   205 Steps:  163109 Episode Steps:  1560 Return:  548.0158 FPS: 23.77
+16:02:36.298 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0002730543492361903
+16:02:37.480 [INFO] (on_policy_trainer.py:127) Total Epi:   206 Steps:  164003 Episode Steps:   894 Return:  280.7259 FPS: 18.49
+16:02:54.688 [INFO] (on_policy_trainer.py:127) Total Epi:   207 Steps:  164391 Episode Steps:   388 Return:  124.4625 FPS: 22.55
+16:03:50.676 [INFO] (on_policy_trainer.py:127) Total Epi:   208 Steps:  165712 Episode Steps:  1321 Return:  424.8117 FPS: 23.60
+16:04:57.481 [INFO] (on_policy_trainer.py:127) Total Epi:   209 Steps:  167300 Episode Steps:  1588 Return:  554.1313 FPS: 23.77
+16:05:36.271 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0029686244670301676
+16:05:37.447 [INFO] (on_policy_trainer.py:127) Total Epi:   210 Steps:  168003 Episode Steps:   703 Return:  214.4701 FPS: 17.59
+16:05:56.455 [INFO] (on_policy_trainer.py:127) Total Epi:   211 Steps:  168432 Episode Steps:   429 Return:  134.6009 FPS: 22.57
+16:07:02.180 [INFO] (on_policy_trainer.py:127) Total Epi:   212 Steps:  169994 Episode Steps:  1562 Return:  537.2589 FPS: 23.77
+16:07:20.308 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  170000 Average Reward  140.6243 over  1 episodes
+16:07:21.453 [INFO] (on_policy_trainer.py:127) Total Epi:   213 Steps:  170001 Episode Steps:     7 Return:  0.3322 FPS:  0.36
+16:08:11.170 [INFO] (on_policy_trainer.py:127) Total Epi:   214 Steps:  171166 Episode Steps:  1165 Return:  350.4181 FPS: 23.43
+16:08:53.448 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004051721654832363
+16:08:54.586 [INFO] (on_policy_trainer.py:127) Total Epi:   215 Steps:  172002 Episode Steps:   836 Return:  255.0591 FPS: 19.26
+16:10:02.314 [INFO] (on_policy_trainer.py:127) Total Epi:   216 Steps:  173611 Episode Steps:  1609 Return:  552.5246 FPS: 23.76
+16:10:22.671 [INFO] (on_policy_trainer.py:127) Total Epi:   217 Steps:  174071 Episode Steps:   460 Return:  141.2583 FPS: 22.60
+16:10:49.946 [INFO] (on_policy_trainer.py:127) Total Epi:   218 Steps:  174688 Episode Steps:   617 Return:  202.7319 FPS: 22.62
+16:11:51.182 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004779221024364233
+16:11:52.337 [INFO] (on_policy_trainer.py:127) Total Epi:   219 Steps:  176002 Episode Steps:  1314 Return:  412.9147 FPS: 21.06
+16:12:49.258 [INFO] (on_policy_trainer.py:127) Total Epi:   220 Steps:  177347 Episode Steps:  1345 Return:  435.0221 FPS: 23.63
+16:13:44.947 [INFO] (on_policy_trainer.py:127) Total Epi:   221 Steps:  178661 Episode Steps:  1314 Return:  436.2599 FPS: 23.60
+16:15:42.567 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  180000 Average Reward  557.8643 over  1 episodes
+16:15:53.815 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0008577660191804171
+16:15:54.940 [INFO] (on_policy_trainer.py:127) Total Epi:   222 Steps:  180001 Episode Steps:  1340 Return:  445.7390 FPS: 10.31
+16:16:15.968 [INFO] (on_policy_trainer.py:127) Total Epi:   223 Steps:  180476 Episode Steps:   475 Return:  148.8083 FPS: 22.59
+16:16:34.281 [INFO] (on_policy_trainer.py:127) Total Epi:   224 Steps:  180889 Episode Steps:   413 Return:  130.7251 FPS: 22.55
+16:17:40.573 [INFO] (on_policy_trainer.py:127) Total Epi:   225 Steps:  182465 Episode Steps:  1576 Return:  549.4260 FPS: 23.77
+16:17:58.933 [INFO] (on_policy_trainer.py:127) Total Epi:   226 Steps:  182879 Episode Steps:   414 Return:  133.0113 FPS: 22.55
+16:18:53.808 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004394283052533865
+16:18:54.965 [INFO] (on_policy_trainer.py:127) Total Epi:   227 Steps:  184002 Episode Steps:  1123 Return:  327.2508 FPS: 20.04
+16:19:13.390 [INFO] (on_policy_trainer.py:127) Total Epi:   228 Steps:  184418 Episode Steps:   416 Return:  142.3327 FPS: 22.58
+16:20:30.773 [INFO] (on_policy_trainer.py:127) Total Epi:   229 Steps:  186245 Episode Steps:  1827 Return:  684.8850 FPS: 23.61
+16:21:51.196 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0033856923691928387
+16:21:52.354 [INFO] (on_policy_trainer.py:127) Total Epi:   230 Steps:  188003 Episode Steps:  1758 Return:  598.4548 FPS: 21.55
+16:22:40.090 [INFO] (on_policy_trainer.py:127) Total Epi:   231 Steps:  189116 Episode Steps:  1113 Return:  356.7686 FPS: 23.32
+16:24:30.100 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  190000 Average Reward  687.8312 over  1 episodes
+16:24:30.101 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+16:24:31.260 [INFO] (on_policy_trainer.py:127) Total Epi:   232 Steps:  190001 Episode Steps:   885 Return:  261.2558 FPS:  7.96
+16:25:38.308 [INFO] (on_policy_trainer.py:127) Total Epi:   233 Steps:  191594 Episode Steps:  1593 Return:  552.0106 FPS: 23.76
+16:26:04.122 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0041762408800423145
+16:26:05.315 [INFO] (on_policy_trainer.py:127) Total Epi:   234 Steps:  192003 Episode Steps:   409 Return:  130.9898 FPS: 15.14
+16:26:24.592 [INFO] (on_policy_trainer.py:127) Total Epi:   235 Steps:  192437 Episode Steps:   434 Return:  132.7499 FPS: 22.52
+16:27:49.861 [INFO] (on_policy_trainer.py:127) Total Epi:   236 Steps:  194444 Episode Steps:  2007 Return:  683.0061 FPS: 23.54
+16:29:03.050 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.002504673320800066
+16:29:04.181 [INFO] (on_policy_trainer.py:127) Total Epi:   237 Steps:  196002 Episode Steps:  1558 Return:  485.2008 FPS: 20.96
+16:29:54.089 [INFO] (on_policy_trainer.py:127) Total Epi:   238 Steps:  197171 Episode Steps:  1169 Return:  355.3451 FPS: 23.42
+16:31:01.663 [INFO] (on_policy_trainer.py:127) Total Epi:   239 Steps:  198776 Episode Steps:  1605 Return:  551.1081 FPS: 23.76
+16:33:07.715 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  200000 Average Reward  689.9617 over  1 episodes
+16:33:07.717 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+16:33:22.676 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0034732588101178408
+16:33:23.777 [INFO] (on_policy_trainer.py:127) Total Epi:   240 Steps:  200001 Episode Steps:  1225 Return:  364.0846 FPS:  8.62
+16:33:46.904 [INFO] (on_policy_trainer.py:127) Total Epi:   241 Steps:  200524 Episode Steps:   523 Return:  141.5067 FPS: 22.62
+16:34:08.072 [INFO] (on_policy_trainer.py:127) Total Epi:   242 Steps:  201002 Episode Steps:   478 Return:  133.5081 FPS: 22.58
+16:35:19.665 [INFO] (on_policy_trainer.py:127) Total Epi:   243 Steps:  202697 Episode Steps:  1695 Return:  536.2537 FPS: 23.68
+16:35:45.698 [INFO] (on_policy_trainer.py:127) Total Epi:   244 Steps:  203285 Episode Steps:   588 Return:  175.1011 FPS: 22.59
+16:36:22.944 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004044258967041969
+16:36:24.130 [INFO] (on_policy_trainer.py:127) Total Epi:   245 Steps:  204003 Episode Steps:   718 Return:  211.6124 FPS: 18.68
+16:37:41.766 [INFO] (on_policy_trainer.py:127) Total Epi:   246 Steps:  205837 Episode Steps:  1834 Return:  686.4221 FPS: 23.62
+16:38:57.043 [INFO] (on_policy_trainer.py:127) Total Epi:   247 Steps:  207617 Episode Steps:  1780 Return:  650.4866 FPS: 23.65
+16:39:21.532 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0031225159764289856
+16:39:22.721 [INFO] (on_policy_trainer.py:127) Total Epi:   248 Steps:  208003 Episode Steps:   386 Return:  125.4909 FPS: 15.03
+16:39:38.510 [INFO] (on_policy_trainer.py:127) Total Epi:   249 Steps:  208356 Episode Steps:   353 Return:  116.6165 FPS: 22.36
+16:40:45.805 [INFO] (on_policy_trainer.py:127) Total Epi:   250 Steps:  209955 Episode Steps:  1599 Return:  550.0922 FPS: 23.76
+16:41:02.745 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  210000 Average Reward  118.5787 over  1 episodes
+16:41:03.891 [INFO] (on_policy_trainer.py:127) Total Epi:   251 Steps:  210001 Episode Steps:    46 Return:  2.2545 FPS:  2.54
+16:41:22.935 [INFO] (on_policy_trainer.py:127) Total Epi:   252 Steps:  210431 Episode Steps:   430 Return:  137.7262 FPS: 22.58
+16:42:36.146 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0025033019483089447
+16:42:37.260 [INFO] (on_policy_trainer.py:127) Total Epi:   253 Steps:  212001 Episode Steps:  1570 Return:  540.5889 FPS: 21.12
+16:43:32.517 [INFO] (on_policy_trainer.py:127) Total Epi:   254 Steps:  213304 Episode Steps:  1303 Return:  428.7738 FPS: 23.58
+16:44:50.147 [INFO] (on_policy_trainer.py:127) Total Epi:   255 Steps:  215138 Episode Steps:  1834 Return:  682.1744 FPS: 23.63
+16:45:34.480 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0038409759290516376
+16:45:35.681 [INFO] (on_policy_trainer.py:127) Total Epi:   256 Steps:  216003 Episode Steps:   865 Return:  273.4043 FPS: 19.00
+16:45:53.771 [INFO] (on_policy_trainer.py:127) Total Epi:   257 Steps:  216411 Episode Steps:   408 Return:  134.1703 FPS: 22.56
+16:46:59.512 [INFO] (on_policy_trainer.py:127) Total Epi:   258 Steps:  217975 Episode Steps:  1564 Return:  552.6134 FPS: 23.79
+16:48:17.310 [INFO] (on_policy_trainer.py:127) Total Epi:   259 Steps:  219813 Episode Steps:  1838 Return:  675.0915 FPS: 23.63
+16:48:42.678 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  220000 Average Reward  137.1053 over  1 episodes
+16:48:55.421 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0031218151561915874
+16:48:56.525 [INFO] (on_policy_trainer.py:127) Total Epi:   260 Steps:  220001 Episode Steps:   188 Return:  49.2212 FPS:  4.79
+16:50:15.106 [INFO] (on_policy_trainer.py:127) Total Epi:   261 Steps:  221856 Episode Steps:  1855 Return:  685.5806 FPS: 23.61
+16:50:46.835 [INFO] (on_policy_trainer.py:127) Total Epi:   262 Steps:  222574 Episode Steps:   718 Return:  219.3567 FPS: 22.63
+16:51:54.853 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003509668866172433
+16:51:56.014 [INFO] (on_policy_trainer.py:127) Total Epi:   263 Steps:  224002 Episode Steps:  1428 Return:  473.3487 FPS: 20.64
+16:53:15.393 [INFO] (on_policy_trainer.py:127) Total Epi:   264 Steps:  225876 Episode Steps:  1874 Return:  682.2346 FPS: 23.61
+16:54:21.268 [INFO] (on_policy_trainer.py:127) Total Epi:   265 Steps:  227443 Episode Steps:  1567 Return:  552.2103 FPS: 23.79
+16:54:52.293 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0033128594513982534
+16:54:53.467 [INFO] (on_policy_trainer.py:127) Total Epi:   266 Steps:  228003 Episode Steps:   560 Return:  180.4575 FPS: 17.39
+16:55:14.489 [INFO] (on_policy_trainer.py:127) Total Epi:   267 Steps:  228478 Episode Steps:   475 Return:  147.3700 FPS: 22.60
+16:57:32.798 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  230000 Average Reward  680.6647 over  1 episodes
+16:57:32.799 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+16:57:33.975 [INFO] (on_policy_trainer.py:127) Total Epi:   268 Steps:  230001 Episode Steps:  1523 Return:  497.8446 FPS: 10.92
+16:57:52.554 [INFO] (on_policy_trainer.py:127) Total Epi:   269 Steps:  230420 Episode Steps:   419 Return:  134.7949 FPS: 22.55
+16:59:06.401 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.005095198284834623
+16:59:07.578 [INFO] (on_policy_trainer.py:127) Total Epi:   270 Steps:  232003 Episode Steps:  1583 Return:  500.4752 FPS: 21.10
+16:59:26.153 [INFO] (on_policy_trainer.py:127) Total Epi:   271 Steps:  232422 Episode Steps:   419 Return:  135.7699 FPS: 22.56
+17:00:46.419 [INFO] (on_policy_trainer.py:127) Total Epi:   272 Steps:  234316 Episode Steps:  1894 Return:  673.7875 FPS: 23.60
+17:02:04.234 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0012718550860881805
+17:02:05.431 [INFO] (on_policy_trainer.py:127) Total Epi:   273 Steps:  236003 Episode Steps:  1687 Return:  579.3898 FPS: 21.35
+17:03:23.923 [INFO] (on_policy_trainer.py:127) Total Epi:   274 Steps:  237851 Episode Steps:  1848 Return:  669.7047 FPS: 23.54
+17:04:30.692 [INFO] (on_policy_trainer.py:127) Total Epi:   275 Steps:  239438 Episode Steps:  1587 Return:  534.7386 FPS: 23.77
+17:04:49.660 [INFO] (on_policy_trainer.py:127) Total Epi:   276 Steps:  239866 Episode Steps:   428 Return:  137.5050 FPS: 22.57
+17:05:58.109 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  240000 Average Reward  542.7391 over  1 episodes
+17:06:11.037 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003776033641770482
+17:06:12.162 [INFO] (on_policy_trainer.py:127) Total Epi:   277 Steps:  240001 Episode Steps:   135 Return:  28.0231 FPS:  1.64
+17:07:31.576 [INFO] (on_policy_trainer.py:127) Total Epi:   278 Steps:  241875 Episode Steps:  1874 Return:  677.5707 FPS: 23.60
+17:08:39.569 [INFO] (on_policy_trainer.py:127) Total Epi:   279 Steps:  243490 Episode Steps:  1615 Return:  549.9339 FPS: 23.75
+17:09:01.042 [INFO] (on_policy_trainer.py:127) Total Epi:   280 Steps:  243975 Episode Steps:   485 Return:  141.6110 FPS: 22.59
+17:09:09.878 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003662730799987912
+17:09:11.095 [INFO] (on_policy_trainer.py:127) Total Epi:   281 Steps:  244003 Episode Steps:    28 Return:  0.5307 FPS:  2.79
+17:09:49.998 [INFO] (on_policy_trainer.py:127) Total Epi:   282 Steps:  244897 Episode Steps:   894 Return:  280.7540 FPS: 22.98
+17:10:55.441 [INFO] (on_policy_trainer.py:127) Total Epi:   283 Steps:  246453 Episode Steps:  1556 Return:  538.6912 FPS: 23.78
+17:12:07.165 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0007086464902386069
+17:12:08.365 [INFO] (on_policy_trainer.py:127) Total Epi:   284 Steps:  248003 Episode Steps:  1550 Return:  526.8248 FPS: 21.26
+17:12:26.888 [INFO] (on_policy_trainer.py:127) Total Epi:   285 Steps:  248421 Episode Steps:   418 Return:  136.1207 FPS: 22.57
+17:13:49.577 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  250000 Average Reward  136.5489 over  1 episodes
+17:13:50.728 [INFO] (on_policy_trainer.py:127) Total Epi:   286 Steps:  250001 Episode Steps:  1580 Return:  565.3574 FPS: 18.85
+17:14:07.709 [INFO] (on_policy_trainer.py:127) Total Epi:   287 Steps:  250384 Episode Steps:   383 Return:  124.8458 FPS: 22.56
+17:15:22.628 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0036863756831735373
+17:15:23.797 [INFO] (on_policy_trainer.py:127) Total Epi:   288 Steps:  252002 Episode Steps:  1618 Return:  584.4974 FPS: 21.27
+17:16:42.569 [INFO] (on_policy_trainer.py:127) Total Epi:   289 Steps:  253860 Episode Steps:  1858 Return:  673.2475 FPS: 23.59
+17:17:48.161 [INFO] (on_policy_trainer.py:127) Total Epi:   290 Steps:  255420 Episode Steps:  1560 Return:  549.5307 FPS: 23.78
+17:18:06.901 [INFO] (on_policy_trainer.py:127) Total Epi:   291 Steps:  255842 Episode Steps:   422 Return:  132.4754 FPS: 22.52
+17:18:23.394 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0013285691384226084
+17:18:24.557 [INFO] (on_policy_trainer.py:127) Total Epi:   292 Steps:  256002 Episode Steps:   160 Return:  37.5421 FPS:  9.06
+17:18:43.747 [INFO] (on_policy_trainer.py:127) Total Epi:   293 Steps:  256435 Episode Steps:   433 Return:  136.9800 FPS: 22.57
+17:19:03.824 [INFO] (on_policy_trainer.py:127) Total Epi:   294 Steps:  256887 Episode Steps:   452 Return:  144.2899 FPS: 22.52
+17:20:22.439 [INFO] (on_policy_trainer.py:127) Total Epi:   295 Steps:  258741 Episode Steps:  1854 Return:  670.0287 FPS: 23.58
+17:20:39.234 [INFO] (on_policy_trainer.py:127) Total Epi:   296 Steps:  259119 Episode Steps:   378 Return:  120.3378 FPS: 22.51
+17:22:18.771 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  260000 Average Reward  543.0316 over  1 episodes
+17:22:33.133 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0035756004508584738
+17:22:34.239 [INFO] (on_policy_trainer.py:127) Total Epi:   297 Steps:  260001 Episode Steps:   882 Return:  270.4399 FPS:  7.67
+17:23:35.378 [INFO] (on_policy_trainer.py:127) Total Epi:   298 Steps:  261451 Episode Steps:  1450 Return:  428.4698 FPS: 23.72
+17:23:54.439 [INFO] (on_policy_trainer.py:127) Total Epi:   299 Steps:  261881 Episode Steps:   430 Return:  135.1797 FPS: 22.56
+17:25:15.984 [INFO] (on_policy_trainer.py:127) Total Epi:   300 Steps:  263804 Episode Steps:  1923 Return:  672.3003 FPS: 23.58
+17:25:32.726 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0022894481662660837
+17:25:33.879 [INFO] (on_policy_trainer.py:127) Total Epi:   301 Steps:  264002 Episode Steps:   198 Return:  49.4373 FPS: 11.07
+17:26:55.842 [INFO] (on_policy_trainer.py:127) Total Epi:   302 Steps:  265934 Episode Steps:  1932 Return:  666.4945 FPS: 23.57
+17:28:17.479 [INFO] (on_policy_trainer.py:127) Total Epi:   303 Steps:  267859 Episode Steps:  1925 Return:  679.3226 FPS: 23.58
+17:28:31.424 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0041845072992146015
+17:28:32.578 [INFO] (on_policy_trainer.py:127) Total Epi:   304 Steps:  268002 Episode Steps:   143 Return:  29.9635 FPS:  9.47
+17:29:42.246 [INFO] (on_policy_trainer.py:127) Total Epi:   305 Steps:  269653 Episode Steps:  1651 Return:  545.4269 FPS: 23.70
+17:30:54.321 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  270000 Average Reward  433.2994 over  1 episodes
+17:30:55.486 [INFO] (on_policy_trainer.py:127) Total Epi:   306 Steps:  270001 Episode Steps:   348 Return:  109.5008 FPS:  4.75
+17:32:20.142 [INFO] (on_policy_trainer.py:127) Total Epi:   307 Steps:  271995 Episode Steps:  1994 Return:  677.3584 FPS: 23.55
+17:32:27.847 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0029869938734918833
+17:32:29.013 [INFO] (on_policy_trainer.py:127) Total Epi:   308 Steps:  272003 Episode Steps:     8 Return:  0.0043 FPS:  0.90
+17:33:55.489 [INFO] (on_policy_trainer.py:127) Total Epi:   309 Steps:  274038 Episode Steps:  2035 Return:  674.5414 FPS: 23.53
+17:34:57.826 [INFO] (on_policy_trainer.py:127) Total Epi:   310 Steps:  275518 Episode Steps:  1480 Return:  421.1600 FPS: 23.74
+17:35:25.712 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0025217647198587656
+17:35:26.871 [INFO] (on_policy_trainer.py:127) Total Epi:   311 Steps:  276002 Episode Steps:   484 Return:  149.4174 FPS: 16.66
+17:36:56.642 [INFO] (on_policy_trainer.py:127) Total Epi:   312 Steps:  278112 Episode Steps:  2110 Return:  672.0499 FPS: 23.50
+17:37:58.555 [INFO] (on_policy_trainer.py:127) Total Epi:   313 Steps:  279582 Episode Steps:  1470 Return:  426.1597 FPS: 23.74
+17:39:14.613 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  280000 Average Reward  426.1838 over  1 episodes
+17:39:25.872 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003560027340427041
+17:39:26.990 [INFO] (on_policy_trainer.py:127) Total Epi:   314 Steps:  280001 Episode Steps:   419 Return:  127.5807 FPS:  4.74
+17:40:56.976 [INFO] (on_policy_trainer.py:127) Total Epi:   315 Steps:  282116 Episode Steps:  2115 Return:  661.3628 FPS: 23.50
+17:42:22.992 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0019404587801545858
+17:42:24.157 [INFO] (on_policy_trainer.py:127) Total Epi:   316 Steps:  284003 Episode Steps:  1887 Return:  573.9643 FPS: 21.64
+17:43:38.092 [INFO] (on_policy_trainer.py:127) Total Epi:   317 Steps:  285753 Episode Steps:  1750 Return:  526.4083 FPS: 23.67
+17:44:53.042 [INFO] (on_policy_trainer.py:127) Total Epi:   318 Steps:  287526 Episode Steps:  1773 Return:  530.4335 FPS: 23.66
+17:45:19.365 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0014644272159785032
+17:45:20.559 [INFO] (on_policy_trainer.py:127) Total Epi:   319 Steps:  288003 Episode Steps:   477 Return:  134.3644 FPS: 17.34
+17:46:36.378 [INFO] (on_policy_trainer.py:127) Total Epi:   320 Steps:  289796 Episode Steps:  1793 Return:  525.5669 FPS: 23.65
+17:47:57.096 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  290000 Average Reward  536.9052 over  1 episodes
+17:47:58.253 [INFO] (on_policy_trainer.py:127) Total Epi:   321 Steps:  290001 Episode Steps:   205 Return:  51.0216 FPS:  2.50
+17:49:28.352 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.003124573267996311
+17:49:29.495 [INFO] (on_policy_trainer.py:127) Total Epi:   322 Steps:  292002 Episode Steps:  2001 Return:  623.3382 FPS: 21.93
+17:49:51.180 [INFO] (on_policy_trainer.py:127) Total Epi:   323 Steps:  292492 Episode Steps:   490 Return:  133.8134 FPS: 22.60
+17:51:19.313 [INFO] (on_policy_trainer.py:127) Total Epi:   324 Steps:  294561 Episode Steps:  2069 Return:  674.5650 FPS: 23.48
+17:52:27.358 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0010345815680921078
+17:52:28.507 [INFO] (on_policy_trainer.py:127) Total Epi:   325 Steps:  296002 Episode Steps:  1441 Return:  411.5637 FPS: 20.83
+17:52:59.753 [INFO] (on_policy_trainer.py:127) Total Epi:   326 Steps:  296709 Episode Steps:   707 Return:  202.3312 FPS: 22.63
+17:54:21.445 [INFO] (on_policy_trainer.py:127) Total Epi:   327 Steps:  298635 Episode Steps:  1926 Return:  607.9932 FPS: 23.58
+17:55:04.776 [INFO] (on_policy_trainer.py:127) Total Epi:   328 Steps:  299639 Episode Steps:  1004 Return:  275.3982 FPS: 23.17
+17:56:43.399 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  300000 Average Reward  664.4233 over  1 episodes
+17:56:43.400 [INFO] (on_policy_trainer.py:155) Saving checkpoint
+17:56:57.803 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.001697477069683373
+17:56:58.925 [INFO] (on_policy_trainer.py:127) Total Epi:   329 Steps:  300001 Episode Steps:   362 Return:  112.2961 FPS:  3.17
+17:58:19.580 [INFO] (on_policy_trainer.py:127) Total Epi:   330 Steps:  301899 Episode Steps:  1898 Return:  615.4291 FPS: 23.53
+17:59:45.560 [INFO] (on_policy_trainer.py:127) Total Epi:   331 Steps:  303923 Episode Steps:  2024 Return:  658.4770 FPS: 23.54
+17:59:55.809 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004003617446869612
+17:59:56.964 [INFO] (on_policy_trainer.py:127) Total Epi:   332 Steps:  304002 Episode Steps:    79 Return:  8.1442 FPS:  6.93
+18:01:10.597 [INFO] (on_policy_trainer.py:127) Total Epi:   333 Steps:  305736 Episode Steps:  1734 Return:  522.9470 FPS: 23.55
+18:02:39.739 [INFO] (on_policy_trainer.py:127) Total Epi:   334 Steps:  307832 Episode Steps:  2096 Return:  675.4623 FPS: 23.51
+18:02:55.066 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0010521437507122755
+18:02:56.220 [INFO] (on_policy_trainer.py:127) Total Epi:   335 Steps:  308002 Episode Steps:   170 Return:  39.9300 FPS: 10.32
+18:04:15.758 [INFO] (on_policy_trainer.py:127) Total Epi:   336 Steps:  309878 Episode Steps:  1876 Return:  614.7935 FPS: 23.59
+18:05:30.162 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  310000 Average Reward  536.7949 over  1 episodes
+18:05:31.329 [INFO] (on_policy_trainer.py:127) Total Epi:   337 Steps:  310001 Episode Steps:   123 Return:  23.7231 FPS:  1.63
+18:07:05.073 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004915114026516676
+18:07:06.214 [INFO] (on_policy_trainer.py:127) Total Epi:   338 Steps:  312002 Episode Steps:  2001 Return:  672.4741 FPS: 21.09
+18:07:50.555 [INFO] (on_policy_trainer.py:127) Total Epi:   339 Steps:  313029 Episode Steps:  1027 Return:  279.4933 FPS: 23.16
+18:09:16.078 [INFO] (on_policy_trainer.py:127) Total Epi:   340 Steps:  315038 Episode Steps:  2009 Return:  675.9718 FPS: 23.49
+18:10:05.742 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.001835507806390524
+18:10:06.934 [INFO] (on_policy_trainer.py:127) Total Epi:   341 Steps:  316003 Episode Steps:   965 Return:  284.0267 FPS: 18.98
+18:11:16.885 [INFO] (on_policy_trainer.py:127) Total Epi:   342 Steps:  317662 Episode Steps:  1659 Return:  528.1840 FPS: 23.72
+18:11:34.484 [INFO] (on_policy_trainer.py:127) Total Epi:   343 Steps:  318059 Episode Steps:   397 Return:  116.9675 FPS: 22.56
+18:12:55.958 [INFO] (on_policy_trainer.py:127) Total Epi:   344 Steps:  319980 Episode Steps:  1921 Return:  659.5506 FPS: 23.58
+18:13:12.903 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  320000 Average Reward  118.8350 over  1 episodes
+18:13:23.805 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0016167983412742615
+18:13:24.913 [INFO] (on_policy_trainer.py:127) Total Epi:   345 Steps:  320001 Episode Steps:    21 Return:  0.6187 FPS:  0.73
+18:14:34.975 [INFO] (on_policy_trainer.py:127) Total Epi:   346 Steps:  321663 Episode Steps:  1662 Return:  537.6812 FPS: 23.72
+18:15:52.604 [INFO] (on_policy_trainer.py:127) Total Epi:   347 Steps:  323497 Episode Steps:  1834 Return:  618.3573 FPS: 23.63
+18:16:20.545 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.00292757386341691
+18:16:21.948 [INFO] (on_policy_trainer.py:127) Total Epi:   348 Steps:  324008 Episode Steps:   511 Return:  161.7380 FPS: 17.42
+18:17:01.869 [INFO] (on_policy_trainer.py:127) Total Epi:   349 Steps:  324928 Episode Steps:   920 Return:  278.9165 FPS: 23.05
+18:17:21.388 [INFO] (on_policy_trainer.py:127) Total Epi:   350 Steps:  325369 Episode Steps:   441 Return:  146.8396 FPS: 22.59
+18:18:03.555 [INFO] (on_policy_trainer.py:127) Total Epi:   351 Steps:  326345 Episode Steps:   976 Return:  282.3057 FPS: 23.15
+18:19:12.217 [INFO] (on_policy_trainer.py:127) Total Epi:   352 Steps:  327975 Episode Steps:  1630 Return:  552.1655 FPS: 23.74
+18:19:21.071 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0060188560746610165
+18:19:22.218 [INFO] (on_policy_trainer.py:127) Total Epi:   353 Steps:  328002 Episode Steps:    27 Return:  0.5352 FPS:  2.70
+18:19:41.565 [INFO] (on_policy_trainer.py:127) Total Epi:   354 Steps:  328439 Episode Steps:   437 Return:  143.6338 FPS: 22.59
+18:20:46.483 [INFO] (on_policy_trainer.py:127) Total Epi:   355 Steps:  329984 Episode Steps:  1545 Return:  546.6418 FPS: 23.80
+18:21:04.453 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  330000 Average Reward  132.8282 over  1 episodes
+18:21:05.606 [INFO] (on_policy_trainer.py:127) Total Epi:   356 Steps:  330001 Episode Steps:    17 Return:  0.4590 FPS:  0.89
+18:21:23.234 [INFO] (on_policy_trainer.py:127) Total Epi:   357 Steps:  330399 Episode Steps:   398 Return:  132.2918 FPS: 22.58
+18:21:42.220 [INFO] (on_policy_trainer.py:127) Total Epi:   358 Steps:  330828 Episode Steps:   429 Return:  141.4933 FPS: 22.60
+18:22:00.452 [INFO] (on_policy_trainer.py:127) Total Epi:   359 Steps:  331239 Episode Steps:   411 Return:  133.2554 FPS: 22.55
+18:22:19.667 [INFO] (on_policy_trainer.py:127) Total Epi:   360 Steps:  331673 Episode Steps:   434 Return:  142.1047 FPS: 22.59
+18:22:40.833 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004705396015197039
+18:22:42.026 [INFO] (on_policy_trainer.py:127) Total Epi:   361 Steps:  332003 Episode Steps:   330 Return:  109.1556 FPS: 14.76
+18:23:00.672 [INFO] (on_policy_trainer.py:127) Total Epi:   362 Steps:  332424 Episode Steps:   421 Return:  139.5092 FPS: 22.58
+18:23:19.923 [INFO] (on_policy_trainer.py:127) Total Epi:   363 Steps:  332859 Episode Steps:   435 Return:  141.3936 FPS: 22.60
+18:23:38.702 [INFO] (on_policy_trainer.py:127) Total Epi:   364 Steps:  333283 Episode Steps:   424 Return:  138.7687 FPS: 22.58
+18:23:55.893 [INFO] (on_policy_trainer.py:127) Total Epi:   365 Steps:  333671 Episode Steps:   388 Return:  132.2094 FPS: 22.57
+18:24:14.095 [INFO] (on_policy_trainer.py:127) Total Epi:   366 Steps:  334082 Episode Steps:   411 Return:  134.6279 FPS: 22.58
+18:24:33.920 [INFO] (on_policy_trainer.py:127) Total Epi:   367 Steps:  334530 Episode Steps:   448 Return:  146.5802 FPS: 22.60
+18:25:41.497 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0035259288270026445
+18:25:42.705 [INFO] (on_policy_trainer.py:127) Total Epi:   368 Steps:  336003 Episode Steps:  1473 Return:  494.9824 FPS: 21.41
+18:26:23.151 [INFO] (on_policy_trainer.py:127) Total Epi:   369 Steps:  336936 Episode Steps:   933 Return:  285.1127 FPS: 23.07
+18:27:40.824 [INFO] (on_policy_trainer.py:127) Total Epi:   370 Steps:  338771 Episode Steps:  1835 Return:  669.8384 FPS: 23.63
+18:28:22.712 [INFO] (on_policy_trainer.py:127) Total Epi:   371 Steps:  339740 Episode Steps:   969 Return:  283.8639 FPS: 23.13
+18:28:50.579 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  340000 Average Reward  132.7716 over  1 episodes
+18:29:02.349 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.005130176432430744
+18:29:03.458 [INFO] (on_policy_trainer.py:127) Total Epi:   372 Steps:  340001 Episode Steps:   261 Return:  78.7692 FPS:  6.41
+18:30:07.949 [INFO] (on_policy_trainer.py:127) Total Epi:   373 Steps:  341535 Episode Steps:  1534 Return:  547.3796 FPS: 23.79
+18:30:26.774 [INFO] (on_policy_trainer.py:127) Total Epi:   374 Steps:  341960 Episode Steps:   425 Return:  140.4419 FPS: 22.58
+18:30:46.098 [INFO] (on_policy_trainer.py:127) Total Epi:   375 Steps:  342396 Episode Steps:   436 Return:  141.1742 FPS: 22.56
+18:31:04.262 [INFO] (on_policy_trainer.py:127) Total Epi:   376 Steps:  342806 Episode Steps:   410 Return:  132.7987 FPS: 22.57
+18:31:21.700 [INFO] (on_policy_trainer.py:127) Total Epi:   377 Steps:  343199 Episode Steps:   393 Return:  131.0630 FPS: 22.54
+18:31:40.187 [INFO] (on_policy_trainer.py:127) Total Epi:   378 Steps:  343616 Episode Steps:   417 Return:  137.8821 FPS: 22.56
+18:32:03.979 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004732893779873848
+18:32:05.201 [INFO] (on_policy_trainer.py:127) Total Epi:   379 Steps:  344003 Episode Steps:   387 Return:  124.9657 FPS: 15.47
+18:33:11.121 [INFO] (on_policy_trainer.py:127) Total Epi:   380 Steps:  345571 Episode Steps:  1568 Return:  553.3448 FPS: 23.79
+18:33:30.996 [INFO] (on_policy_trainer.py:127) Total Epi:   381 Steps:  346020 Episode Steps:   449 Return:  145.7218 FPS: 22.59
+18:33:48.885 [INFO] (on_policy_trainer.py:127) Total Epi:   382 Steps:  346424 Episode Steps:   404 Return:  133.4914 FPS: 22.58
+18:34:04.839 [INFO] (on_policy_trainer.py:127) Total Epi:   383 Steps:  346781 Episode Steps:   357 Return:  116.8063 FPS: 22.38
+18:34:22.297 [INFO] (on_policy_trainer.py:127) Total Epi:   384 Steps:  347175 Episode Steps:   394 Return:  132.1014 FPS: 22.57
+18:34:39.813 [INFO] (on_policy_trainer.py:127) Total Epi:   385 Steps:  347570 Episode Steps:   395 Return:  133.2388 FPS: 22.55
+18:35:05.413 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.001356126507744193
+18:35:06.563 [INFO] (on_policy_trainer.py:127) Total Epi:   386 Steps:  348002 Episode Steps:   432 Return:  139.6917 FPS: 16.15
+18:35:25.554 [INFO] (on_policy_trainer.py:127) Total Epi:   387 Steps:  348431 Episode Steps:   429 Return:  134.6399 FPS: 22.59
+18:37:34.814 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  350000 Average Reward  546.6846 over  1 episodes
+18:37:35.938 [INFO] (on_policy_trainer.py:127) Total Epi:   388 Steps:  350001 Episode Steps:  1570 Return:  510.8317 FPS: 12.04
+18:37:52.411 [INFO] (on_policy_trainer.py:127) Total Epi:   389 Steps:  350371 Episode Steps:   370 Return:  118.6505 FPS: 22.46
+18:39:06.998 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0017649064539000392
+18:39:08.191 [INFO] (on_policy_trainer.py:127) Total Epi:   390 Steps:  352003 Episode Steps:  1632 Return:  566.5852 FPS: 21.54
+18:40:15.359 [INFO] (on_policy_trainer.py:127) Total Epi:   391 Steps:  353597 Episode Steps:  1594 Return:  554.4022 FPS: 23.73
+18:40:45.450 [INFO] (on_policy_trainer.py:127) Total Epi:   392 Steps:  354278 Episode Steps:   681 Return:  207.7571 FPS: 22.63
+18:41:49.938 [INFO] (on_policy_trainer.py:127) Total Epi:   393 Steps:  355812 Episode Steps:  1534 Return:  542.4582 FPS: 23.79
+18:42:05.776 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.0013456220040097833
+18:42:06.955 [INFO] (on_policy_trainer.py:127) Total Epi:   394 Steps:  356003 Episode Steps:   191 Return:  49.7661 FPS: 11.23
+18:43:15.739 [INFO] (on_policy_trainer.py:127) Total Epi:   395 Steps:  357636 Episode Steps:  1633 Return:  573.9565 FPS: 23.74
+18:44:30.585 [INFO] (on_policy_trainer.py:127) Total Epi:   396 Steps:  359405 Episode Steps:  1769 Return:  618.8076 FPS: 23.64
+18:44:50.308 [INFO] (on_policy_trainer.py:127) Total Epi:   397 Steps:  359850 Episode Steps:   445 Return:  144.1511 FPS: 22.56
+18:45:12.625 [INFO] (on_policy_trainer.py:146) Evaluation Total Steps:  360000 Average Reward  120.3729 over  1 episodes
+18:45:23.077 [INFO] (on_policy_trainer.py:203) Done 12 epochs. Average actor loss 0.004124759696424007
+18:45:24.212 [INFO] (on_policy_trainer.py:127) Total Epi:   398 Steps:  360001 Episode Steps:   151 Return:  32.7911 FPS:  4.45
+18:45:44.130 [INFO] (on_policy_trainer.py:127) Total Epi:   399 Steps:  360451 Episode Steps:   450 Return:  146.0498 FPS: 22.59
+18:46:13.481 [INFO] (on_policy_trainer.py:127) Total Epi:   400 Steps:  361114 Episode Steps:   663 Return:  206.2720 FPS: 22.59
+18:46:33.680 [INFO] (on_policy_trainer.py:127) Total Epi:   401 Steps:  361570 Episode Steps:   456 Return:  145.3917 FPS: 22.58
+18:47:02.973 [INFO] (on_policy_trainer.py:127) Total Epi:   402 Steps:  362233 Episode Steps:   663 Return:  207.7701 FPS: 22.63
+18:47:20.974 [INFO] (on_policy_trainer.py:127) Total Epi:   403 Steps:  362639 Episode Steps:   406 Return:  135.7327 FPS: 22.56
+18:47:40.590 [INFO] (on_policy_trainer.py:127) Total Epi:   404 Steps:  363082 Episode Steps:   443 Return:  144.0189 FPS: 22.59
