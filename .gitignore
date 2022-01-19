@@ -5,7 +5,6 @@ export/
 *.rc
 .depend
 *-bin
-gennmtab
 dataset/*
 !dataset/clean.py
 plots
